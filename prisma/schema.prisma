@@ -1,0 +1,363 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Auth.js Models
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Enums
+
+enum Role {
+  OWNER
+  PHARMACIST
+  TECHNICIAN
+}
+
+enum Module {
+  PROVIDERS
+  PRESCRIPTIONS
+  DRUG_REPS
+  TIME_TRACKING
+  TEAM
+  REPORTS
+  SETTINGS
+}
+
+enum Access {
+  NONE
+  VIEW
+  EDIT
+  FULL
+}
+
+enum Plan {
+  STARTER
+  GROWTH
+  PRO
+}
+
+enum InviteStatus {
+  PENDING
+  ACCEPTED
+  CANCELLED
+}
+
+enum UploadStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum PayerType {
+  COMMERCIAL
+  MEDICARE
+  MEDICAID
+  CASH
+  OTHER
+}
+
+// Core Models
+
+model Organization {
+  id                   String   @id @default(cuid())
+  name                 String
+  timezone             String   @default("America/New_York")
+  plan                 Plan     @default(STARTER)
+  trialEndsAt          DateTime?
+  stripeCustomerId     String?  @unique
+  stripeSubscriptionId String?  @unique
+  subscriptionEndsAt   DateTime?
+  brandColor           String?
+  logoUrl              String?
+  brandName            String?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  users       User[]
+  locations   Location[]
+  permissions Permission[]
+  invites     Invite[]
+  auditLogs   AuditLog[]
+
+  providers             Provider[]
+  prescriptionUploads   PrescriptionUpload[]
+  prescriptionRecords   PrescriptionRecord[]
+  drugReps              DrugRep[]
+  drugRepVisits         DrugRepVisit[]
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  phone          String?
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  role           Role      @default(TECHNICIAN)
+  active         Boolean   @default(true)
+  organizationId String?
+  locationId     String?
+  lastActiveAt   DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  location     Location?     @relation(fields: [locationId], references: [id])
+  accounts     Account[]
+  sessions     Session[]
+  permissions  Permission[]
+  auditLogs    AuditLog[]
+  invitesSent  Invite[]      @relation("InvitedBy")
+
+  @@index([organizationId])
+  @@index([locationId])
+}
+
+model Location {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  address        String?
+  city           String?
+  state          String?
+  zip            String?
+  phone          String?
+  npiNumber      String?
+  licenseNumber  String?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  users        User[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model Permission {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String
+  module         Module
+  access         Access
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, module])
+  @@index([userId])
+  @@index([organizationId])
+}
+
+model Invite {
+  id             String       @id @default(cuid())
+  email          String
+  role           Role         @default(TECHNICIAN)
+  organizationId String
+  invitedById    String
+  locationId     String?
+  token          String       @unique
+  status         InviteStatus @default(PENDING)
+  expiresAt      DateTime
+  createdAt      DateTime     @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  invitedBy    User         @relation("InvitedBy", fields: [invitedById], references: [id])
+
+  @@index([organizationId])
+  @@index([token])
+}
+
+model AuditLog {
+  id             String   @id @default(cuid())
+  organizationId String
+  userId         String?
+  action         String
+  entityType     String
+  entityId       String
+  metadata       Json?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  user         User?        @relation(fields: [userId], references: [id])
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, entityType, entityId])
+}
+
+// ─── Prescription & Provider Models ─────────────────────────────
+
+model Provider {
+  id                String    @id @default(cuid())
+  organizationId    String
+  npi               String
+  firstName         String
+  lastName          String
+  suffix            String?
+  credential        String?
+  specialty         String?
+  practiceName      String?
+  practiceAddress   String?
+  practiceCity      String?
+  practiceState     String?
+  practiceZip       String?
+  practicePhone     String?
+  tags              Json      @default("[]")
+  notes             String?
+  isActive          Boolean   @default(true)
+  enrichedFromNppes Boolean   @default(false)
+  lastEnrichedAt    DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  organization          Organization           @relation(fields: [organizationId], references: [id])
+  prescriptionRecords   PrescriptionRecord[]
+  drugRepVisits         DrugRepVisitProvider[]
+
+  @@unique([organizationId, npi])
+  @@index([organizationId])
+  @@index([organizationId, specialty])
+}
+
+model PrescriptionUpload {
+  id             String       @id @default(cuid())
+  organizationId String
+  locationId     String?
+  uploadedById   String
+  fileName       String
+  rowCount       Int          @default(0)
+  dateRangeStart DateTime?
+  dateRangeEnd   DateTime?
+  status         UploadStatus @default(PROCESSING)
+  errorMessage   String?
+  createdAt      DateTime     @default(now())
+
+  organization Organization         @relation(fields: [organizationId], references: [id])
+  records      PrescriptionRecord[]
+}
+
+model PrescriptionRecord {
+  id             String    @id @default(cuid())
+  organizationId String
+  locationId     String?
+  uploadId       String
+  providerId     String?
+  providerNpi    String
+  drugName       String
+  drugNdc        String?
+  isGeneric      Boolean   @default(false)
+  fillDate       DateTime
+  quantity       Int?
+  daysSupply     Int?
+  payerType      PayerType @default(OTHER)
+  createdAt      DateTime  @default(now())
+
+  organization Organization        @relation(fields: [organizationId], references: [id])
+  upload       PrescriptionUpload  @relation(fields: [uploadId], references: [id])
+  provider     Provider?           @relation(fields: [providerId], references: [id])
+
+  @@index([organizationId, providerId, fillDate])
+  @@index([organizationId, drugName, fillDate])
+  @@index([organizationId, fillDate])
+  @@index([organizationId, providerNpi])
+}
+
+// ─── Drug Rep Models ────────────────────────────────────────────
+
+model DrugRep {
+  id             String   @id @default(cuid())
+  organizationId String
+  firstName      String
+  lastName       String
+  company        String
+  email          String?
+  phone          String?
+  territory      String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization   @relation(fields: [organizationId], references: [id])
+  visits       DrugRepVisit[]
+
+  @@index([organizationId])
+  @@index([organizationId, company])
+}
+
+model DrugRepVisit {
+  id              String   @id @default(cuid())
+  organizationId  String
+  locationId      String?
+  drugRepId       String
+  visitDate       DateTime
+  durationMinutes Int?
+  drugsPromoted   Json     @default("[]")
+  samplesLeft     Json     @default("[]")
+  notes           String?
+  followUpDate    DateTime?
+  loggedById      String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  organization Organization          @relation(fields: [organizationId], references: [id])
+  drugRep      DrugRep               @relation(fields: [drugRepId], references: [id])
+  providers    DrugRepVisitProvider[]
+
+  @@index([organizationId, visitDate])
+  @@index([organizationId, drugRepId])
+}
+
+model DrugRepVisitProvider {
+  drugRepVisitId String
+  providerId     String
+
+  visit    DrugRepVisit @relation(fields: [drugRepVisitId], references: [id], onDelete: Cascade)
+  provider Provider     @relation(fields: [providerId], references: [id])
+
+  @@id([drugRepVisitId, providerId])
+}
