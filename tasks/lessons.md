@@ -18,6 +18,12 @@ git config user.name "Mohammed Zafer"
 
 **Fix:** Use explicit `dotenv.config({ path: ".env.local" })` in `prisma.config.ts`.
 
+## 04/04/2026 — prisma db push can drop data with enum changes
+
+**What happened:** Adding `SCHEDULING` to the `Module` enum and running `prisma db push` appeared to wipe schedule data. Investigation showed data was intact — the issue was that schedules only existed for one location in one org, and the user was viewing a different org/location.
+
+**Rule:** After any `prisma db push` with schema changes, immediately verify data counts in the database. Add data verification to the deployment checklist. Also: always seed both orgs with test data for every feature so issues are visible regardless of which account is used.
+
 ## 04/04/2026 — PrismaNeon adapter constructor
 
 **What happened:** Seed script used `neon()` function + `new PrismaNeon(sql)` pattern from older docs. The working pattern (matching `src/lib/db.ts`) is `new PrismaNeon({ connectionString })`.
