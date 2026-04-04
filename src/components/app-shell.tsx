@@ -138,6 +138,16 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     }
   }, [pathname]);
 
+  // Prevent body scroll when mobile menu or more menu is open
+  useEffect(() => {
+    if (mobileMenuOpen || moreMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileMenuOpen, moreMenuOpen]);
+
   const hasAccess = (module?: string) => {
     if (!module) return true;
     if (user.role === "OWNER") return true;
@@ -193,10 +203,10 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
           </div>
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors shrink-0"
+            className="p-2 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors shrink-0"
             aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           >
-            {collapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+            {collapsed ? <PanelLeft className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
           </button>
         </div>
 
@@ -230,7 +240,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                   {hasChildren && !collapsed && (
                     <button
                       onClick={() => toggleSection(item.href)}
-                      className="p-1 rounded-md hover:bg-white/10 text-white/40 hover:text-white transition-colors shrink-0"
+                      className="p-1.5 rounded-md hover:bg-white/10 text-white/40 hover:text-white transition-colors shrink-0"
                       aria-label={isExpanded ? `Collapse ${item.label}` : `Expand ${item.label}`}
                     >
                       {isExpanded ? (
@@ -373,7 +383,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {/* Main content */}
       <main
         className={cn(
-          "flex-1 pt-14 md:pt-0 pb-20 md:pb-0 overflow-y-auto transition-all duration-200",
+          "flex-1 pt-14 md:pt-0 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200",
           collapsed ? "md:ml-16" : "md:ml-60"
         )}
       >
@@ -381,7 +391,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       </main>
 
       {/* Mobile bottom tabs */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-white border-t border-black/5 flex items-center justify-around z-40 px-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[72px] bg-white border-t border-black/5 flex items-center justify-around z-40 px-2">
         {mobileTabs.map((item) => {
           const Icon = item.icon;
           const isActive = isSectionActive(item.href);
@@ -390,12 +400,12 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center gap-0.5 px-3 py-1",
+                "flex flex-col items-center gap-0.5 px-3 py-1 min-h-[48px] min-w-[48px] justify-center",
                 isActive ? "text-[#0071e3]" : "text-[rgba(0,0,0,0.48)]"
               )}
             >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px]">{item.label}</span>
+              <Icon className="w-6 h-6" />
+              <span className="text-[11px]">{item.label}</span>
             </Link>
           );
         })}
@@ -403,35 +413,41 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
           <button
             onClick={() => setMoreMenuOpen(!moreMenuOpen)}
             className={cn(
-              "flex flex-col items-center gap-0.5 px-3 py-1",
+              "flex flex-col items-center gap-0.5 px-3 py-1 min-h-[48px] min-w-[48px] justify-center",
               moreMenuOpen ? "text-[#0071e3]" : "text-[rgba(0,0,0,0.48)]"
             )}
             aria-label="More navigation options"
           >
-            <MoreHorizontal className="w-5 h-5" />
-            <span className="text-[10px]">More</span>
+            <MoreHorizontal className="w-6 h-6" />
+            <span className="text-[11px]">More</span>
           </button>
         )}
       </nav>
 
       {/* More menu */}
       {moreMenuOpen && (
-        <div className="md:hidden fixed bottom-16 left-0 right-0 bg-white border-t border-black/5 z-30 p-3">
-          {moreItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMoreMenuOpen(false)}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-[#1d1d1f] hover:bg-[#f5f5f7]"
-              >
-                <Icon className="w-4 h-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </div>
+        <>
+          <div className="md:hidden fixed inset-0 bg-black/20 z-20" onClick={() => setMoreMenuOpen(false)} />
+          <div className="md:hidden fixed bottom-[72px] left-0 right-0 bg-white border-t border-black/5 z-30 p-3 rounded-t-xl shadow-lg">
+            {moreItems.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMoreMenuOpen(false)}
+                  className={cn(
+                    "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors",
+                    isSectionActive(item.href) ? "bg-[#0071e3]/10 text-[#0071e3] font-medium" : "text-[#1d1d1f] hover:bg-[#f5f5f7]"
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  {item.label}
+                </Link>
+              );
+            })}
+          </div>
+        </>
       )}
     </div>
   );

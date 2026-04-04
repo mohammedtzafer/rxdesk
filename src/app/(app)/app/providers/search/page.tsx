@@ -175,7 +175,7 @@ export default function NppesSearchPage() {
                 <button
                   onClick={() => handleAdd(r)}
                   disabled={addedNpis.has(r.npi)}
-                  className={`shrink-0 ml-3 inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-[12px] transition-colors ${
+                  className={`shrink-0 ml-3 inline-flex items-center gap-1 px-4 py-2.5 rounded-lg text-[13px] transition-colors ${
                     addedNpis.has(r.npi)
                       ? "bg-[#22C55E]/10 text-[#22C55E]"
                       : "bg-[#0071e3] text-white hover:bg-[#0077ED]"

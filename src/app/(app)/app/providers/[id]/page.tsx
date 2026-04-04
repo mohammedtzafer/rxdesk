@@ -72,7 +72,7 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
     return (
       <div>
         <div className="h-8 w-48 bg-white rounded animate-pulse" />
-        <div className="mt-6 grid grid-cols-4 gap-4">
+        <div className="mt-6 grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-24 bg-white rounded-lg animate-pulse" />
           ))}
@@ -186,7 +186,7 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
           {/* Stat cards */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white rounded-lg p-4">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase">Rx volume ({days}d)</p>
+              <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">Rx volume ({days}d)</p>
               <p className="text-[28px] font-normal text-[#1d1d1f] mt-1">{analytics.rxVolume}</p>
               <div className="flex items-center gap-1 mt-1">
                 <TrendIcon direction={analytics.trendDirection} />
@@ -197,11 +197,11 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
               </div>
             </div>
             <div className="bg-white rounded-lg p-4">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase">Rx per week</p>
+              <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">Rx per week</p>
               <p className="text-[28px] font-normal text-[#1d1d1f] mt-1">{analytics.rxPerWeek}</p>
             </div>
             <div className="bg-white rounded-lg p-4">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase">Brand %</p>
+              <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">Brand %</p>
               <p className="text-[28px] font-normal text-[#1d1d1f] mt-1">
                 {analytics.brandGenericRatio.brandPercent}%
               </p>
@@ -210,7 +210,7 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
               </p>
             </div>
             <div className="bg-white rounded-lg p-4">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase">Prior volume</p>
+              <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">Prior volume</p>
               <p className="text-[28px] font-normal text-[#1d1d1f] mt-1">{analytics.priorRxVolume}</p>
               <p className="text-[12px] text-[rgba(0,0,0,0.48)] mt-1">Previous {days} days</p>
             </div>

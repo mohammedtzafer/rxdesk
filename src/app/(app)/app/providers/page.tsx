@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Users } from "lucide-react";
+import { ErrorState } from "@/components/error-state";
 
 interface Provider {
   id: string;
@@ -24,32 +25,41 @@ export default function ProvidersPage() {
   const [total, setTotal] = useState(0);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    const fetchProviders = async () => {
-      setLoading(true);
-      const params = new URLSearchParams({ page: String(page), limit: "25" });
-      if (search) params.set("search", search);
-
+  const fetchProviders = async (searchVal = search, pageVal = page) => {
+    setLoading(true);
+    setError(false);
+    try {
+      const params = new URLSearchParams({ page: String(pageVal), limit: "25" });
+      if (searchVal) params.set("search", searchVal);
       const res = await fetch(`/api/providers?${params}`);
       if (res.ok) {
         const data = await res.json();
         setProviders(data.providers);
         setTotal(data.total);
+      } else {
+        setError(true);
       }
+    } catch {
+      setError(true);
+    } finally {
       setLoading(false);
-    };
+    }
+  };
 
-    const debounce = setTimeout(fetchProviders, 300);
+  useEffect(() => {
+    const debounce = setTimeout(() => fetchProviders(search, page), 300);
     return () => clearTimeout(debounce);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search, page]);
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
             Providers
           </h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
@@ -59,14 +69,14 @@ export default function ProvidersPage() {
         <div className="flex gap-2">
           <Link
             href="/app/providers/search"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
           >
             <Search className="w-4 h-4" />
             Search NPI
           </Link>
           <Link
             href="/app/providers/import"
-            className="inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors"
           >
             <Plus className="w-4 h-4" />
             Import CSV
@@ -87,9 +97,22 @@ export default function ProvidersPage() {
         />
       </div>
 
+      {error && (
+        <div className="mt-4"><ErrorState onRetry={() => fetchProviders(search, page)} /></div>
+      )}
+
       <div className="mt-4 bg-white rounded-xl overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-[rgba(0,0,0,0.48)]">Loading...</div>
+          <div className="p-4 space-y-3">
+            {[1,2,3,4,5].map(i => (
+              <div key={i} className="flex items-center gap-3 py-2">
+                <div className="w-32 h-4 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
+                <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="flex-1" />
+                <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
         ) : providers.length === 0 ? (
           <div className="p-12 text-center">
             <Users className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
@@ -99,7 +122,7 @@ export default function ProvidersPage() {
             </p>
           </div>
         ) : (
-          <table className="w-full">
+          <div className="overflow-x-auto"><table className="w-full min-w-[600px]">
             <thead>
               <tr className="border-b border-[rgba(0,0,0,0.05)]">
                 <th className="text-left px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
@@ -163,7 +186,7 @@ export default function ProvidersPage() {
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
         )}
       </div>
 

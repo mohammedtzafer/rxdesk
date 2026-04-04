@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Briefcase, Calendar, Users, X } from "lucide-react";
 import { toast } from "sonner";
+import { ErrorState } from "@/components/error-state";
 
 interface DrugRep {
   id: string;
@@ -36,34 +37,42 @@ export default function DrugRepsPage() {
   const [showAddRep, setShowAddRep] = useState(false);
   const [showLogVisit, setShowLogVisit] = useState(false);
   const [tab, setTab] = useState<"reps" | "visits">("reps");
+  const [providers, setProviders] = useState<Array<{id: string, firstName: string, lastName: string}>>([]);
+  const [error, setError] = useState(false);
 
   // Add rep form
   const [newRep, setNewRep] = useState({ firstName: "", lastName: "", company: "", email: "", phone: "", territory: "" });
 
   // Log visit form
-  const [visitForm, setVisitForm] = useState({ drugRepId: "", visitDate: new Date().toISOString().split("T")[0], durationMinutes: "", notes: "" });
+  const [visitForm, setVisitForm] = useState({ drugRepId: "", visitDate: new Date().toISOString().split("T")[0], durationMinutes: "", notes: "", providerIds: [] as string[] });
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      const params = new URLSearchParams();
-      if (search) params.set("search", search);
+    fetch("/api/providers?limit=100").then(r => r.json()).then(d => setProviders(d.providers || [])).catch(() => {});
+  }, []);
 
+  const fetchData = async (searchVal = search) => {
+    setLoading(true);
+    setError(false);
+    try {
+      const params = new URLSearchParams();
+      if (searchVal) params.set("search", searchVal);
       const [repsRes, visitsRes] = await Promise.all([
         fetch(`/api/drug-reps?${params}`),
         fetch("/api/drug-reps/visits?limit=20"),
       ]);
-
       if (repsRes.ok) setReps(await repsRes.json());
-      if (visitsRes.ok) {
-        const data = await visitsRes.json();
-        setVisits(data.visits || []);
-      }
+      if (visitsRes.ok) { const data = await visitsRes.json(); setVisits(data.visits || []); }
+    } catch {
+      setError(true);
+    } finally {
       setLoading(false);
-    };
+    }
+  };
 
-    const debounce = setTimeout(fetchData, 300);
+  useEffect(() => {
+    const debounce = setTimeout(() => fetchData(search), 300);
     return () => clearTimeout(debounce);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
 
   const handleAddRep = async (e: React.FormEvent) => {
@@ -94,12 +103,13 @@ export default function DrugRepsPage() {
       body: JSON.stringify({
         ...visitForm,
         durationMinutes: visitForm.durationMinutes ? parseInt(visitForm.durationMinutes) : undefined,
+        providerIds: visitForm.providerIds,
       }),
     });
     if (res.ok) {
       toast.success("Visit logged");
       setShowLogVisit(false);
-      setVisitForm({ drugRepId: "", visitDate: new Date().toISOString().split("T")[0], durationMinutes: "", notes: "" });
+      setVisitForm({ drugRepId: "", visitDate: new Date().toISOString().split("T")[0], durationMinutes: "", notes: "", providerIds: [] });
       const r = await fetch("/api/drug-reps/visits?limit=20");
       if (r.ok) { const d = await r.json(); setVisits(d.visits || []); }
     } else {
@@ -110,20 +120,24 @@ export default function DrugRepsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">Drug reps</h1>
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">Drug reps</h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">Track pharmaceutical rep visits and activity</p>
         </div>
         <div className="flex gap-2">
-          <button onClick={() => setShowLogVisit(true)} className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors">
+          <button onClick={() => setShowLogVisit(true)} className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors">
             <Calendar className="w-4 h-4" /> Log visit
           </button>
-          <button onClick={() => setShowAddRep(true)} className="inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors">
+          <button onClick={() => setShowAddRep(true)} className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors">
             <Plus className="w-4 h-4" /> Add rep
           </button>
         </div>
       </div>
+
+      {error && (
+        <div className="mt-4"><ErrorState onRetry={() => fetchData(search)} /></div>
+      )}
 
       {/* Tabs */}
       <div className="mt-6 flex gap-1 bg-white rounded-lg p-1 w-fit">
@@ -144,7 +158,16 @@ export default function DrugRepsPage() {
 
           <div className="mt-4 bg-white rounded-xl overflow-hidden">
             {loading ? (
-              <div className="p-8 text-center text-[rgba(0,0,0,0.48)]">Loading...</div>
+              <div className="p-4 space-y-3">
+                {[1,2,3,4,5].map(i => (
+                  <div key={i} className="flex items-center gap-3 py-2">
+                    <div className="w-32 h-4 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
+                    <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                    <div className="flex-1" />
+                    <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                  </div>
+                ))}
+              </div>
             ) : reps.length === 0 ? (
               <div className="p-12 text-center">
                 <Briefcase className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
@@ -210,20 +233,20 @@ export default function DrugRepsPage() {
       {/* Add Rep Modal */}
       {showAddRep && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowAddRep(false)}>
-          <div className="bg-white rounded-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-[21px] font-bold text-[#1d1d1f]">Add drug rep</h2>
               <button onClick={() => setShowAddRep(false)} className="text-[rgba(0,0,0,0.48)]"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={handleAddRep} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
-                <div><Label className="text-[12px]">First name</Label><Input value={newRep.firstName} onChange={(e) => setNewRep({ ...newRep, firstName: e.target.value })} required className="h-9" /></div>
-                <div><Label className="text-[12px]">Last name</Label><Input value={newRep.lastName} onChange={(e) => setNewRep({ ...newRep, lastName: e.target.value })} required className="h-9" /></div>
+                <div><Label className="text-[12px]">First name</Label><Input value={newRep.firstName} onChange={(e) => setNewRep({ ...newRep, firstName: e.target.value })} required className="h-11" /></div>
+                <div><Label className="text-[12px]">Last name</Label><Input value={newRep.lastName} onChange={(e) => setNewRep({ ...newRep, lastName: e.target.value })} required className="h-11" /></div>
               </div>
-              <div><Label className="text-[12px]">Company</Label><Input value={newRep.company} onChange={(e) => setNewRep({ ...newRep, company: e.target.value })} required className="h-9" placeholder="Pfizer, Merck, etc." /></div>
-              <div><Label className="text-[12px]">Email</Label><Input type="email" value={newRep.email} onChange={(e) => setNewRep({ ...newRep, email: e.target.value })} className="h-9" /></div>
-              <div><Label className="text-[12px]">Phone</Label><Input value={newRep.phone} onChange={(e) => setNewRep({ ...newRep, phone: e.target.value })} className="h-9" /></div>
-              <div><Label className="text-[12px]">Territory</Label><Input value={newRep.territory} onChange={(e) => setNewRep({ ...newRep, territory: e.target.value })} className="h-9" /></div>
+              <div><Label className="text-[12px]">Company</Label><Input value={newRep.company} onChange={(e) => setNewRep({ ...newRep, company: e.target.value })} required className="h-11" placeholder="Pfizer, Merck, etc." /></div>
+              <div><Label className="text-[12px]">Email</Label><Input type="email" value={newRep.email} onChange={(e) => setNewRep({ ...newRep, email: e.target.value })} className="h-11" /></div>
+              <div><Label className="text-[12px]">Phone</Label><Input value={newRep.phone} onChange={(e) => setNewRep({ ...newRep, phone: e.target.value })} className="h-11" /></div>
+              <div><Label className="text-[12px]">Territory</Label><Input value={newRep.territory} onChange={(e) => setNewRep({ ...newRep, territory: e.target.value })} className="h-11" /></div>
               <button type="submit" className="w-full h-10 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED]">Add rep</button>
             </form>
           </div>
@@ -233,7 +256,7 @@ export default function DrugRepsPage() {
       {/* Log Visit Modal */}
       {showLogVisit && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowLogVisit(false)}>
-          <div className="bg-white rounded-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-[21px] font-bold text-[#1d1d1f]">Log visit</h2>
               <button onClick={() => setShowLogVisit(false)} className="text-[rgba(0,0,0,0.48)]"><X className="w-5 h-5" /></button>
@@ -241,15 +264,37 @@ export default function DrugRepsPage() {
             <form onSubmit={handleLogVisit} className="space-y-3">
               <div>
                 <Label className="text-[12px]">Drug rep</Label>
-                <select value={visitForm.drugRepId} onChange={(e) => setVisitForm({ ...visitForm, drugRepId: e.target.value })} required className="w-full h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white">
+                <select value={visitForm.drugRepId} onChange={(e) => setVisitForm({ ...visitForm, drugRepId: e.target.value })} required className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white">
                   <option value="">Select a rep...</option>
                   {reps.map((r) => (
                     <option key={r.id} value={r.id}>{r.lastName}, {r.firstName} ({r.company})</option>
                   ))}
                 </select>
               </div>
-              <div><Label className="text-[12px]">Visit date</Label><Input type="date" value={visitForm.visitDate} onChange={(e) => setVisitForm({ ...visitForm, visitDate: e.target.value })} required className="h-9" /></div>
-              <div><Label className="text-[12px]">Duration (minutes)</Label><Input type="number" value={visitForm.durationMinutes} onChange={(e) => setVisitForm({ ...visitForm, durationMinutes: e.target.value })} className="h-9" placeholder="30" /></div>
+              <div><Label className="text-[12px]">Visit date</Label><Input type="date" value={visitForm.visitDate} onChange={(e) => setVisitForm({ ...visitForm, visitDate: e.target.value })} required className="h-11" /></div>
+              <div><Label className="text-[12px]">Duration (minutes)</Label><Input type="number" value={visitForm.durationMinutes} onChange={(e) => setVisitForm({ ...visitForm, durationMinutes: e.target.value })} className="h-11" placeholder="30" /></div>
+              <div>
+                <label className="block text-[12px] font-medium text-[rgba(0,0,0,0.48)] mb-1">Providers discussed</label>
+                <div className="max-h-32 overflow-y-auto border border-[rgba(0,0,0,0.08)] rounded-lg p-2 space-y-1">
+                  {providers.map(p => (
+                    <label key={p.id} className="flex items-center gap-2 text-[13px] py-0.5 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={visitForm.providerIds.includes(p.id)}
+                        onChange={(e) => {
+                          const ids = e.target.checked
+                            ? [...visitForm.providerIds, p.id]
+                            : visitForm.providerIds.filter(id => id !== p.id);
+                          setVisitForm({...visitForm, providerIds: ids});
+                        }}
+                        className="rounded"
+                      />
+                      {p.lastName}, {p.firstName}
+                    </label>
+                  ))}
+                  {providers.length === 0 && <p className="text-[12px] text-[rgba(0,0,0,0.48)]">No providers in directory</p>}
+                </div>
+              </div>
               <div><Label className="text-[12px]">Notes</Label><textarea value={visitForm.notes} onChange={(e) => setVisitForm({ ...visitForm, notes: e.target.value })} className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] px-3 py-2 text-[14px] h-20 resize-none" placeholder="Drugs discussed, samples left, etc." /></div>
               <button type="submit" className="w-full h-10 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED]">Log visit</button>
             </form>

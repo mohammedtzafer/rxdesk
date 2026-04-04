@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Upload, TrendingUp, TrendingDown, Minus, UserPlus, UserX } from "lucide-react";
+import { ErrorState } from "@/components/error-state";
 
 interface DashboardData {
   totalRx: number;
@@ -37,26 +38,43 @@ export default function PrescriptionsPage() {
   const [alerts, setAlerts] = useState<AlertData | null>(null);
   const [days, setDays] = useState(90);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+  const fetchData = async (daysVal = days) => {
+    setLoading(true);
+    setError(false);
+    try {
       const [dashRes, alertRes] = await Promise.all([
-        fetch(`/api/prescriptions/dashboard?days=${days}`),
+        fetch(`/api/prescriptions/dashboard?days=${daysVal}`),
         fetch("/api/prescriptions/alerts"),
       ]);
-
       if (dashRes.ok) setData(await dashRes.json());
       if (alertRes.ok) setAlerts(await alertRes.json());
+    } catch {
+      setError(true);
+    } finally {
       setLoading(false);
-    };
-    fetchData();
+    }
+  };
+
+  useEffect(() => {
+    fetchData(days);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [days]);
+
+  if (error) {
+    return (
+      <div>
+        <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">Prescriptions</h1>
+        <div className="mt-8"><ErrorState onRetry={() => fetchData(days)} /></div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
       <div>
-        <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+        <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
           Prescriptions
         </h1>
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -72,9 +90,9 @@ export default function PrescriptionsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
             Prescriptions
           </h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
@@ -93,7 +111,7 @@ export default function PrescriptionsPage() {
           </select>
           <Link
             href="/app/prescriptions/upload"
-            className="inline-flex items-center gap-2 px-4 py-2 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
           >
             <Upload className="w-4 h-4" />
             Upload CSV
@@ -121,7 +139,7 @@ export default function PrescriptionsPage() {
           {/* Stat cards */}
           <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div className="bg-white rounded-lg p-5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+              <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">
                 Total Rx ({days}d)
               </p>
               <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">
@@ -136,7 +154,7 @@ export default function PrescriptionsPage() {
               </div>
             </div>
             <div className="bg-white rounded-lg p-5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+              <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">
                 Active providers
               </p>
               <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">
@@ -144,7 +162,7 @@ export default function PrescriptionsPage() {
               </p>
             </div>
             <div className="bg-white rounded-lg p-5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+              <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">
                 Concentration risk
               </p>
               <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">
@@ -155,7 +173,7 @@ export default function PrescriptionsPage() {
               </p>
             </div>
             <div className="bg-white rounded-lg p-5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+              <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">
                 New prescribers
               </p>
               <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">

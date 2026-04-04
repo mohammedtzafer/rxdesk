@@ -43,25 +43,25 @@ export default function HomePage() {
           <div className="w-14 h-14 rounded-2xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-xl mx-auto">
             Rx
           </div>
-          <h1 className="mt-6 text-[56px] font-semibold leading-[1.07] tracking-[-0.28px]">
+          <h1 className="mt-6 text-[32px] sm:text-[40px] md:text-[56px] font-semibold leading-[1.07] tracking-[-0.28px]">
             Know your prescribers.
             <br />
             Grow your scripts.
           </h1>
-          <p className="mt-4 text-[21px] font-normal leading-[1.19] tracking-[0.231px] text-white/70 max-w-2xl mx-auto">
+          <p className="mt-4 text-[17px] sm:text-[19px] md:text-[21px] font-normal leading-[1.19] tracking-[0.231px] text-white/70 max-w-2xl mx-auto">
             The prescriber relationship platform built for independent pharmacies. Track providers,
             analyze prescription trends, and manage drug rep visits — all in one place.
           </p>
-          <div className="mt-8 flex gap-3 justify-center">
+          <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/signup"
-              className="px-6 py-3 bg-[#0071e3] text-white rounded-lg text-[17px] hover:bg-[#0077ED] transition-colors"
+              className="w-full sm:w-auto px-6 py-3 bg-[#0071e3] text-white rounded-lg text-[17px] hover:bg-[#0077ED] transition-colors"
             >
               Start free trial
             </Link>
             <Link
               href="/login"
-              className="px-6 py-3 border border-white/20 text-white rounded-lg text-[17px] hover:bg-white/10 transition-colors"
+              className="w-full sm:w-auto px-6 py-3 border border-white/20 text-white rounded-lg text-[17px] hover:bg-white/10 transition-colors"
             >
               Sign in
             </Link>
@@ -75,14 +75,14 @@ export default function HomePage() {
       {/* Features */}
       <section className="bg-[#f5f5f7] py-20">
         <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-center text-[#1d1d1f]">
+          <h2 className="text-[28px] sm:text-[36px] md:text-[40px] font-semibold leading-[1.1] tracking-tight text-center text-[#1d1d1f]">
             Everything your pharmacy needs
           </h2>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f) => (
               <div key={f.title} className="bg-white rounded-xl p-6">
                 <f.icon className="w-8 h-8 text-[#0071e3]" />
-                <h3 className="mt-3 text-[21px] font-bold leading-[1.19] tracking-[0.231px] text-[#1d1d1f]">
+                <h3 className="mt-3 text-[18px] sm:text-[21px] font-bold leading-[1.19] tracking-[0.231px] text-[#1d1d1f]">
                   {f.title}
                 </h3>
                 <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)] leading-[1.47] tracking-[-0.374px]">
@@ -97,10 +97,10 @@ export default function HomePage() {
       {/* Pricing teaser */}
       <section className="bg-black text-white py-20">
         <div className="max-w-3xl mx-auto px-4 text-center">
-          <h2 className="text-[40px] font-semibold leading-[1.1] tracking-tight">
+          <h2 className="text-[28px] sm:text-[36px] md:text-[40px] font-semibold leading-[1.1] tracking-tight">
             Affordable for every pharmacy
           </h2>
-          <p className="mt-4 text-[21px] text-white/70 leading-[1.19]">
+          <p className="mt-4 text-[17px] sm:text-[19px] md:text-[21px] text-white/70 leading-[1.19]">
             Starting at $99/month. 6-18x cheaper than the only alternative.
           </p>
           <Link

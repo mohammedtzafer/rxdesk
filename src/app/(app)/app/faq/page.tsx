@@ -64,11 +64,9 @@ function FAQItem({ q, a }: { q: string; a: string }) {
           className={`w-4 h-4 shrink-0 text-[rgba(0,0,0,0.48)] transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && (
-        <div className="pb-4">
-          <p className="text-[14px] text-[rgba(0,0,0,0.6)] leading-relaxed">{a}</p>
-        </div>
-      )}
+      <div className={`overflow-hidden transition-all duration-200 ${open ? "max-h-96" : "max-h-0"}`}>
+        <p className="pb-4 text-[14px] text-[rgba(0,0,0,0.6)] leading-relaxed">{a}</p>
+      </div>
     </div>
   );
 }

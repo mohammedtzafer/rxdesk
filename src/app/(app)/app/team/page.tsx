@@ -233,12 +233,12 @@ export default function TeamPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">Team</h1>
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">Team</h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">{users.length} member{users.length !== 1 ? "s" : ""}</p>
         </div>
-        <button onClick={() => setShowInvite(true)} className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors">
+        <button onClick={() => setShowInvite(true)} className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors">
           <UserPlus className="w-4 h-4" /> Invite member
         </button>
       </div>
@@ -264,7 +264,16 @@ export default function TeamPage() {
       {/* Team list */}
       <div className="mt-6 bg-white rounded-xl overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-[rgba(0,0,0,0.48)] text-[14px]">Loading...</div>
+          <div className="p-4 space-y-3">
+            {[1,2,3,4,5].map(i => (
+              <div key={i} className="flex items-center gap-3 py-2">
+                <div className="w-32 h-4 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
+                <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="flex-1" />
+                <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
         ) : users.length === 0 ? (
           <div className="p-12 text-center">
             <p className="text-[17px] font-semibold text-[#1d1d1f]">No team members yet</p>
@@ -380,7 +389,7 @@ export default function TeamPage() {
       {/* Edit user modal */}
       {editingUser && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setEditingUser(null)}>
-          <div className="bg-white rounded-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-[21px] font-bold text-[#1d1d1f]">Edit member</h2>
               <button onClick={() => setEditingUser(null)} className="text-[rgba(0,0,0,0.48)]"><X className="w-5 h-5" /></button>
@@ -475,7 +484,7 @@ export default function TeamPage() {
       {/* Invite modal */}
       {showInvite && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
-          <div className="bg-white rounded-xl p-6 w-full max-w-md" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-[21px] font-bold text-[#1d1d1f]">Invite team member</h2>
               <button onClick={() => setShowInvite(false)} className="text-[rgba(0,0,0,0.48)]"><X className="w-5 h-5" /></button>

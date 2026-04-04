@@ -25,8 +25,8 @@ describe("ACCESS_OPTIONS", () => {
 });
 
 describe("MODULE_LABELS", () => {
-  it("has exactly 7 entries matching ALL_MODULES", () => {
-    expect(Object.keys(MODULE_LABELS)).toHaveLength(7);
+  it("has exactly 8 entries matching ALL_MODULES", () => {
+    expect(Object.keys(MODULE_LABELS)).toHaveLength(8);
   });
 
   it("has a label for every module in ALL_MODULES", () => {
@@ -38,8 +38,8 @@ describe("MODULE_LABELS", () => {
 });
 
 describe("ALL_MODULES", () => {
-  it("has exactly 7 entries", () => {
-    expect(ALL_MODULES).toHaveLength(7);
+  it("has exactly 8 entries", () => {
+    expect(ALL_MODULES).toHaveLength(8);
   });
 
   it("contains all expected modules", () => {
@@ -47,6 +47,7 @@ describe("ALL_MODULES", () => {
     expect(ALL_MODULES).toContain("PRESCRIPTIONS");
     expect(ALL_MODULES).toContain("DRUG_REPS");
     expect(ALL_MODULES).toContain("TIME_TRACKING");
+    expect(ALL_MODULES).toContain("SCHEDULING");
     expect(ALL_MODULES).toContain("TEAM");
     expect(ALL_MODULES).toContain("REPORTS");
     expect(ALL_MODULES).toContain("SETTINGS");
@@ -97,7 +98,7 @@ describe("getDefaultPermissions", () => {
   });
 
   describe("OWNER", () => {
-    it("returns FULL access on all 7 modules", () => {
+    it("returns FULL access on all 8 modules", () => {
       const perms = getDefaultPermissions("OWNER");
       for (const perm of perms) {
         expect(perm.access).toBe("FULL");

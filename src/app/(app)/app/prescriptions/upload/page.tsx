@@ -164,7 +164,7 @@ export default function UploadPage() {
         <div className="mt-6">
           <h2 className="text-[17px] font-semibold text-[#1d1d1f]">Upload history</h2>
           <div className="mt-3 bg-white rounded-xl overflow-hidden">
-            <table className="w-full">
+            <div className="overflow-x-auto"><table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-[rgba(0,0,0,0.05)]">
                   <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase">
@@ -222,7 +222,7 @@ export default function UploadPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           </div>
         </div>
       )}

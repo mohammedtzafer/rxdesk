@@ -36,6 +36,7 @@ export default function TimeOffPage() {
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [filter, setFilter] = useState("all");
+  const [confirmDenyId, setConfirmDenyId] = useState<string | null>(null);
 
   const [form, setForm] = useState({
     startDate: "",
@@ -91,9 +92,9 @@ export default function TimeOffPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
             Time off
           </h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
@@ -102,7 +103,7 @@ export default function TimeOffPage() {
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
+          className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
         >
           <Plus className="w-4 h-4" /> Request time off
         </button>
@@ -126,7 +127,16 @@ export default function TimeOffPage() {
       {/* Requests list */}
       <div className="mt-4 bg-white rounded-xl overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-[rgba(0,0,0,0.48)]">Loading...</div>
+          <div className="p-4 space-y-3">
+            {[1,2,3,4,5].map(i => (
+              <div key={i} className="flex items-center gap-3 py-2">
+                <div className="w-32 h-4 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
+                <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="flex-1" />
+                <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+              </div>
+            ))}
+          </div>
         ) : requests.length === 0 ? (
           <div className="p-12 text-center">
             <Calendar className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
@@ -166,21 +176,30 @@ export default function TimeOffPage() {
                   )}
                 </div>
                 {req.status === "PENDING" && (
-                  <div className="flex gap-1 shrink-0">
+                  <div className="flex gap-1 shrink-0 items-center">
                     <button
                       onClick={() => handleReview(req.id, "approve")}
                       aria-label="Approve request"
-                      className="p-1.5 rounded-lg bg-[#22C55E]/10 text-[#22C55E] hover:bg-[#22C55E]/20 transition-colors"
+                      className="p-2 rounded-lg bg-[#22C55E]/10 text-[#22C55E] hover:bg-[#22C55E]/20 transition-colors"
                     >
                       <Check className="w-4 h-4" />
                     </button>
-                    <button
-                      onClick={() => handleReview(req.id, "deny")}
-                      aria-label="Deny request"
-                      className="p-1.5 rounded-lg bg-[#EF4444]/10 text-[#EF4444] hover:bg-[#EF4444]/20 transition-colors"
-                    >
-                      <X className="w-4 h-4" />
-                    </button>
+                    {confirmDenyId === req.id ? (
+                      <button
+                        onClick={() => { handleReview(req.id, "deny"); setConfirmDenyId(null); }}
+                        className="px-2.5 py-1.5 rounded-lg bg-[#EF4444] text-white text-[12px] transition-colors"
+                      >
+                        Confirm
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmDenyId(req.id)}
+                        className="p-2 rounded-lg bg-[#EF4444]/10 text-[#EF4444] hover:bg-[#EF4444]/20 transition-colors"
+                        aria-label="Deny request"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -196,7 +215,7 @@ export default function TimeOffPage() {
           onClick={() => setShowCreate(false)}
         >
           <div
-            className="bg-white rounded-xl p-6 w-full max-w-md"
+            className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-[21px] font-bold text-[#1d1d1f] mb-4">Request time off</h2>
@@ -211,7 +230,7 @@ export default function TimeOffPage() {
                     value={form.startDate}
                     onChange={(e) => setForm({ ...form, startDate: e.target.value })}
                     required
-                    className="w-full h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                    className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                   />
                 </div>
                 <div>
@@ -223,7 +242,7 @@ export default function TimeOffPage() {
                     value={form.endDate}
                     onChange={(e) => setForm({ ...form, endDate: e.target.value })}
                     required
-                    className="w-full h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                    className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                   />
                 </div>
               </div>
@@ -234,7 +253,7 @@ export default function TimeOffPage() {
                 <select
                   value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value })}
-                  className="w-full h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                  className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                 >
                   <option value="VACATION">Vacation</option>
                   <option value="SICK">Sick</option>

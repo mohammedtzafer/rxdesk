@@ -85,9 +85,9 @@ export default function LocationsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
             Locations
           </h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
@@ -96,7 +96,7 @@ export default function LocationsPage() {
         </div>
         <button
           onClick={() => setShowCreate(true)}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
+          className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
         >
           <Plus className="w-4 h-4" /> Add location
         </button>
@@ -154,7 +154,7 @@ export default function LocationsPage() {
           onClick={() => setShowCreate(false)}
         >
           <div
-            className="bg-white rounded-xl p-6 w-full max-w-md"
+            className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
@@ -174,7 +174,7 @@ export default function LocationsPage() {
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                   required
-                  className="h-9"
+                  className="h-11"
                   placeholder="Main Street"
                 />
               </div>
@@ -183,7 +183,7 @@ export default function LocationsPage() {
                 <Input
                   value={form.address}
                   onChange={(e) => setForm({ ...form, address: e.target.value })}
-                  className="h-9"
+                  className="h-11"
                   placeholder="123 Main St"
                 />
               </div>
@@ -193,7 +193,7 @@ export default function LocationsPage() {
                   <Input
                     value={form.city}
                     onChange={(e) => setForm({ ...form, city: e.target.value })}
-                    className="h-9"
+                    className="h-11"
                   />
                 </div>
                 <div>
@@ -201,7 +201,7 @@ export default function LocationsPage() {
                   <Input
                     value={form.state}
                     onChange={(e) => setForm({ ...form, state: e.target.value })}
-                    className="h-9"
+                    className="h-11"
                     maxLength={2}
                   />
                 </div>
@@ -210,7 +210,7 @@ export default function LocationsPage() {
                   <Input
                     value={form.zip}
                     onChange={(e) => setForm({ ...form, zip: e.target.value })}
-                    className="h-9"
+                    className="h-11"
                     maxLength={5}
                   />
                 </div>
@@ -220,7 +220,7 @@ export default function LocationsPage() {
                 <Input
                   value={form.phone}
                   onChange={(e) => setForm({ ...form, phone: e.target.value })}
-                  className="h-9"
+                  className="h-11"
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -229,7 +229,7 @@ export default function LocationsPage() {
                   <Input
                     value={form.npiNumber}
                     onChange={(e) => setForm({ ...form, npiNumber: e.target.value })}
-                    className="h-9"
+                    className="h-11"
                   />
                 </div>
                 <div>
@@ -237,7 +237,7 @@ export default function LocationsPage() {
                   <Input
                     value={form.licenseNumber}
                     onChange={(e) => setForm({ ...form, licenseNumber: e.target.value })}
-                    className="h-9"
+                    className="h-11"
                   />
                 </div>
               </div>

@@ -1,5 +1,64 @@
 # RxDesk release notes
 
+## v0.8.0 — 04/04/2026 — UX overhaul, dashboard schedule view, scheduler permission
+
+### 25 UX improvements (all fixed)
+
+**Critical (2):**
+- Bottom tab touch targets increased to 48x48px minimum (WCAG 2.5.8 compliant)
+- Landing page hero text now responsive (32/40/56px breakpoints), CTAs stack on mobile
+
+**High (7):**
+- Header action buttons now stack on mobile (flex-col sm:flex-row) across 7 pages
+- All tables wrapped in overflow-x-auto with min-width for mobile horizontal scroll
+- All modal dialogs have max-h-[90vh] overflow-y-auto (no more unreachable submit buttons)
+- API error handling with ErrorState component (retry button) on Dashboard, Providers, Prescriptions, Drug Reps
+- Drug rep visit form now includes provider multi-select (fixes correlation feature)
+- Signup flow auto-detects authenticated users and skips to pharmacy setup step
+- Billing plan cards stack vertically on mobile (grid-cols-1 sm:grid-cols-3)
+
+**Medium (13):**
+- More menu has semi-transparent backdrop with click-to-dismiss
+- Sidebar collapse toggle and chevrons enlarged for iPad touch
+- Body scroll locked behind mobile menu overlays
+- NPI search add buttons enlarged to 40px+ height
+- Consistent skeleton loading states across all list pages (replaced "Loading..." text)
+- Stat card labels changed from 12px uppercase to 13px sentence case
+- Schedule management cards use 5-column grid (no orphan card)
+- PTO deny requires two-tap confirmation to prevent accidental denial
+- All modal form inputs standardized to h-11 (44px, iOS minimum)
+- Landing page CTAs full-width on mobile
+- Password strength indicator with 4-segment bar on signup
+- Team dropdown positioned to avoid offscreen rendering
+- Form inputs properly sized for iOS keyboard
+
+**Low (3):**
+- Provider detail skeleton matches responsive grid layout
+- FAQ accordion has smooth max-height transition animation
+- More menu highlights the currently active page
+
+### Dashboard overhaul
+- **Weekly Overview** embedded directly in dashboard — see staff coverage at a glance
+- **Daily Timeline** below overview — visual schedule bars for the selected day
+- **Week navigation** — prev/next buttons to browse schedules
+- **Location filter** — multi-select dropdown at top of dashboard
+  - OWNER: sees all locations + "All locations" aggregate
+  - PHARMACIST: sees assigned locations
+  - Filter applies to all dashboard data (Rx analytics, schedules, alerts)
+
+### Scheduler permission
+- New SCHEDULING module added to permission system (8 modules total, was 7)
+- OWNER: FULL scheduling access by default
+- PHARMACIST: NONE by default (must be granted by OWNER)
+- TECHNICIAN: NONE
+- Owners can grant scheduling EDIT or FULL access to specific pharmacists per location
+- Controls access to: Planner, Schedule publish/finalize, Copy previous week
+
+### Testing
+- 416 tests passing (updated permission tests for 8 modules)
+
+---
+
 ## v0.7.0 — 04/04/2026 — Multi-location users, payroll export, branding, FAQ
 
 ### Multi-location team members

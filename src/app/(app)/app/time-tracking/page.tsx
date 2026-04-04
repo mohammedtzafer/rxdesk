@@ -114,9 +114,9 @@ export default function TimeTrackingPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
             Time tracking
           </h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
@@ -126,13 +126,13 @@ export default function TimeTrackingPage() {
         <div className="flex gap-2">
           <Link
             href="/app/time-tracking/time-off"
-            className="inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors"
           >
             <Calendar className="w-4 h-4" /> Time off
           </Link>
           <button
             onClick={() => setShowAddEntry(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors"
           >
             <Plus className="w-4 h-4" /> Add entry
           </button>
@@ -173,7 +173,7 @@ export default function TimeTrackingPage() {
               </p>
             </div>
           ) : (
-            <table className="w-full">
+            <div className="overflow-x-auto"><table className="w-full min-w-[600px]">
               <thead>
                 <tr className="border-b border-[rgba(0,0,0,0.05)]">
                   <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase">
@@ -231,7 +231,7 @@ export default function TimeTrackingPage() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table></div>
           )}
         </div>
       </div>
@@ -240,7 +240,7 @@ export default function TimeTrackingPage() {
       <div className="mt-8">
         <h2 className="text-[17px] font-semibold text-[#1d1d1f]">Schedule management</h2>
         <p className="mt-0.5 text-[14px] text-[rgba(0,0,0,0.48)]">Build schedules, manage your team, and track time off</p>
-        <div className="mt-3 grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {[
             {
               href: "/app/time-tracking/schedule",
@@ -295,7 +295,7 @@ export default function TimeTrackingPage() {
           onClick={() => setShowAddEntry(false)}
         >
           <div
-            className="bg-white rounded-xl p-6 w-full max-w-md"
+            className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <h2 className="text-[21px] font-bold text-[#1d1d1f] mb-4">Add time entry</h2>
@@ -309,7 +309,7 @@ export default function TimeTrackingPage() {
                   value={entryForm.date}
                   onChange={(e) => setEntryForm({ ...entryForm, date: e.target.value })}
                   required
-                  className="w-full h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                  className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -322,7 +322,7 @@ export default function TimeTrackingPage() {
                     value={entryForm.startTime}
                     onChange={(e) => setEntryForm({ ...entryForm, startTime: e.target.value })}
                     required
-                    className="w-full h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                    className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                   />
                 </div>
                 <div>
@@ -334,7 +334,7 @@ export default function TimeTrackingPage() {
                     value={entryForm.endTime}
                     onChange={(e) => setEntryForm({ ...entryForm, endTime: e.target.value })}
                     required
-                    className="w-full h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                    className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                   />
                 </div>
               </div>
@@ -347,7 +347,7 @@ export default function TimeTrackingPage() {
                   value={entryForm.breakMinutes}
                   onChange={(e) => setEntryForm({ ...entryForm, breakMinutes: e.target.value })}
                   min="0"
-                  className="w-full h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                  className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                 />
               </div>
               <div>
