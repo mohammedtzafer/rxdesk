@@ -114,6 +114,16 @@ model Organization {
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
 
+  // Time tracking settings
+  payPeriodType             PayPeriodType @default(WEEKLY)
+  payPeriodStartDay         Int           @default(1)
+  dailyOvertimeThreshold    Float         @default(8)
+  weeklyOvertimeThreshold   Float         @default(40)
+  roundingRule              RoundingRule  @default(NONE)
+  defaultBreakMinutes       Int           @default(30)
+  defaultBreakType          BreakType     @default(UNPAID)
+  autoDeductBreakThreshold  Float         @default(6)
+
   users       User[]
   locations   Location[]
   permissions Permission[]
@@ -125,6 +135,19 @@ model Organization {
   prescriptionRecords   PrescriptionRecord[]
   drugReps              DrugRep[]
   drugRepVisits         DrugRepVisit[]
+
+  departments           Department[]
+  timeEntries           TimeEntry[]
+  timesheets            Timesheet[]
+  shiftAssignments      ShiftAssignment[]
+  availabilityPrefs     AvailabilityPreference[]
+  availabilityOverrides AvailabilityOverride[]
+  ptoRequests           PtoRequest[]
+  shiftSwapRequests     ShiftSwapRequest[]
+  scheduleTemplates     ScheduleTemplate[]
+  coverageRequirements  CoverageRequirement[]
+  payRates              PayRate[]
+  notifications         Notification[]
 }
 
 model User {
@@ -150,6 +173,10 @@ model User {
   permissions  Permission[]
   auditLogs    AuditLog[]
   invitesSent  Invite[]      @relation("InvitedBy")
+
+  timeEntries   TimeEntry[]
+  timesheets    Timesheet[]
+  notifications Notification[]
 
   @@index([organizationId])
   @@index([locationId])
@@ -360,4 +387,350 @@ model DrugRepVisitProvider {
   provider Provider     @relation(fields: [providerId], references: [id])
 
   @@id([drugRepVisitId, providerId])
+}
+
+// ─── Time Tracking Enums ────────────────────────────────────────
+
+enum TimesheetStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum PayPeriodType {
+  WEEKLY
+  BIWEEKLY
+  SEMIMONTHLY
+  MONTHLY
+}
+
+enum RoundingRule {
+  NONE
+  NEAREST_5
+  NEAREST_15
+  NEAREST_30
+}
+
+enum BreakType {
+  PAID
+  UNPAID
+  AUTO_DEDUCT
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+enum PtoType {
+  VACATION
+  SICK
+  PERSONAL
+  OTHER
+}
+
+enum PtoStatus {
+  PENDING
+  APPROVED
+  DENIED
+}
+
+enum ShiftSwapStatus {
+  PENDING
+  APPROVED
+  DENIED
+  CANCELLED
+}
+
+enum AvailabilityState {
+  ALL_DAY
+  HOURS
+  UNAVAILABLE
+}
+
+enum NotificationType {
+  SCHEDULE_PUBLISHED
+  SCHEDULE_UPDATED
+  PTO_SUBMITTED
+  PTO_APPROVED
+  PTO_DENIED
+  SHIFT_SWAP_REQUESTED
+  SHIFT_SWAP_APPROVED
+  SHIFT_SWAP_DENIED
+  TIMESHEET_APPROVED
+  TIMESHEET_REJECTED
+  SHIFT_REMINDER
+}
+
+// ─── Time Tracking Models ───────────────────────────────────────
+
+model Department {
+  id             String   @id @default(cuid())
+  name           String
+  organizationId String
+  color          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+}
+
+model TimeEntry {
+  id              String    @id @default(cuid())
+  userId          String
+  organizationId  String
+  locationId      String?
+  timesheetId     String?
+  date            DateTime  @db.Date
+  startTime       DateTime
+  endTime         DateTime?
+  durationMinutes Int?
+  regularHours    Float     @default(0)
+  overtimeHours   Float     @default(0)
+  breakMinutes    Int       @default(0)
+  breakType       BreakType @default(UNPAID)
+  payRateId       String?
+  note            String?
+  isClockIn       Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+  timesheet    Timesheet?   @relation(fields: [timesheetId], references: [id])
+  payRate      PayRate?     @relation(fields: [payRateId], references: [id])
+
+  @@index([userId, date])
+  @@index([organizationId])
+  @@index([timesheetId])
+}
+
+model Timesheet {
+  id                 String          @id @default(cuid())
+  userId             String
+  organizationId     String
+  payPeriodStart     DateTime        @db.Date
+  payPeriodEnd       DateTime        @db.Date
+  status             TimesheetStatus @default(DRAFT)
+  totalRegularHours  Float           @default(0)
+  totalOvertimeHours Float           @default(0)
+  totalHours         Float           @default(0)
+  submittedAt        DateTime?
+  reviewedAt         DateTime?
+  reviewedById       String?
+  rejectionNote      String?
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  user         User                 @relation(fields: [userId], references: [id])
+  organization Organization         @relation(fields: [organizationId], references: [id])
+  entries      TimeEntry[]
+  amendments   TimesheetAmendment[]
+
+  @@unique([userId, payPeriodStart, payPeriodEnd])
+  @@index([organizationId, status])
+  @@index([userId])
+}
+
+model ShiftAssignment {
+  id             String    @id @default(cuid())
+  employeeId     String
+  organizationId String
+  locationId     String?
+  date           DateTime  @db.Date
+  startTime      String
+  endTime        String
+  roleLabel      String?
+  hours          Float
+  isPublished    Boolean   @default(false)
+  reminderSentAt DateTime?
+  payRateId      String?
+  createdById    String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  payRate      PayRate?     @relation(fields: [payRateId], references: [id])
+
+  @@index([organizationId, date])
+  @@index([employeeId, date])
+  @@index([organizationId, isPublished])
+  @@index([payRateId])
+}
+
+model AvailabilityPreference {
+  id             String            @id @default(cuid())
+  employeeId     String
+  organizationId String
+  dayOfWeek      DayOfWeek
+  state          AvailabilityState
+  startTime      String?
+  endTime        String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([employeeId, dayOfWeek])
+  @@index([organizationId])
+}
+
+model AvailabilityOverride {
+  id             String   @id @default(cuid())
+  employeeId     String
+  organizationId String
+  date           DateTime @db.Date
+  unavailable    Boolean  @default(true)
+  reason         String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([employeeId, date])
+  @@index([organizationId])
+}
+
+model PtoRequest {
+  id             String    @id @default(cuid())
+  employeeId     String
+  organizationId String
+  startDate      DateTime  @db.Date
+  endDate        DateTime  @db.Date
+  type           PtoType
+  note           String?
+  status         PtoStatus @default(PENDING)
+  responseNote   String?
+  reviewedById   String?
+  submittedAt    DateTime  @default(now())
+  reviewedAt     DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, status])
+  @@index([employeeId])
+}
+
+model ShiftSwapRequest {
+  id               String          @id @default(cuid())
+  organizationId   String
+  requesterId      String
+  requestedId      String
+  requesterShiftId String
+  requestedShiftId String?
+  status           ShiftSwapStatus @default(PENDING)
+  note             String?
+  responseNote     String?
+  reviewedById     String?
+  requestedAt      DateTime        @default(now())
+  reviewedAt       DateTime?
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, status])
+  @@index([requesterId])
+  @@index([requestedId])
+}
+
+model ScheduleTemplate {
+  id             String   @id @default(cuid())
+  name           String
+  organizationId String
+  shiftPattern   Json
+  createdById    String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+}
+
+model CoverageRequirement {
+  id             String    @id @default(cuid())
+  organizationId String
+  departmentId   String?
+  dayOfWeek      DayOfWeek
+  startTime      String
+  endTime        String
+  minEmployees   Int       @default(1)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@index([organizationId, dayOfWeek])
+}
+
+model PayRate {
+  id             String    @id @default(cuid())
+  userId         String
+  organizationId String
+  name           String
+  ratePerHour    Decimal   @db.Decimal(10, 2)
+  effectiveFrom  DateTime  @db.Date
+  effectiveTo    DateTime? @db.Date
+  isDefault      Boolean   @default(false)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  organization     Organization      @relation(fields: [organizationId], references: [id])
+  timeEntries      TimeEntry[]
+  shiftAssignments ShiftAssignment[]
+
+  @@index([userId, organizationId])
+  @@index([organizationId])
+}
+
+model TimesheetAmendment {
+  id          String   @id @default(cuid())
+  timesheetId String
+  timeEntryId String?
+  fieldName   String
+  oldValue    String
+  newValue    String
+  changedById String
+  changedAt   DateTime @default(now())
+  reason      String?
+
+  timesheet Timesheet @relation(fields: [timesheetId], references: [id])
+
+  @@index([timesheetId, changedAt])
+  @@index([timeEntryId])
+}
+
+// ─── Notification Model ─────────────────────────────────────────
+
+model Notification {
+  id             String           @id @default(cuid())
+  organizationId String
+  userId         String
+  type           NotificationType
+  title          String
+  message        String
+  entityType     String?
+  entityId       String?
+  read           Boolean          @default(false)
+  emailSent      Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
+
+  @@index([userId, read])
+  @@index([organizationId, createdAt])
 }

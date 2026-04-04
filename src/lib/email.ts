@@ -107,3 +107,39 @@ export async function sendInviteEmail(params: {
     console.error("Failed to send invite email:", error);
   }
 }
+
+export async function sendNotificationEmail(params: {
+  to: string;
+  subject: string;
+  message: string;
+}): Promise<void> {
+  try {
+    const resend = getResend();
+    await resend.emails.send({
+      from: fromEmail,
+      to: params.to,
+      subject: params.subject,
+      html: `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="padding: 24px 0; border-bottom: 1px solid rgba(0,0,0,0.08);">
+            <span style="background: #0071e3; color: #fff; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 14px;">Rx</span>
+            <span style="margin-left: 8px; font-weight: 600; color: #1d1d1f;">RxDesk</span>
+          </div>
+          <div style="padding: 24px 0;">
+            <h2 style="color: #1d1d1f; margin: 0 0 12px 0;">${params.subject}</h2>
+            <p style="color: rgba(0,0,0,0.8); font-size: 17px; line-height: 1.47; margin: 0;">
+              ${params.message}
+            </p>
+          </div>
+          <div style="padding: 16px 0; border-top: 1px solid rgba(0,0,0,0.08);">
+            <p style="color: rgba(0,0,0,0.48); font-size: 12px; margin: 0;">
+              You received this because you have notifications enabled on RxDesk.
+            </p>
+          </div>
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error("Failed to send notification email:", error);
+  }
+}

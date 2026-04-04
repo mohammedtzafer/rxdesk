@@ -1,5 +1,53 @@
 # RxDesk release notes
 
+## v0.3.0 — 04/04/2026 — Time tracking + notification system
+
+### Time tracking (ported from Timecraft)
+- Clock in/out toggle (POST /api/time-entries/clock)
+- Manual time entry creation with date, start/end time, breaks, notes
+- Time entry listing with date range filtering
+- Overtime calculation: daily + weekly thresholds with proper deduplication
+- Time rounding: NONE, NEAREST_5, NEAREST_15, NEAREST_30
+- Organization-level settings: pay period type, OT thresholds, rounding rules, break defaults
+
+### PTO management
+- Submit time off requests (vacation, sick, personal, other)
+- Manager approve/deny with optional response notes
+- Role-based visibility (technicians see only their own requests)
+
+### Scheduling infrastructure (schema ready, APIs in next phase)
+- Shift assignments with location, role labels, publish status
+- Availability preferences by day of week
+- Availability overrides for specific dates
+- Shift swap requests with approval workflow
+- Schedule templates with JSON shift patterns
+- Coverage requirements by day/time/department
+
+### Notification system
+- In-app notifications stored in database
+- Email notifications via Resend with branded template
+- Notification API: list (with unread filter), mark read, mark all read
+- Automated notifications for:
+  - Schedule published / updated → employees
+  - PTO submitted → managers/owners
+  - PTO approved / denied → employee
+  - Shift swap requested → target employee
+  - Shift swap approved / denied → requester
+  - Timesheet approved / rejected → employee
+  - Shift reminders
+
+### Prisma schema
+- 13 new models (Department, TimeEntry, Timesheet, ShiftAssignment, AvailabilityPreference, AvailabilityOverride, PtoRequest, ShiftSwapRequest, ScheduleTemplate, CoverageRequirement, PayRate, TimesheetAmendment, Notification)
+- 11 new enums
+- 8 time tracking settings on Organization
+
+### Testing
+- 266 tests passing (51 new: overtime 21, time-rounding 30)
+- Overtime tests cover daily OT, weekly OT, combined, entry-level OT, day breakdowns
+- Rounding tests cover all 4 rules with boundary values
+
+---
+
 ## v0.2.0 — 04/04/2026 — Auth enhancements + data protection
 
 ### Email verification
