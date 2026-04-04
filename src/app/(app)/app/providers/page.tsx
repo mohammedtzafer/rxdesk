@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, Users } from "lucide-react";
+import { Search, Plus, Users, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { ErrorState } from "@/components/error-state";
 
 interface Provider {
@@ -20,6 +20,20 @@ interface Provider {
   _count: { prescriptionRecords: number };
 }
 
+type TrendValue = "UP" | "DOWN" | "STABLE";
+
+interface TrendProvider {
+  providerId: string;
+  npi: string;
+  trend: TrendValue;
+}
+
+function TrendIndicator({ trend }: { trend: TrendValue }) {
+  if (trend === "UP") return <TrendingUp className="w-4 h-4 text-[#22C55E]" aria-label="Growing" />;
+  if (trend === "DOWN") return <TrendingDown className="w-4 h-4 text-[#EF4444]" aria-label="Declining" />;
+  return <Minus className="w-4 h-4 text-[#9CA3AF]" aria-label="Stable" />;
+}
+
 export default function ProvidersPage() {
   const [providers, setProviders] = useState<Provider[]>([]);
   const [total, setTotal] = useState(0);
@@ -27,6 +41,21 @@ export default function ProvidersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [page, setPage] = useState(1);
+  const [trendMap, setTrendMap] = useState<Map<string, TrendValue>>(new Map());
+
+  // Fetch trend data once on mount
+  useEffect(() => {
+    fetch("/api/providers/analysis?days=90")
+      .then((r) => r.json())
+      .then((data: { providers?: TrendProvider[] }) => {
+        const map = new Map<string, TrendValue>();
+        (data.providers ?? []).forEach((p) => {
+          map.set(p.npi, p.trend);
+        });
+        setTrendMap(map);
+      })
+      .catch(() => {});
+  }, []);
 
   const fetchProviders = async (searchVal = search, pageVal = page) => {
     setLoading(true);
@@ -66,7 +95,13 @@ export default function ProvidersPage() {
             {total} provider{total !== 1 ? "s" : ""} in your directory
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/app/providers/analysis"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#22C55E] text-white rounded-lg text-[14px] hover:bg-[#16A34A] transition-colors w-full sm:w-auto"
+          >
+            <TrendingUp className="w-4 h-4" /> Analyze Trends
+          </Link>
           <Link
             href="/app/providers/search"
             className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
@@ -137,6 +172,9 @@ export default function ProvidersPage() {
                 <th className="text-left px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden lg:table-cell">
                   Location
                 </th>
+                <th className="text-center px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden sm:table-cell">
+                  Trend
+                </th>
                 <th className="text-right px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
                   Rx count
                 </th>
@@ -179,6 +217,15 @@ export default function ProvidersPage() {
                     {p.practiceCity && p.practiceState
                       ? `${p.practiceCity}, ${p.practiceState}`
                       : "—"}
+                  </td>
+                  <td className="px-4 py-3 text-center hidden sm:table-cell">
+                    {trendMap.has(p.npi) ? (
+                      <span className="inline-flex justify-center">
+                        <TrendIndicator trend={trendMap.get(p.npi)!} />
+                      </span>
+                    ) : (
+                      <span className="text-[rgba(0,0,0,0.20)]">—</span>
+                    )}
                   </td>
                   <td className="px-4 py-3 text-right text-[14px] font-medium text-[#1d1d1f]">
                     {p._count.prescriptionRecords}

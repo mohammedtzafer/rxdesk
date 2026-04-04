@@ -45,7 +45,7 @@ export default function CorrelationsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
-            Rep visit correlations
+            Rep Visit Correlations
           </h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
             Rx volume changes within 4 weeks of drug rep visits

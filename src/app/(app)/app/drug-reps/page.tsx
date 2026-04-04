@@ -122,7 +122,7 @@ export default function DrugRepsPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">Drug reps</h1>
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">Drug Reps</h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">Track pharmaceutical rep visits and activity</p>
         </div>
         <div className="flex gap-2">

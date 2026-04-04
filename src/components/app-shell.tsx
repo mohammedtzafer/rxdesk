@@ -62,6 +62,7 @@ const navItems: NavItem[] = [
     children: [
       { label: "Directory", href: "/app/providers", icon: Users },
       { label: "Search NPI", href: "/app/providers/search", icon: Search },
+      { label: "Analyze Trends", href: "/app/providers/analysis", icon: TrendingUp },
     ],
   },
   {
@@ -102,7 +103,7 @@ const navItems: NavItem[] = [
       { label: "Planned vs Actual", href: "/app/time-tracking/comparison", icon: BarChart3 },
     ],
   },
-  { label: "Reports", href: "/app/reports", icon: BarChart3, module: "REPORTS" },
+  { label: "Reports & Analytics", href: "/app/reports", icon: BarChart3, module: "REPORTS" },
   { label: "Team", href: "/app/team", icon: UserCog, module: "TEAM" },
   { label: "Locations", href: "/app/locations", icon: MapPin, module: "SETTINGS" },
   {

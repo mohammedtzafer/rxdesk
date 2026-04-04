@@ -95,7 +95,7 @@ export default function TimeOffPage() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
-            Time off
+            Time Off
           </h1>
           <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
             Request and manage time off

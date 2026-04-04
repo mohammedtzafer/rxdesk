@@ -381,7 +381,7 @@ export default function ReportsPage() {
       >
         <div className="sticky top-0 bg-white border-b border-black/5 px-4 py-3">
           <h1 className="text-[22px] font-semibold tracking-tight text-[#1d1d1f]">
-            Reports
+            Reports & Analytics
           </h1>
         </div>
 
