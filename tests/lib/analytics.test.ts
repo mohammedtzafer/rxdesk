@@ -87,6 +87,18 @@ describe("calculateTrend", () => {
     expect(result.direction).toBe("DOWN");
     expect(result.percentChange).toBe(-75);
   });
+
+  it("returns DOWN with -100% when current drops to zero", () => {
+    const result = calculateTrend(0, 100);
+    expect(result.direction).toBe("DOWN");
+    expect(result.percentChange).toBe(-100);
+  });
+
+  it("returns STABLE when change is exactly -5% (threshold is strict <)", () => {
+    const result = calculateTrend(95, 100);
+    expect(result.direction).toBe("STABLE");
+    expect(result.percentChange).toBe(-5);
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -431,5 +443,19 @@ describe("calculateProviderAnalytics", () => {
     const records = [makeRecord(), makeRecord(), makeRecord()];
     const result = calculateProviderAnalytics(records, [], 7);
     expect(result.rxPerWeek).toBe(3);
+  });
+
+  it("handles very large datasets (100+ records) without error", () => {
+    const current = Array.from({ length: 120 }, (_, i) =>
+      makeRecord({ drugName: `Drug${i % 10}`, payerType: i % 2 === 0 ? "COMMERCIAL" : "MEDICARE" })
+    );
+    const prior = Array.from({ length: 80 }, (_, i) =>
+      makeRecord({ drugName: `Drug${i % 10}` })
+    );
+    const result = calculateProviderAnalytics(current, prior, 28);
+    expect(result.rxVolume).toBe(120);
+    expect(result.priorRxVolume).toBe(80);
+    expect(result.topDrugs).toHaveLength(10);
+    expect(result.payerMix).toHaveLength(2);
   });
 });

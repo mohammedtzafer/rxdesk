@@ -149,6 +149,17 @@ describe("calculateCorrelations — volume calculation", () => {
     expect(result[0].postVisitVolume).toBe(0);
   });
 
+  it("Rx 1ms before visit date falls in pre-visit window", () => {
+    const visit = makeVisit({ visitDate, providerIds: [providerId] });
+    const almostOnDayRx = makeRx({
+      providerId,
+      fillDate: new Date(visitDate.getTime() - 1),
+    });
+    const result = calculateCorrelations([visit], [almostOnDayRx]);
+    expect(result[0].preVisitVolume).toBe(1);
+    expect(result[0].postVisitVolume).toBe(0);
+  });
+
   it("calculates volumeChange as post minus pre", () => {
     const visit = makeVisit({ visitDate, providerIds: [providerId] });
     const rxRecords = [
@@ -369,6 +380,23 @@ describe("calculateCorrelations — brand shift", () => {
     expect(result[0].brandShift!.shift).toBe(-100);
   });
 
+  it("shows 0% brand on both sides when all records are generic", () => {
+    const visit = makeVisit({ visitDate, providerIds: [providerId] });
+    const rxRecords = [
+      genericRx(daysFrom(visitDate, -5)),
+      genericRx(daysFrom(visitDate, -10)),
+      genericRx(daysFrom(visitDate, -15)),
+      genericRx(daysFrom(visitDate, 5)),
+      genericRx(daysFrom(visitDate, 10)),
+      genericRx(daysFrom(visitDate, 15)),
+    ];
+    const result = calculateCorrelations([visit], rxRecords);
+    expect(result[0].brandShift).not.toBeNull();
+    expect(result[0].brandShift!.preBrandPercent).toBe(0);
+    expect(result[0].brandShift!.postBrandPercent).toBe(0);
+    expect(result[0].brandShift!.shift).toBe(0);
+  });
+
   it("shift is postBrandPercent minus preBrandPercent", () => {
     const visit = makeVisit({ visitDate, providerIds: [providerId] });
     // pre: 1 of 3 brand = 33.3%
@@ -423,6 +451,14 @@ describe("calculateCorrelations — edge cases", () => {
     expect(corr2.visitId).toBe("v2");
     expect(corr1.visitDate).toEqual(visitDate1);
     expect(corr2.visitDate).toEqual(visitDate2);
+  });
+
+  it("visit with empty drugsPromoted results in no newDrugsAfterVisit", () => {
+    const visitDate = new Date("2024-06-15");
+    const visit = makeVisit({ visitDate, providerIds: ["p-empty"], drugsPromoted: [] });
+    const postRx = makeRx({ providerId: "p-empty", fillDate: daysFrom(visitDate, 5), drugName: "SomeDrug" });
+    const result = calculateCorrelations([visit], [postRx]);
+    expect(result[0].newDrugsAfterVisit).toHaveLength(0);
   });
 
   it("handles multiple visits with different providers, each correlation is isolated", () => {

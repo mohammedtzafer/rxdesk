@@ -247,6 +247,88 @@ describe("parseCsvContent — quoted values", () => {
 });
 
 // ---------------------------------------------------------------------------
+// Extra columns and whitespace handling
+// ---------------------------------------------------------------------------
+
+describe("parseCsvContent — extra columns and whitespace", () => {
+  it("ignores extra columns beyond the required fields", () => {
+    const csv = buildCsv(
+      "npi,drug_name,fill_date,payer_type,is_generic,extra_col,another_col",
+      "1234567890,Lisinopril,2024-01-15,commercial,true,ignored,also_ignored"
+    );
+    const result = parseCsvContent(csv);
+    expect(result.errors).toHaveLength(0);
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0].providerNpi).toBe("1234567890");
+    expect(result.rows[0].drugName).toBe("Lisinopril");
+  });
+
+  it("trims whitespace from NPI values", () => {
+    const csv = buildCsv(
+      VALID_HEADERS,
+      "  1234567890  ,Lisinopril,2024-01-15,commercial,true"
+    );
+    const result = parseCsvContent(csv);
+    expect(result.errors).toHaveLength(0);
+    expect(result.rows[0].providerNpi).toBe("1234567890");
+  });
+
+  it("trims whitespace from drug name values", () => {
+    const csv = buildCsv(
+      VALID_HEADERS,
+      "1234567890,  Lisinopril  ,2024-01-15,commercial,true"
+    );
+    const result = parseCsvContent(csv);
+    expect(result.rows[0].drugName).toBe("Lisinopril");
+  });
+
+  it("rejects NPI longer than 10 digits", () => {
+    const csv = buildCsv(
+      VALID_HEADERS,
+      "12345678901,Lisinopril,2024-01-15,commercial,true"
+    );
+    const result = parseCsvContent(csv);
+    expect(result.rows).toHaveLength(0);
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].message).toContain("Invalid NPI");
+  });
+
+  it("rejects NPI with non-digit characters", () => {
+    const csv = buildCsv(
+      VALID_HEADERS,
+      "123456789A,Lisinopril,2024-01-15,commercial,true"
+    );
+    const result = parseCsvContent(csv);
+    expect(result.rows).toHaveLength(0);
+    expect(result.errors).toHaveLength(1);
+  });
+
+  it("rejects rows where NPI is exactly 9 characters (too short)", () => {
+    const csv = buildCsv(
+      VALID_HEADERS,
+      "123456789,Lisinopril,2024-01-15,commercial,true"
+    );
+    const result = parseCsvContent(csv);
+    expect(result.rows).toHaveLength(0);
+    expect(result.errors[0].message).toMatch(/invalid npi/i);
+  });
+
+  it("handles mixed valid and invalid rows, collecting all errors and valid rows", () => {
+    const csv = buildCsv(
+      VALID_HEADERS,
+      "1234567890,Lisinopril,2024-01-15,commercial,true", // valid
+      "123,BadNpi,2024-01-15,commercial,true",             // invalid NPI
+      "1234567890,,2024-02-01,medicare,false",             // missing drug name
+      "1234567890,Metformin,not-a-date,cash,false",        // invalid date
+      "9876543210,Atorvastatin,2024-03-10,commercial,true" // valid
+    );
+    const result = parseCsvContent(csv);
+    expect(result.rows).toHaveLength(2);
+    expect(result.errors).toHaveLength(3);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // Flexible header names
 // ---------------------------------------------------------------------------
 describe("parseCsvContent — flexible header names", () => {

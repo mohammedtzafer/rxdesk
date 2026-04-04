@@ -132,7 +132,7 @@ export function parseCsvContent(content: string): ParseResult {
     const cols = lines[i].split(",").map((c) => c.trim().replace(/^["']|["']$/g, ""));
 
     const npi = cols[npiCol]?.trim();
-    if (!npi || npi.length < 10) {
+    if (!npi || npi.length !== 10 || !/^\d{10}$/.test(npi)) {
       errors.push({ row: i + 1, message: `Invalid NPI: "${npi}"` });
       continue;
     }

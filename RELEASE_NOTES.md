@@ -1,5 +1,28 @@
 # RxDesk release notes
 
+## v0.4.1 — 04/04/2026 — Full test audit + NPI validation fix
+
+### Test suite expansion
+- 329 tests across 10 files (was 266 across 9)
+- New: nppes.test.ts (37 tests) — NPPES API proxy with fetch mocking, query param construction, result parsing
+- Expanded: analytics (+13), csv-parser (+7), correlations (+3), permissions (+5), tokens (+2), overtime (+4), time-rounding (+3)
+
+### Bug fix
+- NPI validation in CSV parser now enforces exactly 10 digits (was only checking minimum length, allowing 11+ char NPIs and non-numeric strings)
+
+### Edge cases added
+- Trend calculation: current=0 with prior>0 correctly returns DOWN at -100%
+- CSV parser: extra columns silently ignored, whitespace trimmed, strict 10-digit NPI
+- Correlations: empty drugsPromoted, all-generic brand shift, boundary precision
+- Overtime: zero-duration entries, 100-entry large dataset, single-day aggregation
+- Time rounding: midnight boundary crossover for all increment sizes
+- NPPES: missing fields graceful defaults, zip truncation, LOCATION vs MAILING address priority
+
+### TypeScript
+- Zero compile errors under strict mode
+
+---
+
 ## v0.4.0 — 04/04/2026 — Full UI build + team management
 
 ### Time tracking UI

@@ -185,4 +185,30 @@ describe("roundTime", () => {
     const result = roundTime(input, "NEAREST_15");
     expect(result).toBeInstanceOf(Date);
   });
+
+  it("NEAREST_15: rounds up across midnight boundary (23:53 → 00:00 next day)", () => {
+    // 23:53 UTC — 7 minutes past 23:45, rounds up to 00:00 next day
+    const input = new Date("2026-04-01T23:53:00.000Z");
+    const result = roundTime(input, "NEAREST_15");
+    expect(result.getUTCDate()).toBe(2);
+    expect(result.getUTCHours()).toBe(0);
+    expect(result.getUTCMinutes()).toBe(0);
+  });
+
+  it("NEAREST_30: rounds 23:45 up to 00:00 next day", () => {
+    // 23:45 rounds to 24:00 = midnight next day
+    const input = new Date("2026-04-01T23:45:00.000Z");
+    const result = roundTime(input, "NEAREST_30");
+    expect(result.getUTCDate()).toBe(2);
+    expect(result.getUTCHours()).toBe(0);
+    expect(result.getUTCMinutes()).toBe(0);
+  });
+
+  it("NEAREST_5: 23:58 UTC rounds up to 00:00 next day", () => {
+    const input = new Date("2026-04-01T23:58:00.000Z");
+    const result = roundTime(input, "NEAREST_5");
+    expect(result.getUTCDate()).toBe(2);
+    expect(result.getUTCHours()).toBe(0);
+    expect(result.getUTCMinutes()).toBe(0);
+  });
 });

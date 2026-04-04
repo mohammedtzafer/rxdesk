@@ -124,6 +124,31 @@ describe("createVerificationToken", () => {
 
     expect(token1).not.toBe(token2);
   });
+
+  it("works with a very long identifier", async () => {
+    const longIdentifier = "a".repeat(500) + "@example.com";
+    await createVerificationToken(longIdentifier);
+
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({
+          identifier: longIdentifier,
+        }),
+      })
+    );
+  });
+
+  it("deletes existing tokens scoped to the given identifier, not others", async () => {
+    await createVerificationToken("user-a@example.com");
+
+    expect(mockDeleteMany).toHaveBeenCalledWith({
+      where: { identifier: "user-a@example.com" },
+    });
+    // Must not delete with a different identifier
+    expect(mockDeleteMany).not.toHaveBeenCalledWith({
+      where: { identifier: "user-b@example.com" },
+    });
+  });
 });
 
 describe("validateVerificationToken", () => {

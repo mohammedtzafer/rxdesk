@@ -2,11 +2,40 @@ import { describe, it, expect } from "vitest";
 import {
   ALL_MODULES,
   ACCESS_LEVEL,
+  ACCESS_OPTIONS,
+  MODULE_LABELS,
   getDefaultPermissions,
   getDefaultAccess,
   isRoleEditable,
   meetsAccessLevel,
 } from "@/lib/permissions";
+
+describe("ACCESS_OPTIONS", () => {
+  it("has exactly 4 entries (NONE, VIEW, EDIT, FULL)", () => {
+    expect(ACCESS_OPTIONS).toHaveLength(4);
+  });
+
+  it("contains entries for every access level", () => {
+    const values = ACCESS_OPTIONS.map((o) => o.value);
+    expect(values).toContain("NONE");
+    expect(values).toContain("VIEW");
+    expect(values).toContain("EDIT");
+    expect(values).toContain("FULL");
+  });
+});
+
+describe("MODULE_LABELS", () => {
+  it("has exactly 7 entries matching ALL_MODULES", () => {
+    expect(Object.keys(MODULE_LABELS)).toHaveLength(7);
+  });
+
+  it("has a label for every module in ALL_MODULES", () => {
+    for (const mod of ALL_MODULES) {
+      expect(MODULE_LABELS).toHaveProperty(mod);
+      expect(MODULE_LABELS[mod].length).toBeGreaterThan(0);
+    }
+  });
+});
 
 describe("ALL_MODULES", () => {
   it("has exactly 7 entries", () => {
@@ -55,6 +84,15 @@ describe("getDefaultPermissions", () => {
     const modules = perms.map((p) => p.module);
     for (const mod of ALL_MODULES) {
       expect(modules).toContain(mod);
+    }
+  });
+
+  it("returns no duplicate modules for any role", () => {
+    for (const role of ["OWNER", "PHARMACIST", "TECHNICIAN"] as const) {
+      const perms = getDefaultPermissions(role);
+      const modules = perms.map((p) => p.module);
+      const unique = new Set(modules);
+      expect(unique.size).toBe(modules.length);
     }
   });
 

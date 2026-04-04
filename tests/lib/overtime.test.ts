@@ -145,6 +145,38 @@ describe("calculateOvertime", () => {
     expect(result.dailyOvertimeHours).toBe(0.33);
     expect(result.regularHours).toBe(8);
   });
+
+  it("handles a zero-duration entry gracefully (contributes nothing)", () => {
+    const entries: TimeEntryForCalc[] = [
+      { date: "2026-04-01", durationMinutes: 480 },
+      { date: "2026-04-01", durationMinutes: 0 },
+    ];
+    const result = calculateOvertime(entries, 8, 40);
+    expect(result.totalHours).toBe(8);
+    expect(result.dailyOvertimeHours).toBe(0);
+  });
+
+  it("handles a large dataset (100+ entries across many days) without error", () => {
+    const entries: TimeEntryForCalc[] = Array.from({ length: 100 }, (_, i) => ({
+      date: `2026-${String(Math.floor(i / 28) + 1).padStart(2, "0")}-${String((i % 28) + 1).padStart(2, "0")}`,
+      durationMinutes: 480,
+    }));
+    const result = calculateOvertime(entries, 8, 40);
+    expect(result.totalHours).toBe(800);
+    expect(result.dailyOvertimeHours).toBe(0);
+  });
+
+  it("all entries on the same date are treated as a single day", () => {
+    // 5 entries of 2h each → 10h on one day → 2h daily OT
+    const entries: TimeEntryForCalc[] = Array.from({ length: 5 }, () => ({
+      date: "2026-04-01",
+      durationMinutes: 120,
+    }));
+    const result = calculateOvertime(entries, 8, 40);
+    expect(result.totalHours).toBe(10);
+    expect(result.dailyOvertimeHours).toBe(2);
+    expect(result.weeklyOvertimeHours).toBe(0);
+  });
 });
 
 // ---------------------------------------------------------------------------
