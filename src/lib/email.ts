@@ -13,7 +13,7 @@ function getResend(): Resend {
   return resendInstance;
 }
 
-const fromEmail = process.env.RESEND_FROM_EMAIL || "RxDesk <noreply@rxdesk.app>";
+const fromEmail = process.env.RESEND_FROM_EMAIL || "RxDesk <onboarding@resend.dev>";
 
 export async function sendVerificationEmail(params: {
   to: string;

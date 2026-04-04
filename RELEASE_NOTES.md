@@ -1,5 +1,31 @@
 # RxDesk release notes
 
+## v0.5.0 — 04/04/2026 — Live pages + Resend integration
+
+### Provider detail page
+- Full provider profile with Rx analytics, top drugs, payer mix bar, brand/generic ratio
+- Tabbed view: Analytics (with 30/60/90 day selector), Drugs (ranked bar chart), Notes
+- New drugs detection (drugs in current period not in prior)
+- NPPES enrichment indicator
+
+### Live dashboard
+- Fetches real data from prescriptions dashboard, alerts, and notifications APIs
+- Stat cards: total Rx with trend, active providers, concentration risk, unread notifications
+- Top prescribers bar chart (top 5)
+- New prescriber and dormant prescriber alert cards
+- Quick actions grid (upload Rx, search NPI, log visit, clock in)
+- Onboarding CTA when no data uploaded
+
+### Locations UI
+- Location cards with address, staff count, NPI, phone
+- Create location modal with full address fields
+- Plan limit enforcement
+
+### Email
+- Default from address set to `onboarding@resend.dev` (Resend sandbox)
+
+---
+
 ## v0.4.1 — 04/04/2026 — Full test audit + NPI validation fix
 
 ### Test suite expansion
