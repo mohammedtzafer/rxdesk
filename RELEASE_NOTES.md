@@ -1,5 +1,56 @@
 # RxDesk release notes
 
+## v1.0.0 — 04/04/2026 — Pharmacy integration APIs
+
+### PMS integration framework
+- **Adapter interface** — pluggable architecture for any PMS vendor (PioneerRx, Liberty, Rx30, etc.)
+- **CSV adapter** — pre-built column mappings for PioneerRx, Rx30, and generic exports
+- **PMS connection management** — create/list connections per location with API credentials and webhook secrets
+- **Webhook receiver** — HMAC-SHA256 verified endpoint for real-time prescription events from PMS systems
+- Auto-creates/updates patient records from webhook data
+- Auto-queues SMS notification when Rx is marked ready
+
+### RxNorm drug database (live API — no key needed)
+- Drug search with spelling suggestions fallback
+- Drug detail lookup with NDC codes, dosage form, route, strength
+- Drug interaction checker
+- 30-day local cache in DrugReference table
+- API routes: GET /api/drugs/search?q=, GET /api/drugs/[rxcui]
+
+### Patient management
+- Patient CRUD with search (name, phone)
+- Notification preferences (SMS/voice/email opt-in, preferred channel)
+- HIPAA-compliant: minimal PHI stored, communication preferences enforced
+- API routes: GET/POST /api/patients
+
+### Prescription event tracking
+- 10 event types: RX_NEW, RX_FILLED, RX_READY, RX_PICKED_UP, RX_TRANSFERRED, RX_REFILL_DUE, RX_CANCELLED, RX_ON_HOLD, RX_PARTIAL_FILL, RX_RETURNED
+- Events ingested from webhooks, CSV imports, or manual entry
+- Paginated event feed with type and location filters
+- API routes: GET /api/integrations/events
+
+### SMS notification framework (Twilio-ready)
+- HIPAA-compliant message templates (no PHI in SMS body)
+- Twilio REST API integration (activate by adding env vars)
+- Graceful no-op when Twilio not configured
+- Pre-built messages: Rx ready, refill reminder, generic
+
+### Notification template system
+- Customizable message templates per event type per channel
+- Default templates for common events
+- API routes: GET/POST /api/integrations/templates
+
+### New Prisma models (6)
+- PmsConnection, Patient, PrescriptionEvent, PatientNotification, NotificationTemplate, DrugReference
+- 4 new enums: PmsType, NotificationChannel, NotificationStatus, PrescriptionEventType
+
+### Testing — 87 new tests (551 total)
+- rxnorm.test.ts (29): search, detail, interactions, suggestions with fetch mocking
+- sms.test.ts (29): HIPAA message builders, Twilio API mocking, env var handling
+- csv-adapter.test.ts (29): column mapping, status mapping, field extraction, edge cases
+
+---
+
 ## v0.9.0 — 04/04/2026 — Dashboard schedule enhancements, print, planned vs actual
 
 ### Dashboard schedule view

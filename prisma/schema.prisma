@@ -151,6 +151,12 @@ model Organization {
   payRates              PayRate[]
   notifications         Notification[]
   weeklySchedules       WeeklySchedule[]
+
+  pmsConnections        PmsConnection[]
+  patients              Patient[]
+  prescriptionEvents    PrescriptionEvent[]
+  patientNotifications  PatientNotification[]
+  notificationTemplates NotificationTemplate[]
 }
 
 model User {
@@ -209,6 +215,7 @@ model Location {
   users           User[]
   userLocations   UserLocation[]
   weeklySchedules WeeklySchedule[]
+  pmsConnections  PmsConnection[]
 
   @@unique([organizationId, name])
   @@index([organizationId])
@@ -828,4 +835,196 @@ model PayrollExport {
   organization Organization @relation(fields: [organizationId], references: [id])
 
   @@index([organizationId, createdAt])
+}
+
+// ─── Integration Models ─────────────────────────────────────────
+
+enum PmsType {
+  PIONEER_RX
+  LIBERTY
+  PRIME_RX
+  QS1
+  RX30
+  COMPUTER_RX
+  BEST_RX
+  DATASCAN
+  CSV_IMPORT
+  OTHER
+}
+
+enum NotificationChannel {
+  SMS
+  VOICE
+  EMAIL
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+  OPTED_OUT
+}
+
+enum PrescriptionEventType {
+  RX_NEW
+  RX_FILLED
+  RX_READY
+  RX_PICKED_UP
+  RX_TRANSFERRED
+  RX_REFILL_DUE
+  RX_CANCELLED
+  RX_ON_HOLD
+  RX_PARTIAL_FILL
+  RX_RETURNED
+}
+
+model PmsConnection {
+  id             String   @id @default(cuid())
+  organizationId String
+  locationId     String
+  pmsType        PmsType
+  name           String
+  apiUrl         String?
+  apiKey         String?
+  apiSecret      String?
+  webhookSecret  String?
+  isActive       Boolean  @default(true)
+  lastSyncAt     DateTime?
+  syncStatus     String?
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  location     Location     @relation(fields: [locationId], references: [id])
+
+  @@unique([organizationId, locationId, pmsType])
+  @@index([organizationId])
+}
+
+model Patient {
+  id             String   @id @default(cuid())
+  organizationId String
+  locationId     String?
+  externalId     String?
+  firstName      String
+  lastName       String
+  dateOfBirth    DateTime? @db.Date
+  phone          String?
+  email          String?
+  smsOptIn       Boolean  @default(false)
+  voiceOptIn     Boolean  @default(false)
+  emailOptIn     Boolean  @default(false)
+  preferredChannel NotificationChannel @default(SMS)
+  metadata       Json?
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization        Organization          @relation(fields: [organizationId], references: [id])
+  prescriptionEvents  PrescriptionEvent[]
+  patientNotifications PatientNotification[]
+
+  @@unique([organizationId, externalId])
+  @@index([organizationId])
+  @@index([organizationId, lastName, firstName])
+  @@index([phone])
+}
+
+model PrescriptionEvent {
+  id             String                @id @default(cuid())
+  organizationId String
+  locationId     String?
+  patientId      String?
+  externalRxId   String?
+  eventType      PrescriptionEventType
+  drugName       String
+  drugNdc        String?
+  providerNpi    String?
+  providerName   String?
+  quantity       Int?
+  daysSupply     Int?
+  fillDate       DateTime?
+  readyAt        DateTime?
+  pickedUpAt     DateTime?
+  refillDueDate  DateTime?
+  payerName      String?
+  copay          Decimal?  @db.Decimal(10, 2)
+  metadata       Json?
+  source         String    @default("manual")
+  processedAt    DateTime?
+  createdAt      DateTime  @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+  patient      Patient?     @relation(fields: [patientId], references: [id])
+
+  @@index([organizationId, createdAt])
+  @@index([organizationId, eventType])
+  @@index([organizationId, patientId])
+  @@index([externalRxId])
+}
+
+model PatientNotification {
+  id             String             @id @default(cuid())
+  organizationId String
+  patientId      String
+  channel        NotificationChannel
+  templateId     String?
+  subject        String?
+  message        String
+  status         NotificationStatus @default(PENDING)
+  externalId     String?
+  sentAt         DateTime?
+  deliveredAt    DateTime?
+  failReason     String?
+  metadata       Json?
+  createdAt      DateTime           @default(now())
+
+  organization Organization          @relation(fields: [organizationId], references: [id])
+  patient      Patient               @relation(fields: [patientId], references: [id])
+  template     NotificationTemplate? @relation(fields: [templateId], references: [id])
+
+  @@index([organizationId, createdAt])
+  @@index([patientId])
+  @@index([status])
+}
+
+model NotificationTemplate {
+  id             String              @id @default(cuid())
+  organizationId String
+  name           String
+  channel        NotificationChannel
+  eventType      PrescriptionEventType?
+  subject        String?
+  body           String
+  isActive       Boolean             @default(true)
+  isDefault      Boolean             @default(false)
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  organization  Organization          @relation(fields: [organizationId], references: [id])
+  notifications PatientNotification[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId, eventType])
+}
+
+model DrugReference {
+  id          String   @id @default(cuid())
+  rxcui       String   @unique
+  name        String
+  brandName   String?
+  genericName String?
+  ndc         String[]
+  dosageForm  String?
+  route       String?
+  strength    String?
+  dea         String?
+  category    String?
+  lastUpdated DateTime @default(now())
+  metadata    Json?
+
+  @@index([name])
+  @@index([genericName])
 }
