@@ -5,7 +5,6 @@ import { resolve } from "path";
 config({ path: resolve(process.cwd(), ".env.local") });
 
 import { PrismaClient } from "../src/generated/prisma/client";
-import { neon } from "@neondatabase/serverless";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import bcrypt from "bcryptjs";
 
@@ -77,10 +76,8 @@ function createPrismaClient(): PrismaClient {
   if (!connectionString) {
     throw new Error("DATABASE_URL is not set in .env.local");
   }
-  const sql = neon(connectionString);
-  const adapter = new PrismaNeon(sql);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return new PrismaClient({ adapter } as any);
+  const adapter = new PrismaNeon({ connectionString });
+  return new PrismaClient({ adapter } as unknown as ConstructorParameters<typeof PrismaClient>[0]);
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
