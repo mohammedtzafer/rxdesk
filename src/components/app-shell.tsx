@@ -29,6 +29,9 @@ import {
   TrendingUp,
   HelpCircle,
   FileText,
+  Activity,
+  Heart,
+  Plug,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -70,6 +73,7 @@ const navItems: NavItem[] = [
     children: [
       { label: "Analytics", href: "/app/prescriptions", icon: TrendingUp },
       { label: "Upload CSV", href: "/app/prescriptions/upload", icon: Upload },
+      { label: "Events", href: "/app/prescriptions/events", icon: Activity },
     ],
   },
   {
@@ -101,7 +105,18 @@ const navItems: NavItem[] = [
   { label: "Reports", href: "/app/reports", icon: BarChart3, module: "REPORTS" },
   { label: "Team", href: "/app/team", icon: UserCog, module: "TEAM" },
   { label: "Locations", href: "/app/locations", icon: MapPin, module: "SETTINGS" },
-  { label: "Settings", href: "/app/settings", icon: Settings, module: "SETTINGS" },
+  {
+    label: "Settings",
+    href: "/app/settings",
+    icon: Settings,
+    module: "SETTINGS",
+    children: [
+      { label: "General", href: "/app/settings", icon: Settings },
+      { label: "Integrations", href: "/app/settings/integrations", icon: Plug },
+    ],
+  },
+  { label: "Patients", href: "/app/patients", icon: Heart, module: "PRESCRIPTIONS" },
+  { label: "Drug Search", href: "/app/drugs", icon: Search, module: "PRESCRIPTIONS" },
   { label: "FAQ", href: "/app/faq", icon: HelpCircle },
   { label: "Release Notes", href: "/app/release-notes", icon: FileText },
 ];
