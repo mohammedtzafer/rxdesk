@@ -8,6 +8,7 @@ const updateUserSchema = z.object({
   role: z.enum(["PHARMACIST", "TECHNICIAN"]).optional(),
   locationId: z.string().nullable().optional(),
   active: z.boolean().optional(),
+  locationIds: z.array(z.string()).optional(),
 });
 
 export async function PUT(
@@ -48,6 +49,40 @@ export async function PUT(
         { error: "Cannot modify the owner account" },
         { status: 403 }
       );
+    }
+
+    // Handle multi-location update if locationIds provided
+    if (data.locationIds && data.locationIds.length > 0) {
+      // The first locationId is treated as primary
+      const primaryLocationId = data.locationIds[0];
+
+      // Verify all locations belong to the org
+      const validLocations = await db.location.findMany({
+        where: {
+          id: { in: data.locationIds },
+          organizationId: session.user.organizationId,
+        },
+        select: { id: true },
+      });
+
+      if (validLocations.length !== data.locationIds.length) {
+        return NextResponse.json(
+          { error: "Invalid location IDs" },
+          { status: 400 }
+        );
+      }
+
+      await db.userLocation.deleteMany({ where: { userId: id } });
+      await db.userLocation.createMany({
+        data: data.locationIds.map((locId) => ({
+          userId: id,
+          locationId: locId,
+          isPrimary: locId === primaryLocationId,
+        })),
+      });
+
+      // Also update the primary locationId on the user record
+      data.locationId = primaryLocationId;
     }
 
     const user = await db.user.update({

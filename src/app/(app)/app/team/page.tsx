@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { UserPlus, Shield, X, MoreHorizontal, Pencil, UserX, UserCheck, MapPin } from "lucide-react";
+import { UserPlus, Shield, X, MoreHorizontal, Pencil, UserX, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 import { MODULE_LABELS, ACCESS_OPTIONS } from "@/lib/permissions";
 
@@ -15,7 +15,7 @@ interface TeamUser {
   role: string;
   active: boolean;
   lastActiveAt: string | null;
-  location: { id: string; name: string } | null;
+  locations: Array<{ location: { id: string; name: string }; isPrimary: boolean }>;
   permissions: Array<{ module: string; access: string }>;
 }
 
@@ -52,7 +52,11 @@ export default function TeamPage() {
   const [inviteForm, setInviteForm] = useState({ email: "", role: "TECHNICIAN" as string });
 
   // Edit user form state
-  const [editForm, setEditForm] = useState({ role: "", locationId: "" as string | null });
+  const [editForm, setEditForm] = useState({
+    role: "",
+    locationIds: [] as string[],
+    primaryLocationId: "",
+  });
 
   useEffect(() => {
     fetchTeam();
@@ -137,37 +141,66 @@ export default function TeamPage() {
   };
 
   const startEditUser = (user: TeamUser) => {
+    const locationIds = user.locations.map((l) => l.location.id);
+    const primaryLocationId = user.locations.find((l) => l.isPrimary)?.location.id || locationIds[0] || "";
     setEditingUser(user);
     setEditForm({
       role: user.role,
-      locationId: user.location?.id || null,
+      locationIds,
+      primaryLocationId,
     });
     setOpenMenuId(null);
   };
 
   const handleSaveUser = async () => {
     if (!editingUser) return;
-    const updates: Record<string, unknown> = {};
-    if (editForm.role !== editingUser.role) updates.role = editForm.role;
-    if (editForm.locationId !== (editingUser.location?.id || null)) updates.locationId = editForm.locationId;
 
-    if (Object.keys(updates).length === 0) {
+    const roleChanged = editForm.role !== editingUser.role;
+    const currentLocationIds = editingUser.locations.map((l) => l.location.id);
+    const currentPrimaryId = editingUser.locations.find((l) => l.isPrimary)?.location.id || "";
+    const locationsChanged =
+      JSON.stringify([...editForm.locationIds].sort()) !== JSON.stringify([...currentLocationIds].sort()) ||
+      editForm.primaryLocationId !== currentPrimaryId;
+
+    if (!roleChanged && !locationsChanged) {
       setEditingUser(null);
       return;
     }
 
-    const res = await fetch(`/api/team/${editingUser.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(updates),
-    });
-    if (res.ok) {
+    const promises: Promise<Response>[] = [];
+
+    if (roleChanged) {
+      promises.push(
+        fetch(`/api/team/${editingUser.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ role: editForm.role }),
+        })
+      );
+    }
+
+    if (locationsChanged) {
+      promises.push(
+        fetch(`/api/team/${editingUser.id}/locations`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            locationIds: editForm.locationIds,
+            primaryLocationId: editForm.primaryLocationId,
+          }),
+        })
+      );
+    }
+
+    const results = await Promise.all(promises);
+    const allOk = results.every((r) => r.ok);
+
+    if (allOk) {
       toast.success("User updated");
       setEditingUser(null);
       fetchTeam();
     } else {
-      const data = await res.json();
-      toast.error(data.error || "Failed to update user");
+      toast.error("Failed to update user");
     }
   };
 
@@ -253,7 +286,9 @@ export default function TeamPage() {
                       </p>
                       <p className="text-[12px] text-[rgba(0,0,0,0.48)]">
                         {user.email}
-                        {user.location ? ` · ${user.location.name}` : ""}
+                        {user.locations.length > 0 && (
+                          <> · {user.locations.map((l) => l.location.name).join(", ")}</>
+                        )}
                       </p>
                     </div>
                   </div>
@@ -380,17 +415,48 @@ export default function TeamPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-[13px]">Location</Label>
-                <select
-                  value={editForm.locationId || ""}
-                  onChange={(e) => setEditForm({ ...editForm, locationId: e.target.value || null })}
-                  className="w-full h-10 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white"
-                >
-                  <option value="">No location assigned</option>
-                  {locations.map((loc) => (
-                    <option key={loc.id} value={loc.id}>{loc.name}</option>
-                  ))}
-                </select>
+                <Label className="text-[13px]">Locations</Label>
+                <div className="space-y-2 max-h-40 overflow-y-auto border border-[rgba(0,0,0,0.08)] rounded-lg p-2.5">
+                  {locations.length === 0 ? (
+                    <p className="text-[13px] text-[rgba(0,0,0,0.48)]">No locations configured</p>
+                  ) : (
+                    locations.map((loc) => (
+                      <label key={loc.id} className="flex items-center gap-2 text-[14px] cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={editForm.locationIds.includes(loc.id)}
+                          onChange={(e) => {
+                            const ids = e.target.checked
+                              ? [...editForm.locationIds, loc.id]
+                              : editForm.locationIds.filter((id) => id !== loc.id);
+                            setEditForm({
+                              ...editForm,
+                              locationIds: ids,
+                              primaryLocationId: ids.includes(editForm.primaryLocationId)
+                                ? editForm.primaryLocationId
+                                : ids[0] || "",
+                            });
+                          }}
+                          className="rounded"
+                        />
+                        <span className="flex-1 text-[#1d1d1f]">{loc.name}</span>
+                        {editForm.locationIds.includes(loc.id) && (
+                          <button
+                            type="button"
+                            onClick={() => setEditForm({ ...editForm, primaryLocationId: loc.id })}
+                            className={`text-[11px] px-1.5 py-0.5 rounded transition-colors ${
+                              editForm.primaryLocationId === loc.id
+                                ? "bg-[#0071e3] text-white"
+                                : "bg-[rgba(0,0,0,0.05)] text-[rgba(0,0,0,0.48)] hover:bg-[rgba(0,0,0,0.08)]"
+                            }`}
+                          >
+                            {editForm.primaryLocationId === loc.id ? "Primary" : "Set primary"}
+                          </button>
+                        )}
+                      </label>
+                    ))
+                  )}
+                </div>
               </div>
 
               <div className="flex gap-2 pt-2">

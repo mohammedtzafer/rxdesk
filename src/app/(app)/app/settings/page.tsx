@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Building2, Palette, CreditCard } from "lucide-react";
+import { Building2, Palette, CreditCard, Upload, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface OrgSettings {
@@ -46,11 +46,14 @@ const PLANS = [
   },
 ];
 
+const LOGO_EMOJIS = ["💊", "🏥", "⚕️", "🩺", "💉", "🧪", "🩹", "🫀", "🔬", "⚗️"];
+
 export default function SettingsPage() {
   const [settings, setSettings] = useState<OrgSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [tab, setTab] = useState<Tab>("general");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [form, setForm] = useState({
     name: "",
@@ -102,6 +105,27 @@ export default function SettingsPage() {
     }
     setSaving(false);
   };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select an image file");
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Image must be under 2 MB");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const dataUrl = event.target?.result as string;
+      setForm((prev) => ({ ...prev, logoUrl: dataUrl }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const isEmojiLogo = (url: string) => LOGO_EMOJIS.includes(url);
 
   if (loading) {
     return (
@@ -198,10 +222,11 @@ export default function SettingsPage() {
       {tab === "branding" && (
         <form
           onSubmit={handleSave}
-          className="mt-4 bg-white rounded-xl p-6 space-y-4 max-w-lg"
+          className="mt-4 bg-white rounded-xl p-6 space-y-5 max-w-lg"
           role="tabpanel"
           aria-label="Branding settings"
         >
+          {/* Brand name */}
           <div className="space-y-1.5">
             <Label htmlFor="brand-name">Brand name</Label>
             <Input
@@ -212,6 +237,83 @@ export default function SettingsPage() {
               className="h-10"
             />
           </div>
+
+          {/* Logo upload */}
+          <div className="space-y-2">
+            <Label>Logo</Label>
+            <div className="flex items-start gap-4">
+              {/* Preview */}
+              <div className="w-16 h-16 rounded-xl border border-[rgba(0,0,0,0.08)] bg-[#f5f5f7] flex items-center justify-center shrink-0 overflow-hidden">
+                {form.logoUrl ? (
+                  isEmojiLogo(form.logoUrl) ? (
+                    <span className="text-3xl" role="img" aria-label="Logo emoji">{form.logoUrl}</span>
+                  ) : (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={form.logoUrl} alt="Logo preview" className="w-full h-full object-contain" />
+                  )
+                ) : (
+                  <span className="text-[11px] text-[rgba(0,0,0,0.3)] text-center leading-tight px-1">No logo</span>
+                )}
+              </div>
+
+              <div className="flex-1 space-y-2">
+                {/* Upload button */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="sr-only"
+                  aria-label="Upload logo image"
+                />
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="inline-flex items-center gap-2 px-3 py-2 border border-[rgba(0,0,0,0.08)] rounded-lg text-[13px] text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors"
+                >
+                  <Upload className="w-3.5 h-3.5 text-[rgba(0,0,0,0.48)]" />
+                  Upload image
+                </button>
+                <p className="text-[11px] text-[rgba(0,0,0,0.48)]">PNG, JPG, SVG up to 2 MB</p>
+
+                {form.logoUrl && !isEmojiLogo(form.logoUrl) && (
+                  <button
+                    type="button"
+                    onClick={() => setForm({ ...form, logoUrl: "" })}
+                    className="inline-flex items-center gap-1 text-[12px] text-[rgba(0,0,0,0.48)] hover:text-[#EF4444] transition-colors"
+                  >
+                    <X className="w-3 h-3" />
+                    Remove logo
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Emoji selector */}
+            <div className="space-y-1.5">
+              <p className="text-[12px] text-[rgba(0,0,0,0.48)]">Or choose an emoji</p>
+              <div className="flex flex-wrap gap-2">
+                {LOGO_EMOJIS.map((emoji) => (
+                  <button
+                    key={emoji}
+                    type="button"
+                    onClick={() => setForm({ ...form, logoUrl: form.logoUrl === emoji ? "" : emoji })}
+                    className={`w-10 h-10 rounded-lg border text-xl flex items-center justify-center transition-colors ${
+                      form.logoUrl === emoji
+                        ? "border-[#0071e3] bg-[#0071e3]/5"
+                        : "border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.2)] hover:bg-[#f5f5f7]"
+                    }`}
+                    aria-label={`Use ${emoji} as logo`}
+                    aria-pressed={form.logoUrl === emoji}
+                  >
+                    {emoji}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Brand color */}
           <div className="space-y-1.5">
             <Label htmlFor="brand-color-text">Brand color</Label>
             <div className="flex gap-2 items-center">
@@ -231,17 +333,7 @@ export default function SettingsPage() {
               />
             </div>
           </div>
-          <div className="space-y-1.5">
-            <Label htmlFor="logo-url">Logo URL</Label>
-            <Input
-              id="logo-url"
-              value={form.logoUrl}
-              onChange={(e) => setForm({ ...form, logoUrl: e.target.value })}
-              placeholder="https://yourdomain.com/logo.png"
-              className="h-10"
-              type="url"
-            />
-          </div>
+
           <button
             type="submit"
             disabled={saving}

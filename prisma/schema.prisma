@@ -135,6 +135,7 @@ model Organization {
   prescriptionRecords   PrescriptionRecord[]
   drugReps              DrugRep[]
   drugRepVisits         DrugRepVisit[]
+  payrollExports        PayrollExport[]
 
   departments           Department[]
   timeEntries           TimeEntry[]
@@ -176,6 +177,7 @@ model User {
   permissions  Permission[]
   auditLogs    AuditLog[]
   invitesSent  Invite[]      @relation("InvitedBy")
+  locations    UserLocation[]
 
   timeEntries   TimeEntry[]
   timesheets    Timesheet[]
@@ -204,10 +206,24 @@ model Location {
 
   organization    Organization     @relation(fields: [organizationId], references: [id])
   users           User[]
+  userLocations   UserLocation[]
   weeklySchedules WeeklySchedule[]
 
   @@unique([organizationId, name])
   @@index([organizationId])
+}
+
+model UserLocation {
+  userId     String
+  locationId String
+  isPrimary  Boolean @default(false)
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+
+  @@id([userId, locationId])
+  @@index([userId])
+  @@index([locationId])
 }
 
 model Permission {
@@ -789,4 +805,26 @@ model ScheduleComment {
   schedule WeeklySchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
 
   @@index([scheduleId])
+}
+
+// ─── Payroll Models ─────────────────────────────────────────────
+
+model PayrollExport {
+  id                 String   @id @default(cuid())
+  organizationId     String
+  locationId         String?
+  format             String   // "ADP", "PAYCHEX", "GUSTO", "CSV", "GENERIC"
+  periodStart        DateTime @db.Date
+  periodEnd          DateTime @db.Date
+  totalEmployees     Int
+  totalHours         Float
+  totalOvertimeHours Float    @default(0)
+  fileName           String
+  status             String   @default("GENERATED") // "GENERATED", "DOWNLOADED", "SUBMITTED"
+  createdById        String
+  createdAt          DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId, createdAt])
 }

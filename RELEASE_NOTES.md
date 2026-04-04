@@ -1,5 +1,48 @@
 # RxDesk release notes
 
+## v0.7.0 — 04/04/2026 — Multi-location users, payroll export, branding, FAQ
+
+### Multi-location team members
+- Users can now be assigned to multiple locations (many-to-many via UserLocation join table)
+- One location is marked as primary (affects default filters and clock-in)
+- Team edit modal shows checkbox list with "Set primary" toggle per location
+- User row displays all assigned locations
+- New API: GET/PUT /api/team/[id]/locations for managing user-location assignments
+
+### Payroll export integration
+- Generate payroll-ready CSV files for ADP, Paychex, Gusto, or generic format
+- POST /api/payroll/export — accepts format, date range, optional location filter
+- ADP format: Co Code, Batch ID, File #, Reg Hours, O/T Hours, Temp Dept
+- Paychex format: Employee ID, Last Name, First Name, Regular Hours, Overtime Hours, Department
+- Gusto format: Employee Email, Hours Worked, Overtime Hours, Pay Period Start/End
+- Generic format: all fields with quoted names and locations
+- Export history tracked in PayrollExport model
+- GET /api/payroll/exports — list previous exports
+
+### Custom pharmacy branding
+- Logo image upload via data URL (like PharmShift) in Settings → Branding
+- 10 pharmacy emoji options (💊 🏥 ⚕️ 🩺 💉 🧪 🩹 🫀 🔬 ⚗️) as logo fallback
+- Brand color picker + brand name
+- Live preview in branding tab
+
+### FAQ page
+- 10 pharmacy-relevant FAQ items in accordion format
+- Covers: CSV upload, NPI search, plan limits, drug rep correlations, multi-location, payroll export, notifications, data security, password reset
+
+### Release Notes page
+- Timeline-style display of all versions (v0.1.0 through v0.6.0)
+- Latest version highlighted with blue dot and "Latest" badge
+
+### Navigation updates
+- FAQ and Release Notes added to sidebar (visible to all roles)
+- Team page action menu: Edit member, Edit permissions, Deactivate/Reactivate
+
+### Testing
+- 416 tests passing (48 new for payroll library)
+- Payroll tests: ADP/Paychex/Gusto/Generic CSV generation, format dispatch, entry aggregation
+
+---
+
 ## v0.6.0 — 04/04/2026 — PharmShift scheduling integration
 
 ### Schedule management (ported from PharmShift/ultra-care-pharmacy)

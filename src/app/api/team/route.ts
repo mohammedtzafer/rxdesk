@@ -26,6 +26,12 @@ export async function GET() {
         lastActiveAt: true,
         locationId: true,
         location: { select: { id: true, name: true } },
+        locations: {
+          select: {
+            isPrimary: true,
+            location: { select: { id: true, name: true } },
+          },
+        },
         permissions: { select: { module: true, access: true } },
       },
     }),

@@ -27,6 +27,8 @@ import {
   Upload,
   Search,
   TrendingUp,
+  HelpCircle,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -99,6 +101,8 @@ const navItems: NavItem[] = [
   { label: "Team", href: "/app/team", icon: UserCog, module: "TEAM" },
   { label: "Locations", href: "/app/locations", icon: MapPin, module: "SETTINGS" },
   { label: "Settings", href: "/app/settings", icon: Settings, module: "SETTINGS" },
+  { label: "FAQ", href: "/app/faq", icon: HelpCircle },
+  { label: "Release Notes", href: "/app/release-notes", icon: FileText },
 ];
 
 interface AppShellProps {
