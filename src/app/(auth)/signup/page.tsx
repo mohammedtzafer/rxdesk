@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Check } from "lucide-react";
+import { Check, Mail } from "lucide-react";
 
-type Step = "account" | "pharmacy" | "done";
+type Step = "account" | "verify" | "pharmacy" | "done";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -45,8 +44,7 @@ export default function SignupPage() {
         return;
       }
 
-      await signIn("credentials", { email, password, redirect: false });
-      setStep("pharmacy");
+      setStep("verify");
     } catch {
       setError("Something went wrong");
     } finally {
@@ -84,6 +82,30 @@ export default function SignupPage() {
       setLoading(false);
     }
   };
+
+  if (step === "verify") {
+    return (
+      <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center px-4">
+        <div className="w-full max-w-sm text-center">
+          <div className="w-16 h-16 rounded-full bg-[#0071e3]/10 flex items-center justify-center mx-auto">
+            <Mail className="w-8 h-8 text-[#0071e3]" />
+          </div>
+          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-[#1d1d1f]">
+            Check your email
+          </h1>
+          <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+            We sent a verification link to <strong>{email}</strong>. Click it to verify your account and then sign in.
+          </p>
+          <button
+            onClick={() => router.push("/login")}
+            className="mt-6 px-6 py-2.5 bg-[#0071e3] text-white rounded-lg text-[17px] hover:bg-[#0077ED] transition-colors"
+          >
+            Go to sign in
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (step === "done") {
     return (

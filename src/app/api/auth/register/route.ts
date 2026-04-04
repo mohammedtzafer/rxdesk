@@ -3,6 +3,8 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { rateLimit, getClientIp } from "@/lib/rate-limit";
+import { createVerificationToken } from "@/lib/tokens";
+import { sendVerificationEmail } from "@/lib/email";
 
 const registerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -46,7 +48,14 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    const token = await createVerificationToken(email);
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    await sendVerificationEmail({
+      to: email,
+      verifyUrl: `${appUrl}/verify?token=${token}`,
+    });
+
+    return NextResponse.json({ success: true, requiresVerification: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(

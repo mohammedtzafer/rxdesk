@@ -229,7 +229,32 @@ function buildRxRecords(
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
+  // ── Production safety guard ────────────────────────────────────────────────
+  const dbUrl = process.env.DATABASE_URL || "";
+  const isProduction = process.env.NODE_ENV === "production";
+  const forceFlag = process.argv.includes("--force");
+
+  if (isProduction && !forceFlag) {
+    console.error(
+      "\n❌ REFUSED: Cannot run seed in production without --force flag.\n" +
+      "   This script DELETES ALL DATA before seeding.\n" +
+      "   If you really mean it: npx tsx prisma/seed.ts --force\n"
+    );
+    process.exit(1);
+  }
+
+  // Check if database already has real data (more than seed data)
   const prisma = createPrismaClient();
+
+  const orgCount = await prisma.organization.count();
+  if (orgCount > 0 && !forceFlag) {
+    console.error(
+      `\n⚠️  WARNING: Database already contains ${orgCount} organization(s).\n` +
+      "   Running seed will DELETE ALL EXISTING DATA.\n" +
+      "   To proceed: npx tsx prisma/seed.ts --force\n"
+    );
+    process.exit(1);
+  }
 
   console.log("Connecting to database...");
 
