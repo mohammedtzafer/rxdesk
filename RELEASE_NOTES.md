@@ -1,5 +1,34 @@
 # RxDesk release notes
 
+## v0.4.0 — 04/04/2026 — Full UI build + team management
+
+### Time tracking UI
+- Clock in/out with large toggle button and active status indicator
+- Recent entries table (last 7 days) with date, start/end, duration, break, notes
+- Manual time entry form via modal
+- PTO request page with submit form and approve/deny actions
+- Status filters (all/pending/approved/denied)
+
+### Team management UI
+- Team member list with role badges, location, last active
+- Invite modal (email + role selection)
+- Inline permission editor per user (7 modules x 4 access levels)
+- Deactivate/reactivate users
+- Pending invitations section
+
+### Settings UI
+- Three-tab layout: General, Branding, Billing
+- General: org name, timezone
+- Branding: brand name, brand color (with color picker), logo URL
+- Billing: current plan display, plan comparison cards (Starter/Growth/Pro)
+
+### Profile + notifications
+- Notification list with unread indicators
+- Mark all read functionality
+- Semantic date formatting
+
+---
+
 ## v0.3.0 — 04/04/2026 — Time tracking + notification system
 
 ### Time tracking (ported from Timecraft)
