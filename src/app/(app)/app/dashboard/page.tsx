@@ -19,11 +19,14 @@ import {
   ChevronLeft,
   ChevronRight,
   ChevronDown,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { ErrorState } from "@/components/error-state";
 import { WeeklyOverview } from "@/components/schedule/weekly-overview";
 import { DailyTimeline } from "@/components/schedule/daily-timeline";
+import { PrintSchedule } from "@/components/schedule/print-schedule";
 import {
   DayOfWeek,
   DAYS_OF_WEEK,
@@ -58,6 +61,9 @@ interface LocationItem {
   name: string;
 }
 
+type ScheduleView = "weekly" | "daily";
+type TimeGranularity = "1h" | "30m" | "15m";
+
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -71,37 +77,30 @@ const TrendIcon = ({ direction }: { direction: string }) => {
 const trendColor = (d: string) =>
   d === "UP" ? "text-[#22C55E]" : d === "DOWN" ? "text-[#EF4444]" : "text-[#9CA3AF]";
 
-/** Get the Monday of the current week as YYYY-MM-DD */
 function getCurrentWeekMonday(): string {
   const now = new Date();
-  const day = now.getDay(); // 0=Sun
+  const day = now.getDay();
   const monday = new Date(now);
   monday.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
   monday.setHours(0, 0, 0, 0);
   return monday.toISOString().split("T")[0];
 }
 
-/** Advance a YYYY-MM-DD date by N days */
 function shiftDate(dateStr: string, days: number): string {
   const d = new Date(dateStr);
   d.setDate(d.getDate() + days);
   return d.toISOString().split("T")[0];
 }
 
-/** Format a week start date as a display label, e.g. "Apr 7 – Apr 12" */
 function weekRangeLabel(weekStart: string): string {
   const start = new Date(weekStart);
   const end = new Date(weekStart);
-  end.setDate(end.getDate() + 5); // Monday–Saturday
+  end.setDate(end.getDate() + 5);
   const fmt = (d: Date) =>
     d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
   return `${fmt(start)} – ${fmt(end)}`;
 }
 
-/**
- * Convert flat WeeklyScheduleData entries into EmployeeWithAvailability[]
- * so WeeklyOverview and DailyTimeline can consume them.
- */
 function buildEmployees(schedules: WeeklyScheduleData[]): EmployeeWithAvailability[] {
   const allEntries = schedules.flatMap((s) => s.entries);
   const byEmployee = new Map<string, EmployeeWithAvailability>();
@@ -132,7 +131,6 @@ function buildEmployees(schedules: WeeklyScheduleData[]): EmployeeWithAvailabili
   return Array.from(byEmployee.values()).sort((a, b) => a.sortOrder - b.sortOrder);
 }
 
-/** Today's day of week as DayOfWeek, defaulting to Monday for Sunday */
 function todayAsDayOfWeek(): DayOfWeek {
   const map: Record<number, DayOfWeek> = {
     1: "Monday",
@@ -145,7 +143,6 @@ function todayAsDayOfWeek(): DayOfWeek {
   return map[new Date().getDay()] ?? "Monday";
 }
 
-/** Build the location query param fragment from an array of IDs */
 function locationQs(ids: string[]): string {
   if (ids.length === 0) return "";
   return ids.map((id) => `locationId=${id}`).join("&");
@@ -174,6 +171,26 @@ export default function DashboardPage() {
   const [schedules, setSchedules] = useState<WeeklyScheduleData[]>([]);
   const [scheduleLoading, setScheduleLoading] = useState(true);
   const [selectedDay, setSelectedDay] = useState<DayOfWeek>(todayAsDayOfWeek);
+
+  // --- Schedule view controls ---
+  const [scheduleView, setScheduleView] = useState<ScheduleView>("weekly");
+  const [granularity, setGranularity] = useState<TimeGranularity>("1h");
+  const [showSchedule, setShowSchedule] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("rxdesk-show-schedule") !== "false";
+    }
+    return true;
+  });
+
+  const toggleShowSchedule = () => {
+    setShowSchedule((v) => {
+      const next = !v;
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("rxdesk-show-schedule", String(next));
+      }
+      return next;
+    });
+  };
 
   // ---------------------------------------------------------------------------
   // Fetch locations once on mount
@@ -268,6 +285,24 @@ export default function DashboardPage() {
         ? (locations.find((l) => l.id === selectedLocationIds[0])?.name ?? "1 location")
         : `${selectedLocationIds.length} locations`;
 
+  // Group schedules by location for multi-store display
+  const schedulesByLocation = new Map<string, { locationName: string; schedules: WeeklyScheduleData[] }>();
+  for (const schedule of schedules) {
+    const loc = locations.find((l) => l.id === schedule.locationId);
+    const key = schedule.locationId;
+    if (!schedulesByLocation.has(key)) {
+      schedulesByLocation.set(key, {
+        locationName: loc?.name ?? "Unknown location",
+        schedules: [],
+      });
+    }
+    schedulesByLocation.get(key)!.schedules.push(schedule);
+  }
+  // When no locationId on schedule entries, fall back to showing all as one group
+  if (schedulesByLocation.size === 0 && schedules.length > 0) {
+    schedulesByLocation.set("__all__", { locationName: "All locations", schedules });
+  }
+
   // ---------------------------------------------------------------------------
   // Location filter toggle helpers
   // ---------------------------------------------------------------------------
@@ -336,7 +371,6 @@ export default function DashboardPage() {
                 role="listbox"
                 aria-label="Filter by location"
               >
-                {/* All locations option */}
                 <button
                   type="button"
                   role="option"
@@ -526,12 +560,79 @@ export default function DashboardPage() {
           </div>
 
           {/* ---------------------------------------------------------------- */}
-          {/* Weekly Overview                                                   */}
+          {/* Schedule section                                                  */}
           {/* ---------------------------------------------------------------- */}
           <div className="mt-6">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-[17px] font-semibold text-[#1d1d1f]">Weekly schedule</h2>
-              <div className="flex items-center gap-1">
+            {/* Section header */}
+            <div className="flex items-center gap-2 flex-wrap mb-3">
+              <h2 className="text-[17px] font-semibold text-[#1d1d1f] mr-1">Schedule</h2>
+
+              {/* Weekly / Daily toggle */}
+              <div
+                className="flex items-center gap-0.5 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg p-0.5"
+                role="radiogroup"
+                aria-label="Schedule view"
+              >
+                {(["weekly", "daily"] as ScheduleView[]).map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    role="radio"
+                    aria-checked={scheduleView === v}
+                    onClick={() => setScheduleView(v)}
+                    className={`h-7 px-3 text-[12px] font-medium rounded-md transition-all capitalize ${
+                      scheduleView === v
+                        ? "bg-[#0071e3] text-white shadow-sm"
+                        : "text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
+                    }`}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+
+              {/* Granularity selector — only in daily view */}
+              {scheduleView === "daily" && (
+                <div
+                  className="flex items-center gap-0.5 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg p-0.5"
+                  role="radiogroup"
+                  aria-label="Timeline granularity"
+                >
+                  {(["1h", "30m", "15m"] as TimeGranularity[]).map((g) => (
+                    <button
+                      key={g}
+                      type="button"
+                      role="radio"
+                      aria-checked={granularity === g}
+                      onClick={() => setGranularity(g)}
+                      className={`h-7 px-2.5 text-[12px] font-medium rounded-md transition-all ${
+                        granularity === g
+                          ? "bg-[#f5f5f7] text-[#1d1d1f] shadow-sm"
+                          : "text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
+                      }`}
+                    >
+                      {g}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Spacer */}
+              <div className="flex-1" />
+
+              {/* Hide/show toggle */}
+              <button
+                type="button"
+                onClick={toggleShowSchedule}
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f] hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3] focus-visible:ring-offset-1"
+                aria-label={showSchedule ? "Hide schedule" : "Show schedule"}
+              >
+                {showSchedule ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                <span className="hidden sm:inline">{showSchedule ? "Hide" : "Show"}</span>
+              </button>
+
+              {/* Week navigation */}
+              <div className="flex items-center gap-0.5">
                 <button
                   type="button"
                   onClick={() => setWeekStart((w) => shiftDate(w, -7))}
@@ -540,7 +641,7 @@ export default function DashboardPage() {
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="text-[13px] text-[rgba(0,0,0,0.48)] min-w-[140px] text-center select-none">
+                <span className="text-[13px] text-[rgba(0,0,0,0.48)] min-w-[130px] text-center select-none">
                   {weekRangeLabel(weekStart)}
                 </span>
                 <button
@@ -554,7 +655,21 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            {scheduleLoading ? (
+            {/* Schedule body */}
+            {!showSchedule ? (
+              <div className="bg-white rounded-xl border border-[rgba(0,0,0,0.06)] px-4 py-3">
+                <p className="text-[14px] text-[rgba(0,0,0,0.48)]">
+                  Schedule hidden.{" "}
+                  <button
+                    type="button"
+                    onClick={toggleShowSchedule}
+                    className="text-[#0066cc] hover:underline"
+                  >
+                    Show schedule
+                  </button>
+                </p>
+              </div>
+            ) : scheduleLoading ? (
               <div className="bg-white rounded-xl border border-[rgba(0,0,0,0.06)] h-48 animate-pulse" />
             ) : !hasSchedule ? (
               <div className="bg-white rounded-xl border border-[rgba(0,0,0,0.06)] p-8 text-center">
@@ -567,29 +682,66 @@ export default function DashboardPage() {
                 </Link>
               </div>
             ) : (
-              <WeeklyOverview
-                employees={employees}
-                selectedDay={selectedDay}
-                onDaySelect={setSelectedDay}
-                weekLabel={weekRangeLabel(weekStart)}
-              />
+              /* Multi-store sections */
+              Array.from(schedulesByLocation.entries()).map(([locId, { locationName, schedules: locSchedules }]) => {
+                const locEmployees = buildEmployees(locSchedules);
+                if (locEmployees.length === 0) return null;
+                return (
+                  <div key={locId} className={schedulesByLocation.size > 1 ? "mt-6 first:mt-0" : ""}>
+                    {/* Location header — only when multiple locations */}
+                    {schedulesByLocation.size > 1 && (
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-[15px] font-semibold text-[#1d1d1f] flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-[rgba(0,0,0,0.48)]" />
+                          {locationName}
+                        </h3>
+                        <PrintSchedule
+                          employees={locEmployees}
+                          weekLabel={weekRangeLabel(weekStart)}
+                          locationName={locationName}
+                        />
+                      </div>
+                    )}
+
+                    {/* Single-location print button in the main header area */}
+                    {schedulesByLocation.size === 1 && (
+                      <div className="flex justify-end mb-2">
+                        <PrintSchedule
+                          employees={locEmployees}
+                          weekLabel={weekRangeLabel(weekStart)}
+                          locationName={locationName}
+                        />
+                      </div>
+                    )}
+
+                    {/* View content */}
+                    {scheduleView === "weekly" && (
+                      <WeeklyOverview
+                        employees={locEmployees}
+                        selectedDay={selectedDay}
+                        onDaySelect={setSelectedDay}
+                        weekLabel={weekRangeLabel(weekStart)}
+                      />
+                    )}
+
+                    {scheduleView === "daily" && (
+                      <div className="overflow-x-auto">
+                        <DailyTimeline
+                          employees={locEmployees}
+                          day={selectedDay}
+                          granularity={granularity}
+                          onGranularityChange={setGranularity}
+                          onEmployeeClick={(emp) => {
+                            window.location.href = `/app/team/${emp.id}`;
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                );
+              })
             )}
           </div>
-
-          {/* ---------------------------------------------------------------- */}
-          {/* Daily Timeline                                                    */}
-          {/* ---------------------------------------------------------------- */}
-          {hasSchedule && !scheduleLoading && (
-            <div className="mt-6 overflow-x-auto">
-              <DailyTimeline
-                employees={employees}
-                day={selectedDay}
-                onEmployeeClick={(emp) => {
-                  window.location.href = `/app/team/${emp.id}`;
-                }}
-              />
-            </div>
-          )}
 
           {/* ---------------------------------------------------------------- */}
           {/* Top prescribers + alerts                                          */}

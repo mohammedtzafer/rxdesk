@@ -95,6 +95,7 @@ const navItems: NavItem[] = [
       { label: "Team", href: "/app/time-tracking/team", icon: Users },
       { label: "Time Off", href: "/app/time-tracking/time-off", icon: Calendar },
       { label: "Roles", href: "/app/time-tracking/roles", icon: Wrench },
+      { label: "Planned vs Actual", href: "/app/time-tracking/comparison", icon: BarChart3 },
     ],
   },
   { label: "Reports", href: "/app/reports", icon: BarChart3, module: "REPORTS" },

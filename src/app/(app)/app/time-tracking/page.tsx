@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Clock, Play, Square, Plus, Calendar, CalendarDays, LayoutGrid, Users, Tag } from "lucide-react";
+import { Clock, Play, Square, Plus, Calendar, CalendarDays, LayoutGrid, Users, Tag, BarChart3 } from "lucide-react";
 import { toast } from "sonner";
 
 interface TimeEntry {
@@ -240,7 +240,7 @@ export default function TimeTrackingPage() {
       <div className="mt-8">
         <h2 className="text-[17px] font-semibold text-[#1d1d1f]">Schedule management</h2>
         <p className="mt-0.5 text-[14px] text-[rgba(0,0,0,0.48)]">Build schedules, manage your team, and track time off</p>
-        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
           {[
             {
               href: "/app/time-tracking/schedule",
@@ -271,6 +271,12 @@ export default function TimeTrackingPage() {
               icon: Tag,
               label: "Roles",
               desc: "Manage shift roles",
+            },
+            {
+              href: "/app/time-tracking/comparison",
+              icon: BarChart3,
+              label: "Planned vs actual",
+              desc: "Scheduled vs logged hours",
             },
           ].map((item) => (
             <Link

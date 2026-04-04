@@ -1,5 +1,49 @@
 # RxDesk release notes
 
+## v0.9.0 — 04/04/2026 — Dashboard schedule enhancements, print, planned vs actual
+
+### Dashboard schedule view
+- **Weekly/daily toggle** — switch between weekly overview grid and daily timeline
+- **Multi-store separated display** — when multiple locations selected, each shows its own schedule section with location header
+- **Hide/show toggle** — eye icon to collapse the schedule section, persisted to sessionStorage
+- **Interval granularity** — 1 Hr / 30 Min / 15 Min selector for daily timeline ruler (controlled via new prop on DailyTimeline)
+- **Print per location** — each location section has a Print button that opens a formatted print view with employee schedules, shift times, roles, and weekly hour totals
+
+### Print schedules
+- Print-ready HTML table with employee name, Mon-Sat shifts, roles, and total hours
+- Opens in new window with auto-print
+- Available per location — users with multi-store access can print each store separately
+- Shows store name and week range in header
+
+### Planned vs actual comparison
+- New page: Time Tracking → Planned vs Actual (/app/time-tracking/comparison)
+- Defaults to last week (past data comparison)
+- Summary cards: planned hours, actual hours, variance (color-coded over/under)
+- Per-employee table with planned, actual, variance, and visual bar comparison
+- Totals row in footer
+- Week navigation + location selector
+- Fetches schedule entries + time entries, merges by employee ID
+
+### DailyTimeline component
+- New `granularity` and `onGranularityChange` props for controlled mode
+- When controlled by parent, internal toggle hidden
+- Standalone mode still works with internal state
+
+### Navigation
+- "Planned vs Actual" added to Time Tracking sub-navigation
+- Added to time-tracking hub page schedule management cards
+
+### Testing — 48 new scenario tests (464 total)
+- Scenario 1: Single location schedule display (6 tests)
+- Scenario 2: Multi-location schedule display (3 tests)
+- Scenario 3: Schedule merge — finalized overrides defaults (8 tests)
+- Scenario 4: Planned vs actual hours calculation (8 tests)
+- Scenario 5: Print schedule hours (7 tests)
+- Scenario 6: Bar positioning at different times (7 tests)
+- Scenario 7: Default availability factory (9 tests)
+
+---
+
 ## v0.8.0 — 04/04/2026 — UX overhaul, dashboard schedule view, scheduler permission
 
 ### 25 UX improvements (all fixed)

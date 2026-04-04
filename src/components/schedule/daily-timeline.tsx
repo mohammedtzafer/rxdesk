@@ -44,10 +44,27 @@ interface DailyTimelineProps {
   employees: EmployeeWithAvailability[];
   day: DayOfWeek;
   onEmployeeClick?: (employee: EmployeeWithAvailability) => void;
+  /** Controlled granularity from parent. When provided, hides the internal toggle. */
+  granularity?: TimeGranularity;
+  onGranularityChange?: (g: TimeGranularity) => void;
 }
 
-export function DailyTimeline({ employees, day, onEmployeeClick }: DailyTimelineProps) {
-  const [granularity, setGranularity] = useState<TimeGranularity>("1h");
+export function DailyTimeline({
+  employees,
+  day,
+  onEmployeeClick,
+  granularity: controlledGranularity,
+  onGranularityChange,
+}: DailyTimelineProps) {
+  const [internalGranularity, setInternalGranularity] = useState<TimeGranularity>("1h");
+  const granularity = controlledGranularity ?? internalGranularity;
+  const setGranularity = (g: TimeGranularity) => {
+    if (onGranularityChange) {
+      onGranularityChange(g);
+    } else {
+      setInternalGranularity(g);
+    }
+  };
   const slots = buildTimeSlots(granularity);
 
   const availableEmployees = employees.filter(
@@ -65,28 +82,30 @@ export function DailyTimeline({ employees, day, onEmployeeClick }: DailyTimeline
             </span>
           </div>
 
-          <div
-            className="flex items-center gap-0.5 bg-[#f5f5f7] rounded-lg p-0.5 print:hidden"
-            role="radiogroup"
-            aria-label="Timeline granularity"
-          >
-            {(["1h", "30m", "15m"] as TimeGranularity[]).map((g) => (
-              <button
-                key={g}
-                type="button"
-                role="radio"
-                aria-checked={granularity === g}
-                onClick={() => setGranularity(g)}
-                className={`h-6 px-2.5 text-[11px] rounded-md transition-all font-medium ${
-                  granularity === g
-                    ? "bg-white shadow-sm text-[#1d1d1f]"
-                    : "text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
-                }`}
-              >
-                {g}
-              </button>
-            ))}
-          </div>
+          {!controlledGranularity && (
+            <div
+              className="flex items-center gap-0.5 bg-[#f5f5f7] rounded-lg p-0.5 print:hidden"
+              role="radiogroup"
+              aria-label="Timeline granularity"
+            >
+              {(["1h", "30m", "15m"] as TimeGranularity[]).map((g) => (
+                <button
+                  key={g}
+                  type="button"
+                  role="radio"
+                  aria-checked={granularity === g}
+                  onClick={() => setGranularity(g)}
+                  className={`h-6 px-2.5 text-[11px] rounded-md transition-all font-medium ${
+                    granularity === g
+                      ? "bg-white shadow-sm text-[#1d1d1f]"
+                      : "text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
+                  }`}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
