@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Clock, Play, Square, Plus, Calendar } from "lucide-react";
+import { Clock, Play, Square, Plus, Calendar, CalendarDays, LayoutGrid, Users, Tag } from "lucide-react";
 import { toast } from "sonner";
 
 interface TimeEntry {
@@ -233,6 +233,58 @@ export default function TimeTrackingPage() {
               </tbody>
             </table>
           )}
+        </div>
+      </div>
+
+      {/* Schedule management */}
+      <div className="mt-8">
+        <h2 className="text-[17px] font-semibold text-[#1d1d1f]">Schedule management</h2>
+        <p className="mt-0.5 text-[14px] text-[rgba(0,0,0,0.48)]">Build schedules, manage your team, and track time off</p>
+        <div className="mt-3 grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            {
+              href: "/app/time-tracking/schedule",
+              icon: CalendarDays,
+              label: "Schedule",
+              desc: "Daily timeline view",
+            },
+            {
+              href: "/app/time-tracking/planner",
+              icon: LayoutGrid,
+              label: "Planner",
+              desc: "Build weekly schedules",
+            },
+            {
+              href: "/app/time-tracking/team",
+              icon: Users,
+              label: "Team",
+              desc: "Availability & preferences",
+            },
+            {
+              href: "/app/time-tracking/time-off",
+              icon: Calendar,
+              label: "Time off",
+              desc: "Requests & approvals",
+            },
+            {
+              href: "/app/time-tracking/roles",
+              icon: Tag,
+              label: "Roles",
+              desc: "Manage shift roles",
+            },
+          ].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="bg-white rounded-xl p-4 border border-[rgba(0,0,0,0.06)] hover:border-[#0071e3] hover:shadow-sm transition-all group"
+            >
+              <div className="w-9 h-9 rounded-lg bg-[#f0f6ff] flex items-center justify-center mb-3 group-hover:bg-[#0071e3] transition-colors">
+                <item.icon className="w-4.5 h-4.5 text-[#0071e3] group-hover:text-white transition-colors" aria-hidden="true" />
+              </div>
+              <p className="text-[14px] font-semibold text-[#1d1d1f]">{item.label}</p>
+              <p className="text-[12px] text-[rgba(0,0,0,0.48)] mt-0.5">{item.desc}</p>
+            </Link>
+          ))}
         </div>
       </div>
 

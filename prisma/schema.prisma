@@ -148,6 +148,7 @@ model Organization {
   coverageRequirements  CoverageRequirement[]
   payRates              PayRate[]
   notifications         Notification[]
+  weeklySchedules       WeeklySchedule[]
 }
 
 model User {
@@ -159,12 +160,14 @@ model User {
   image          String?
   hashedPassword String?
   role           Role      @default(TECHNICIAN)
-  active         Boolean   @default(true)
-  organizationId String?
-  locationId     String?
-  lastActiveAt   DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  active             Boolean   @default(true)
+  organizationId     String?
+  locationId         String?
+  lastActiveAt       DateTime?
+  targetHoursPerWeek Int       @default(40)
+  sortOrder          Int       @default(0)
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
   organization Organization? @relation(fields: [organizationId], references: [id])
   location     Location?     @relation(fields: [locationId], references: [id])
@@ -197,8 +200,11 @@ model Location {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
-  organization Organization @relation(fields: [organizationId], references: [id])
-  users        User[]
+  roles        Json         @default("[\"Pharmacist\", \"Technician\", \"Filling\", \"POS\", \"Driver\"]")
+
+  organization    Organization     @relation(fields: [organizationId], references: [id])
+  users           User[]
+  weeklySchedules WeeklySchedule[]
 
   @@unique([organizationId, name])
   @@index([organizationId])
@@ -733,4 +739,54 @@ model Notification {
 
   @@index([userId, read])
   @@index([organizationId, createdAt])
+}
+
+// ─── PharmShift Scheduling Models ──────────────────────────────
+
+model WeeklySchedule {
+  id             String    @id @default(cuid())
+  organizationId String
+  locationId     String
+  weekStart      String    // ISO date YYYY-MM-DD (Monday)
+  status         String    @default("Not Started") // "Not Started" | "In Progress" | "Finalized"
+  lastUpdated    DateTime  @default(now())
+  finalizedAt    DateTime?
+  createdAt      DateTime  @default(now())
+
+  organization Organization      @relation(fields: [organizationId], references: [id])
+  location     Location          @relation(fields: [locationId], references: [id])
+  entries      ScheduleEntry[]
+  comments     ScheduleComment[]
+
+  @@unique([locationId, weekStart])
+  @@index([organizationId])
+  @@index([locationId])
+}
+
+model ScheduleEntry {
+  id           String  @id @default(cuid())
+  scheduleId   String
+  employeeId   String
+  employeeName String
+  day          String  // "Monday", "Tuesday", etc.
+  available    Boolean @default(true)
+  startTime    String  @default("9:00 AM")
+  endTime      String  @default("5:00 PM")
+  role         String  @default("Filling")
+
+  schedule WeeklySchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@unique([scheduleId, employeeId, day])
+  @@index([scheduleId])
+}
+
+model ScheduleComment {
+  id         String   @id @default(cuid())
+  scheduleId String
+  text       String
+  createdAt  DateTime @default(now())
+
+  schedule WeeklySchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId])
 }

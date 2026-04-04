@@ -1,5 +1,54 @@
 # RxDesk release notes
 
+## v0.6.0 — 04/04/2026 — PharmShift scheduling integration
+
+### Schedule management (ported from PharmShift/ultra-care-pharmacy)
+- **Daily timeline** — Figma-inspired visual schedule bars with ruler header (1h/30m/15m granularity), role-colored employee rows, click-to-edit
+- **Weekly overview** — 6-day grid showing staff count per day with role coverage breakdown
+- **Weekly planner** — Full grid editor (employees × days), click any cell to edit shift details, conflict detection (time-off, over-hours, invalid times)
+- **Schedule workflow** — Not Started → In Progress → Finalized status progression, comments required when editing finalized schedules
+- **Copy previous week** — One-click schedule duplication
+- **Employee availability** — Per-day availability toggles, time ranges, role assignments, target hours per week
+- **Employee reordering** — Sort staff display order
+- **Role management** — Add/rename/delete pharmacy roles per location, color-coded
+- **Schedule notifications** — Auto-notify employees when schedule published or updated after finalization
+
+### New Prisma models
+- WeeklySchedule (org-scoped, unique per location+week)
+- ScheduleEntry (employee×day cells with role, times, availability)
+- ScheduleComment (required notes on finalized schedule edits)
+
+### New fields on existing models
+- User: targetHoursPerWeek, sortOrder
+- Location: roles (JSON array of pharmacy role names)
+
+### New API routes
+- GET/POST /api/schedules — fetch/save weekly schedules with entry upsert
+- GET/PUT /api/employees — employee availability + target hours
+- PUT /api/employees/reorder — sort order
+- PUT /api/locations/[id]/roles — per-location role management
+
+### New libraries
+- schedule-types.ts — types, day/role constants, default availability factory
+- schedule-time-utils.ts — 12h↔decimal conversion, bar positioning, time options
+- schedule-conflicts.ts — time validation, time-off overlap, over-hours detection
+
+### New components (7)
+- daily-timeline, weekly-overview, schedule-editor, employee-form, employee-list, role-manager, employee-avatar + breadcrumbs
+
+### Multi-page SaaS layout
+- /app/time-tracking/ — Hub with clock in/out + schedule nav cards
+- /app/time-tracking/schedule/ — Daily timeline + weekly overview
+- /app/time-tracking/planner/ — Weekly schedule editor
+- /app/time-tracking/team/ — Employee list + availability editor
+- /app/time-tracking/roles/ — Role management
+- All pages use breadcrumb navigation
+
+### Testing
+- 368 tests passing (39 new: schedule-time-utils 24, schedule-conflicts 15)
+
+---
+
 ## v0.5.0 — 04/04/2026 — Live pages + Resend integration
 
 ### Provider detail page
