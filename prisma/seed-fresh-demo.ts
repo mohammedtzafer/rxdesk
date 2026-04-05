@@ -306,7 +306,6 @@ function buildRxBatch(
   quantity: number;
   daysSupply: number;
   payerType: PayerType;
-  metadata: object;
 }> {
   if (targetCount === 0) return [];
 
