@@ -35,7 +35,7 @@ const SORT_OPTIONS = [
   { value: "volume", label: "By volume" },
 ] as const;
 
-const DAY_OPTIONS = [30, 60, 90] as const;
+const DAY_OPTIONS = [7, 14, 30, 60, 90] as const;
 
 type SortBy = (typeof SORT_OPTIONS)[number]["value"];
 
@@ -86,6 +86,9 @@ export default function ProviderAnalysisPage() {
   const [sortBy, setSortBy] = useState<SortBy>("change");
   const [locationFilter, setLocationFilter] = useState("");
   const [locations, setLocations] = useState<string[]>([]);
+  const [customMode, setCustomMode] = useState(false);
+  const [customStart, setCustomStart] = useState("");
+  const [customEnd, setCustomEnd] = useState("");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -230,25 +233,71 @@ export default function ProviderAnalysisPage() {
       {/* Controls */}
       <div className="mt-5 flex flex-wrap gap-2 items-center">
         {/* Time range */}
-        <div className="flex gap-1 bg-white rounded-lg p-1 border border-[rgba(0,0,0,0.06)]">
+        <div className="flex gap-1 bg-white dark:bg-[#1c1c1e] rounded-lg p-1 border border-[rgba(0,0,0,0.06)] dark:border-white/10">
           {DAY_OPTIONS.map((d) => (
             <button
               key={d}
-              onClick={() => setDays(d)}
+              onClick={() => { setDays(d); setCustomMode(false); }}
               className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors ${
-                days === d ? "bg-[#0071e3] text-white" : "text-[rgba(0,0,0,0.56)] hover:text-[#1d1d1f]"
+                !customMode && days === d
+                  ? "bg-[#0071e3] text-white"
+                  : "text-[rgba(0,0,0,0.56)] dark:text-white/56 hover:text-[#1d1d1f] dark:hover:text-white"
               }`}
             >
               {d}d
             </button>
           ))}
+          <button
+            onClick={() => setCustomMode(true)}
+            className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors ${
+              customMode
+                ? "bg-[#0071e3] text-white"
+                : "text-[rgba(0,0,0,0.56)] dark:text-white/56 hover:text-[#1d1d1f] dark:hover:text-white"
+            }`}
+          >
+            Custom
+          </button>
         </div>
+
+        {/* Custom date range */}
+        {customMode && (
+          <div className="flex items-center gap-2 flex-wrap">
+            <input
+              type="date"
+              value={customStart}
+              onChange={(e) => setCustomStart(e.target.value)}
+              className="h-9 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 px-2 text-[13px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white"
+              aria-label="Start date"
+            />
+            <span className="text-[13px] text-[rgba(0,0,0,0.40)] dark:text-white/40">to</span>
+            <input
+              type="date"
+              value={customEnd}
+              onChange={(e) => setCustomEnd(e.target.value)}
+              className="h-9 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 px-2 text-[13px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white"
+              aria-label="End date"
+            />
+            {customStart && customEnd && (
+              <button
+                onClick={() => {
+                  const start = new Date(customStart);
+                  const end = new Date(customEnd);
+                  const diffDays = Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
+                  if (diffDays > 0) setDays(diffDays);
+                }}
+                className="h-9 px-3 bg-[#0071e3] text-white rounded-lg text-[13px] hover:bg-[#0077ED] transition-colors"
+              >
+                Apply
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Sort */}
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortBy)}
-          className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] text-[13px] bg-white text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
+          className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 text-[13px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -262,7 +311,7 @@ export default function ProviderAnalysisPage() {
           <select
             value={locationFilter}
             onChange={(e) => setLocationFilter(e.target.value)}
-            className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] text-[13px] bg-white text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
+            className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 text-[13px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
           >
             <option value="">All locations</option>
             {locations.map((loc) => (
@@ -275,7 +324,7 @@ export default function ProviderAnalysisPage() {
       </div>
 
       {/* Table */}
-      <div className="mt-4 bg-white rounded-xl border border-[rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="mt-4 bg-white dark:bg-[#1c1c1e] rounded-xl border border-[rgba(0,0,0,0.06)] dark:border-white/10 overflow-hidden">
         {loading ? (
           <div className="p-4 space-y-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (

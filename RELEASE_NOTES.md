@@ -1,5 +1,35 @@
 # RxDesk release notes
 
+## v1.1.0 — 04/04/2026 — Product pivot: Field Rep, dark mode, provider-centric analytics
+
+### Drug Rep → Field Rep (conceptual correction)
+- Drug Rep is now a **pharmacy-hired field rep** who visits doctor offices to build relationships and steer Rx referrals
+- Per-visit pay model (not hourly)
+- **New single-screen dashboard** with monthly calendar, visit list, and stats sidebar
+- **Log Visit form**: provider typeahead search, multi-provider selection, saved/frequent providers, date + time range, lunch provided toggle, structured notes
+- Visit detail page shows "Referral impact — Rx since this visit"
+- Correlations page renamed to "Field rep visit correlations"
+
+### Prescriptions menu removed
+- Prescriptions nav and all sub-pages removed from sidebar
+- Backend APIs remain for analytics accessed through Provider pages
+- Drug Search removed from nav (available in context)
+
+### Provider-centric Rx data
+- **Upload Rx Data** button added to Provider list and Provider detail pages
+- New dedicated upload page at /app/providers/upload
+- CSV columns: Provider Name, NPI, Date of Origin, Date of Fill, Drug Name, NDC, Brand/Generic
+- **Updated date filters**: 7d, 14d, 30d, 60d, 90d, Custom (with inline date range inputs)
+- Applied to Provider detail and Analyze Trends pages
+
+### Dark mode
+- Full dark/light mode toggle in top nav (Sun/Moon icon)
+- Dark theme: black background, #1c1c1e cards, white text, adjusted borders
+- Powered by next-themes with class attribute strategy
+- Applied across app shell, calendar, modals, tables, stats cards
+
+---
+
 ## v1.0.0 — 04/04/2026 — Pharmacy integration APIs
 
 ### PMS integration framework

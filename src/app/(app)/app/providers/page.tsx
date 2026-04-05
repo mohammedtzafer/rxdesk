@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, Users, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Search, Plus, Users, TrendingUp, TrendingDown, Minus, Upload } from "lucide-react";
 import { ErrorState } from "@/components/error-state";
 
 interface Provider {
@@ -110,11 +110,18 @@ export default function ProvidersPage() {
             Search NPI
           </Link>
           <Link
+            href="/app/providers/upload"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-white dark:hover:bg-white/10 transition-colors"
+          >
+            <Upload className="w-4 h-4" />
+            Upload Rx Data
+          </Link>
+          <Link
             href="/app/providers/import"
-            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-white dark:hover:bg-white/10 transition-colors"
           >
             <Plus className="w-4 h-4" />
-            Import CSV
+            Import providers
           </Link>
         </div>
       </div>

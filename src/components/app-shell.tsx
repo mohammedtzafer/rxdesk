@@ -3,10 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTheme } from "next-themes";
 import {
   LayoutDashboard,
   Users,
-  Pill,
   Briefcase,
   Clock,
   BarChart3,
@@ -22,16 +22,16 @@ import {
   PanelLeft,
   Calendar,
   CalendarDays,
-  UserCircle,
   Wrench,
   Upload,
   Search,
   TrendingUp,
   HelpCircle,
   FileText,
-  Activity,
   Heart,
   Plug,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -63,28 +63,17 @@ const navItems: NavItem[] = [
       { label: "Directory", href: "/app/providers", icon: Users },
       { label: "Search NPI", href: "/app/providers/search", icon: Search },
       { label: "Analyze Trends", href: "/app/providers/analysis", icon: TrendingUp },
+      { label: "Upload Rx Data", href: "/app/providers/upload", icon: Upload },
     ],
   },
   {
-    label: "Prescriptions",
-    href: "/app/prescriptions",
-    icon: Pill,
-    module: "PRESCRIPTIONS",
-    mobileTab: true,
-    children: [
-      { label: "Analytics", href: "/app/prescriptions", icon: TrendingUp },
-      { label: "Upload CSV", href: "/app/prescriptions/upload", icon: Upload },
-      { label: "Events", href: "/app/prescriptions/events", icon: Activity },
-    ],
-  },
-  {
-    label: "Drug Reps",
+    label: "Field Reps",
     href: "/app/drug-reps",
     icon: Briefcase,
     module: "DRUG_REPS",
     mobileTab: true,
     children: [
-      { label: "Directory", href: "/app/drug-reps", icon: Briefcase },
+      { label: "Visit log", href: "/app/drug-reps", icon: Briefcase },
       { label: "Correlations", href: "/app/drug-reps/correlations", icon: TrendingUp },
     ],
   },
@@ -117,7 +106,6 @@ const navItems: NavItem[] = [
     ],
   },
   { label: "Patients", href: "/app/patients", icon: Heart, module: "PRESCRIPTIONS" },
-  { label: "Drug Search", href: "/app/drugs", icon: Search, module: "PRESCRIPTIONS" },
   { label: "FAQ", href: "/app/faq", icon: HelpCircle },
   { label: "Release Notes", href: "/app/release-notes", icon: FileText },
 ];
@@ -145,6 +133,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
+  const { theme, setTheme } = useTheme();
 
   // Auto-expand the section that contains the current path
   useEffect(() => {
@@ -195,7 +184,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
   const isSectionActive = (href: string) => pathname.startsWith(href);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-background">
       {/* Desktop sidebar */}
       <aside
         className={cn(
@@ -218,13 +207,24 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
               <span className="text-white font-semibold tracking-tight truncate">{brandName}</span>
             )}
           </div>
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="p-2 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors shrink-0"
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          >
-            {collapsed ? <PanelLeft className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
-          </button>
+          <div className="flex items-center gap-1 shrink-0">
+            {!collapsed && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="p-1.5 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+                aria-label="Toggle dark mode"
+              >
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+            )}
+            <button
+              onClick={() => setCollapsed(!collapsed)}
+              className="p-2 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors"
+              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              {collapsed ? <PanelLeft className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
@@ -340,13 +340,22 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
           </div>
           <span className="text-white font-semibold text-sm">{brandName}</span>
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="text-white p-1"
-          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="p-2 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+            aria-label="Toggle dark mode"
+          >
+            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="text-white p-1"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </header>
 
       {/* Mobile menu overlay */}
@@ -400,7 +409,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {/* Main content */}
       <main
         className={cn(
-          "flex-1 pt-14 md:pt-0 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200",
+          "flex-1 pt-14 md:pt-0 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200 bg-background",
           collapsed ? "md:ml-16" : "md:ml-60"
         )}
       >
@@ -408,7 +417,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       </main>
 
       {/* Mobile bottom tabs */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[72px] bg-white border-t border-black/5 flex items-center justify-around z-40 px-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[72px] bg-white dark:bg-[#1c1c1e] border-t border-black/5 dark:border-white/10 flex items-center justify-around z-40 px-2">
         {mobileTabs.map((item) => {
           const Icon = item.icon;
           const isActive = isSectionActive(item.href);
@@ -418,7 +427,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
               href={item.href}
               className={cn(
                 "flex flex-col items-center gap-0.5 px-3 py-1 min-h-[48px] min-w-[48px] justify-center",
-                isActive ? "text-[#0071e3]" : "text-[rgba(0,0,0,0.48)]"
+                isActive ? "text-[#0071e3]" : "text-[rgba(0,0,0,0.48)] dark:text-white/48"
               )}
             >
               <Icon className="w-6 h-6" />
@@ -431,7 +440,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
             onClick={() => setMoreMenuOpen(!moreMenuOpen)}
             className={cn(
               "flex flex-col items-center gap-0.5 px-3 py-1 min-h-[48px] min-w-[48px] justify-center",
-              moreMenuOpen ? "text-[#0071e3]" : "text-[rgba(0,0,0,0.48)]"
+              moreMenuOpen ? "text-[#0071e3]" : "text-[rgba(0,0,0,0.48)] dark:text-white/48"
             )}
             aria-label="More navigation options"
           >
@@ -445,7 +454,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {moreMenuOpen && (
         <>
           <div className="md:hidden fixed inset-0 bg-black/20 z-20" onClick={() => setMoreMenuOpen(false)} />
-          <div className="md:hidden fixed bottom-[72px] left-0 right-0 bg-white border-t border-black/5 z-30 p-3 rounded-t-xl shadow-lg">
+          <div className="md:hidden fixed bottom-[72px] left-0 right-0 bg-white dark:bg-[#1c1c1e] border-t border-black/5 dark:border-white/10 z-30 p-3 rounded-t-xl shadow-lg">
             {moreItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -455,7 +464,9 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                   onClick={() => setMoreMenuOpen(false)}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors",
-                    isSectionActive(item.href) ? "bg-[#0071e3]/10 text-[#0071e3] font-medium" : "text-[#1d1d1f] hover:bg-[#f5f5f7]"
+                    isSectionActive(item.href)
+                      ? "bg-[#0071e3]/10 text-[#0071e3] font-medium"
+                      : "text-[#1d1d1f] dark:text-white hover:bg-[#f5f5f7] dark:hover:bg-white/10"
                   )}
                 >
                   <Icon className="w-4 h-4" />

@@ -92,7 +92,7 @@ export default function DrugRepVisitDetailPage() {
           className="mt-6 inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Drug Reps
+          Back to visit log
         </Link>
       </div>
     );
@@ -114,7 +114,7 @@ export default function DrugRepVisitDetailPage() {
         className="inline-flex items-center gap-1.5 text-[14px] text-[#0071e3] hover:underline"
       >
         <ArrowLeft className="w-4 h-4" />
-        Drug Reps
+        Visit log
       </Link>
 
       {/* Visit header card */}
@@ -210,7 +210,7 @@ export default function DrugRepVisitDetailPage() {
       {visit.providerDetails.length > 0 && (
         <div>
           <h2 className="text-[21px] font-semibold text-[#1d1d1f] mb-3">
-            Provider Rx Activity
+            Referral impact — Rx since this visit
           </h2>
           <div className="space-y-4">
             {visit.providerDetails.map((pd) => {

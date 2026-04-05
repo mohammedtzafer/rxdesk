@@ -44,11 +44,11 @@ export default function CorrelationsPage() {
     <div>
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
-            Rep Visit Correlations
+          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f] dark:text-white">
+            Field rep visit correlations
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
-            Rx volume changes within 4 weeks of drug rep visits
+          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)] dark:text-white/48">
+            Rx volume changes within 4 weeks of field rep visits to provider offices
           </p>
         </div>
         <select value={days} onChange={(e) => setDays(parseInt(e.target.value))} className="h-9 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white">
@@ -65,9 +65,9 @@ export default function CorrelationsPage() {
       ) : significantCorrelations.length === 0 ? (
         <div className="mt-8 bg-white rounded-xl p-12 text-center">
           <AlertTriangle className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
-          <h2 className="mt-4 text-[21px] font-bold text-[#1d1d1f]">No significant correlations</h2>
-          <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)] max-w-md mx-auto">
-            Log drug rep visits and upload prescription data to see how rep activity correlates with prescription volume changes.
+          <h2 className="mt-4 text-[21px] font-bold text-[#1d1d1f] dark:text-white">No significant correlations</h2>
+          <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)] dark:text-white/48 max-w-md mx-auto">
+            Log field rep visits to provider offices and upload prescription data to see how visit activity correlates with prescription volume changes.
           </p>
         </div>
       ) : (
