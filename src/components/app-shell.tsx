@@ -199,8 +199,8 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {/* ── Desktop: Brand banner (OUTSIDE sidebar, fixed at top) ── */}
       <div
         className={cn(
-          "hidden md:flex items-center fixed top-0 left-0 z-50 h-20 bg-background transition-all duration-200",
-          collapsed ? "w-16 justify-center px-1" : "w-64 gap-4 px-4"
+          "hidden md:flex fixed top-0 left-0 z-50 bg-background transition-all duration-200",
+          collapsed ? "w-16 items-center justify-center h-20 px-1" : "w-64 flex-col items-center justify-center h-40 px-4"
         )}
       >
         {branding?.logoUrl ? (
@@ -209,22 +209,21 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
             src={branding.logoUrl}
             alt={brandName}
             className={cn(
-              "rounded-xl object-contain shrink-0 transition-all duration-200",
-              collapsed ? "h-9 max-w-[36px]" : "h-12 max-w-[56px]"
+              "rounded-2xl object-contain shrink-0 transition-all duration-200",
+              collapsed ? "h-10 max-w-[40px]" : "h-[120px] max-w-[140px]"
             )}
           />
         ) : (
           <div className={cn(
-            "rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold shrink-0 transition-all duration-200",
-            collapsed ? "w-9 h-9 text-xs" : "w-12 h-12 text-base"
+            "rounded-2xl bg-[#0071e3] flex items-center justify-center text-white font-bold shrink-0 transition-all duration-200",
+            collapsed ? "w-10 h-10 text-sm" : "w-[120px] h-[120px] text-3xl"
           )}>
             Rx
           </div>
         )}
         {!collapsed && (
-          <div className="min-w-0 flex-1">
-            <p className="text-[16px] font-semibold text-foreground leading-tight">{brandName}</p>
-            <p className="text-[11px] text-muted-foreground mt-1">Pharmacy Management</p>
+          <div className="text-center mt-2">
+            <p className="text-[15px] font-semibold text-foreground leading-tight">{brandName}</p>
           </div>
         )}
       </div>
@@ -232,8 +231,9 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {/* ── Desktop sidebar (below brand banner) ── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 bg-background top-20 bottom-0",
-          sidebarWidth
+          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 bg-background bottom-0",
+          sidebarWidth,
+          collapsed ? "top-20" : "top-40"
         )}
       >
         {/* Toolbar: theme toggle + collapse */}
@@ -429,7 +429,8 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {/* ── Main content (offset by brand banner height + sidebar width) ── */}
       <main
         className={cn(
-          "flex-1 pt-14 md:pt-20 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200",
+          "flex-1 pt-14 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200",
+          collapsed ? "md:pt-20" : "md:pt-40",
           mainMargin
         )}
       >
