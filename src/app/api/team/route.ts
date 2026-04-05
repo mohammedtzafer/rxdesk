@@ -57,7 +57,7 @@ export async function GET() {
 
 const inviteSchema = z.object({
   email: z.string().email("Invalid email"),
-  role: z.enum(["PHARMACIST", "TECHNICIAN"]),
+  role: z.enum(["PHARMACIST", "TECHNICIAN", "DRUG_REP"]),
   locationId: z.string().optional(),
 });
 

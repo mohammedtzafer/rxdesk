@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { writeAuditLog, AuditActions } from "@/lib/audit";
 
 const updateUserSchema = z.object({
-  role: z.enum(["PHARMACIST", "TECHNICIAN"]).optional(),
+  role: z.enum(["PHARMACIST", "TECHNICIAN", "DRUG_REP"]).optional(),
   locationId: z.string().nullable().optional(),
   active: z.boolean().optional(),
   locationIds: z.array(z.string()).optional(),

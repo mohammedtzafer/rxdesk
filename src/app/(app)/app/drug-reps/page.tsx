@@ -1,7 +1,7 @@
 "use client";
 
 // Field Rep Dashboard — single-screen visit log interface
-// The field rep logs in and sees only this page
+// The drug rep logs in and sees only this page
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Input } from "@/components/ui/input";
@@ -235,7 +235,7 @@ export default function DrugRepsPage() {
       }
 
       if (!drugRepId) {
-        toast.error("No field rep profile found. Contact your administrator.");
+        toast.error("No drug rep profile found. Contact your administrator.");
         setSubmitting(false);
         return;
       }

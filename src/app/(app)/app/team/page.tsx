@@ -36,6 +36,7 @@ const roleColors: Record<string, string> = {
   OWNER: "bg-[#0071e3]/10 text-[#0071e3]",
   PHARMACIST: "bg-[#22C55E]/10 text-[#22C55E]",
   TECHNICIAN: "bg-[rgba(0,0,0,0.05)] text-[rgba(0,0,0,0.48)]",
+  DRUG_REP: "bg-[#F59E0B]/10 text-[#F59E0B]",
 };
 
 export default function TeamPage() {
@@ -415,10 +416,13 @@ export default function TeamPage() {
                 >
                   <option value="PHARMACIST">Pharmacist</option>
                   <option value="TECHNICIAN">Technician</option>
+                  <option value="DRUG_REP">Drug Rep</option>
                 </select>
                 <p className="text-[12px] text-[rgba(0,0,0,0.48)]">
                   {editForm.role === "PHARMACIST"
                     ? "Full access to providers, prescriptions, drug reps, and time tracking. View-only reports."
+                    : editForm.role === "DRUG_REP"
+                    ? "Visit log only. Sees only the Drug Rep dashboard to log provider visits."
                     : "Edit access to time tracking. View-only providers. No access to prescriptions, drug reps, or reports."}
                 </p>
               </div>
@@ -499,6 +503,7 @@ export default function TeamPage() {
                 <select value={inviteForm.role} onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })} className="w-full h-10 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white">
                   <option value="PHARMACIST">Pharmacist</option>
                   <option value="TECHNICIAN">Technician</option>
+                  <option value="DRUG_REP">Drug Rep</option>
                 </select>
               </div>
               <button type="submit" className="w-full h-10 bg-[#0071e3] text-white rounded-lg text-[14px] font-medium hover:bg-[#0077ED]">Send invitation</button>

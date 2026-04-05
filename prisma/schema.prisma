@@ -52,6 +52,7 @@ enum Role {
   OWNER
   PHARMACIST
   TECHNICIAN
+  DRUG_REP
 }
 
 enum Module {

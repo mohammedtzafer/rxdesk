@@ -22,7 +22,7 @@ function createPrismaClient(): PrismaClient {
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-type Role = "OWNER" | "PHARMACIST" | "TECHNICIAN";
+type Role = "OWNER" | "PHARMACIST" | "TECHNICIAN" | "DRUG_REP";
 type Module =
   | "PROVIDERS"
   | "PRESCRIPTIONS"
@@ -73,6 +73,16 @@ const DEFAULT_PERMISSIONS: Record<Role, Record<Module, Access>> = {
     DRUG_REPS: "NONE",
     TIME_TRACKING: "EDIT",
     SCHEDULING: "VIEW",
+    TEAM: "NONE",
+    REPORTS: "NONE",
+    SETTINGS: "NONE",
+  },
+  DRUG_REP: {
+    PROVIDERS: "NONE",
+    PRESCRIPTIONS: "NONE",
+    DRUG_REPS: "FULL",
+    TIME_TRACKING: "NONE",
+    SCHEDULING: "NONE",
     TEAM: "NONE",
     REPORTS: "NONE",
     SETTINGS: "NONE",
@@ -664,9 +674,9 @@ async function main() {
     { name: "Marcus Johnson", email: "marcus@valleyhealth.com", role: "TECHNICIAN",  locationId: mainStreet.id },
     { name: "Mei Lin",        email: "mei@valleyhealth.com",    role: "TECHNICIAN",  locationId: westside.id   },
     { name: "James Wilson",   email: "james@valleyhealth.com",  role: "TECHNICIAN",  locationId: mainStreet.id },
-    // Field reps — TECHNICIAN role with DRUG_REPS FULL permission override
-    { name: "Alex Rivera",    email: "alex@valleyhealth.com",   role: "TECHNICIAN",  locationId: mainStreet.id, isFieldRep: true },
-    { name: "Jordan Blake",   email: "jordan@valleyhealth.com", role: "TECHNICIAN",  locationId: westside.id,   isFieldRep: true },
+    // Drug Reps — DRUG_REP role, only see visit log
+    { name: "Alex Rivera",    email: "alex@valleyhealth.com",   role: "DRUG_REP",    locationId: mainStreet.id, isFieldRep: true },
+    { name: "Jordan Blake",   email: "jordan@valleyhealth.com", role: "DRUG_REP",    locationId: westside.id,   isFieldRep: true },
   ];
 
   const createdUsers: Array<{ id: string; email: string; role: Role; isFieldRep: boolean }> = [];
@@ -704,9 +714,7 @@ async function main() {
   for (const user of createdUsers) {
     const basePerms = getDefaultPermissions(user.role);
     for (const perm of basePerms) {
-      // Field reps: override DRUG_REPS to FULL, everything else stays TECHNICIAN default
-      const access: Access =
-        user.isFieldRep && perm.module === "DRUG_REPS" ? "FULL" : perm.access;
+      const access: Access = perm.access;
       permissionData.push({
         userId: user.id,
         organizationId: org.id,
@@ -1645,8 +1653,8 @@ async function main() {
   console.log(`  ${padName("Marcus Johnson")}  ${padEmail("marcus@valleyhealth.com")}  TECHNICIAN`);
   console.log(`  ${padName("Mei Lin")}  ${padEmail("mei@valleyhealth.com")}  TECHNICIAN`);
   console.log(`  ${padName("James Wilson")}  ${padEmail("james@valleyhealth.com")}  TECHNICIAN`);
-  console.log(`  ${padName("Alex Rivera")}  ${padEmail("alex@valleyhealth.com")}  FIELD REP (TECHNICIAN + DRUG_REPS FULL)`);
-  console.log(`  ${padName("Jordan Blake")}  ${padEmail("jordan@valleyhealth.com")}  FIELD REP (TECHNICIAN + DRUG_REPS FULL)`);
+  console.log(`  ${padName("Alex Rivera")}  ${padEmail("alex@valleyhealth.com")}  DRUG REP`);
+  console.log(`  ${padName("Jordan Blake")}  ${padEmail("jordan@valleyhealth.com")}  DRUG REP`);
   console.log("");
 
   await prisma.$disconnect();

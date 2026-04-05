@@ -60,6 +60,16 @@ const DEFAULT_PERMISSIONS: Record<Role, Record<Module, Access>> = {
     REPORTS: "NONE",
     SETTINGS: "NONE",
   },
+  DRUG_REP: {
+    PROVIDERS: "NONE",
+    PRESCRIPTIONS: "NONE",
+    DRUG_REPS: "FULL",
+    TIME_TRACKING: "NONE",
+    SCHEDULING: "NONE",
+    TEAM: "NONE",
+    REPORTS: "NONE",
+    SETTINGS: "NONE",
+  },
 };
 
 export function getDefaultPermissions(

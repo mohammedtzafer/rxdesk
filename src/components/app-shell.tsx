@@ -67,13 +67,13 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    label: "Field Reps",
+    label: "Drug Reps",
     href: "/app/drug-reps",
     icon: Briefcase,
     module: "DRUG_REPS",
     mobileTab: true,
     children: [
-      { label: "Visit log", href: "/app/drug-reps", icon: Briefcase },
+      { label: "Visit Log", href: "/app/drug-reps", icon: Briefcase },
       { label: "Correlations", href: "/app/drug-reps/correlations", icon: TrendingUp },
     ],
   },
@@ -161,6 +161,9 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     return perm ? perm.access !== "NONE" : false;
   };
 
+  // Drug Rep role: only sees the Visit Log page — nothing else
+  const isDrugRepOnly = user.role === "DRUG_REP";
+
   const toggleSection = (href: string) => {
     setExpandedSections((prev) => {
       const next = new Set(prev);
@@ -170,7 +173,20 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     });
   };
 
-  const visibleNav = navItems.filter((item) => hasAccess(item.module));
+  // In Drug Rep-only mode, show only the Drug Reps visit log — no other nav items
+  const drugRepOnlyNav: NavItem[] = [
+    {
+      label: "Drug Reps",
+      href: "/app/drug-reps",
+      icon: Briefcase,
+      module: "DRUG_REPS",
+      mobileTab: true,
+    },
+  ];
+
+  const visibleNav = isDrugRepOnly
+    ? drugRepOnlyNav
+    : navItems.filter((item) => hasAccess(item.module));
   const mobileTabs = visibleNav.filter((item) => item.mobileTab).slice(0, 4);
   const moreItems = visibleNav.filter((item) => !mobileTabs.includes(item));
 
