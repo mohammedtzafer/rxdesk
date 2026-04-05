@@ -50,22 +50,22 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="border-b border-[rgba(0,0,0,0.06)] last:border-0">
+    <div className="border-b border-border/70 last:border-0">
       <button
         type="button"
         onClick={() => setOpen(!open)}
         className="w-full flex items-center justify-between gap-4 py-4 text-left group"
         aria-expanded={open}
       >
-        <span className="text-[15px] font-medium text-[#1d1d1f] group-hover:text-[#0071e3] transition-colors">
+        <span className="text-[15px] font-medium text-foreground group-hover:text-[#0071e3] transition-colors">
           {q}
         </span>
         <ChevronDown
-          className={`w-4 h-4 shrink-0 text-[rgba(0,0,0,0.48)] transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          className={`w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-200 ${open ? "rotate-180" : ""}`}
         />
       </button>
       <div className={`overflow-hidden transition-all duration-200 ${open ? "max-h-96" : "max-h-0"}`}>
-        <p className="pb-4 text-[14px] text-[rgba(0,0,0,0.6)] leading-relaxed">{a}</p>
+        <p className="pb-4 text-[14px] text-foreground/60 leading-relaxed">{a}</p>
       </div>
     </div>
   );
@@ -75,11 +75,11 @@ export default function FAQPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">FAQ</h1>
-        <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">Answers to common questions about RxDesk.</p>
+        <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">FAQ</h1>
+        <p className="mt-2 text-[17px] text-muted-foreground">Answers to common questions about RxDesk.</p>
       </div>
 
-      <div className="max-w-2xl bg-white rounded-xl px-6 divide-y-0">
+      <div className="max-w-2xl bg-card rounded-xl px-6 divide-y-0">
         {faqs.map((faq) => (
           <FAQItem key={faq.q} q={faq.q} a={faq.a} />
         ))}
@@ -87,8 +87,8 @@ export default function FAQPage() {
 
       <div className="mt-8 max-w-2xl">
         <div className="bg-[#0071e3]/5 border border-[#0071e3]/15 rounded-xl p-5">
-          <p className="text-[14px] font-medium text-[#1d1d1f]">Still have questions?</p>
-          <p className="mt-1 text-[13px] text-[rgba(0,0,0,0.48)]">
+          <p className="text-[14px] font-medium text-foreground">Still have questions?</p>
+          <p className="mt-1 text-[13px] text-muted-foreground">
             Email us at{" "}
             <a href="mailto:support@rxdesk.com" className="text-[#0071e3] hover:underline">
               support@rxdesk.com

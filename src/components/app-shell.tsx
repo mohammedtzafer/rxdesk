@@ -204,43 +204,66 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {/* Desktop sidebar */}
       <aside
         className={cn(
-          "hidden md:flex flex-col fixed inset-y-0 left-0 z-40 transition-all duration-200",
-          collapsed ? "md:w-16" : "md:w-60"
+          "hidden md:flex flex-col fixed inset-y-0 left-0 z-40 transition-all duration-200 border-r",
+          collapsed ? "md:w-16" : "md:w-64",
+          "bg-white dark:bg-black/90 border-border dark:border-white/10"
         )}
         style={{
-          background: "rgba(0, 0, 0, 0.85)",
           backdropFilter: "saturate(180%) blur(20px)",
           WebkitBackdropFilter: "saturate(180%) blur(20px)",
         }}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between px-3 h-14 border-b border-white/10">
-          <div className="flex items-center gap-2 min-w-0">
-            <div className="w-8 h-8 rounded-lg bg-[#0071e3] flex items-center justify-center text-white font-semibold text-sm shrink-0">
-              Rx
+        {/* Brand area */}
+        <div className={cn("border-b border-border dark:border-white/10", collapsed ? "px-2 py-3" : "px-4 py-4")}>
+          {collapsed ? (
+            <div className="flex justify-center">
+              {branding?.logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={branding.logoUrl} alt={brandName} className="w-10 h-10 rounded-xl object-cover" />
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-sm">
+                  Rx
+                </div>
+              )}
             </div>
-            {!collapsed && (
-              <span className="text-white font-semibold tracking-tight truncate">{brandName}</span>
-            )}
-          </div>
-          <div className="flex items-center gap-1 shrink-0">
-            {!collapsed && (
-              <button
-                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="p-1.5 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors"
-                aria-label="Toggle dark mode"
-              >
-                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
-            )}
-            <button
-              onClick={() => setCollapsed(!collapsed)}
-              className="p-2 rounded-md hover:bg-white/10 text-white/50 hover:text-white transition-colors"
-              aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            >
-              {collapsed ? <PanelLeft className="w-5 h-5" /> : <PanelLeftClose className="w-5 h-5" />}
-            </button>
-          </div>
+          ) : (
+            <div>
+              <div className="flex items-center gap-3">
+                {branding?.logoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={branding.logoUrl} alt={brandName} className="w-10 h-10 rounded-xl object-cover shrink-0" />
+                ) : (
+                  <div className="w-10 h-10 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-sm shrink-0">
+                    Rx
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="text-[15px] font-semibold text-foreground dark:text-white leading-tight">
+                    {brandName}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground dark:text-white/40 mt-0.5">
+                    Pharmacy Management
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center justify-end gap-1 mt-2">
+                <button
+                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  className="p-1.5 rounded-md hover:bg-muted dark:hover:bg-white/10 text-muted-foreground dark:text-white/50 hover:text-foreground dark:hover:text-white transition-colors"
+                  aria-label="Toggle dark mode"
+                >
+                  {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                </button>
+                <button
+                  onClick={() => setCollapsed(!collapsed)}
+                  className="p-1.5 rounded-md hover:bg-muted dark:hover:bg-white/10 text-muted-foreground dark:text-white/50 hover:text-foreground dark:hover:text-white transition-colors"
+                  aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+                >
+                  {collapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Navigation */}
@@ -262,8 +285,8 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                       isActive && !hasChildren
                         ? "bg-[#0071e3] text-white"
                         : isActive && hasChildren
-                        ? "text-white"
-                        : "text-white/70 hover:text-white hover:bg-white/10"
+                        ? "text-foreground dark:text-white"
+                        : "text-muted-foreground dark:text-white/70 hover:text-foreground dark:hover:text-white hover:bg-muted dark:hover:bg-white/10"
                     )}
                     title={collapsed ? item.label : undefined}
                   >
@@ -273,7 +296,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                   {hasChildren && !collapsed && (
                     <button
                       onClick={() => toggleSection(item.href)}
-                      className="p-1.5 rounded-md hover:bg-white/10 text-white/40 hover:text-white transition-colors shrink-0"
+                      className="p-1.5 rounded-md hover:bg-muted dark:hover:bg-white/10 text-muted-foreground/60 dark:text-white/40 hover:text-foreground dark:hover:text-white transition-colors shrink-0"
                       aria-label={isExpanded ? `Collapse ${item.label}` : `Expand ${item.label}`}
                     >
                       {isExpanded ? (
@@ -287,7 +310,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
 
                 {/* Sub-navigation */}
                 {hasChildren && isExpanded && !collapsed && (
-                  <div className="ml-4 pl-3 border-l border-white/10 mt-0.5 space-y-0.5">
+                  <div className="ml-4 pl-3 border-l border-border dark:border-white/10 mt-0.5 space-y-0.5">
                     {item.children!.map((child) => {
                       const ChildIcon = child.icon;
                       const isChildActive = isExactActive(child.href);
@@ -299,7 +322,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                             "flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] transition-colors",
                             isChildActive
                               ? "bg-[#0071e3] text-white"
-                              : "text-white/50 hover:text-white hover:bg-white/10"
+                              : "text-muted-foreground dark:text-white/50 hover:text-foreground dark:hover:text-white hover:bg-muted dark:hover:bg-white/10"
                           )}
                         >
                           <ChildIcon className="w-3.5 h-3.5 shrink-0" />
@@ -315,25 +338,25 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
         </nav>
 
         {/* User section */}
-        <div className="px-2 py-3 border-t border-white/10">
+        <div className="px-2 py-3 border-t border-border dark:border-white/10">
           <Link
             href="/app/profile"
-            className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-white/10 transition-colors"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted dark:hover:bg-white/10 transition-colors"
             title={collapsed ? user.name : undefined}
           >
-            <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white text-xs font-medium shrink-0">
+            <div className="w-8 h-8 rounded-full bg-muted dark:bg-white/20 flex items-center justify-center text-foreground dark:text-white text-xs font-medium shrink-0">
               {initials}
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-white text-sm font-medium truncate">{user.name}</p>
-                <p className="text-white/50 text-xs truncate">{user.role}</p>
+                <p className="text-foreground dark:text-white text-sm font-medium truncate">{user.name}</p>
+                <p className="text-muted-foreground dark:text-white/50 text-xs truncate">{user.role}</p>
               </div>
             )}
           </Link>
           {!collapsed && (
             <div className="mt-1 px-2">
-              <Badge variant="outline" className="text-white/60 border-white/20 text-[10px]">
+              <Badge variant="outline" className="text-muted-foreground dark:text-white/60 border-border dark:border-white/20 text-[10px]">
                 {plan}
               </Badge>
             </div>
@@ -343,30 +366,26 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
 
       {/* Mobile top header */}
       <header
-        className="md:hidden fixed top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-4"
-        style={{
-          background: "rgba(0, 0, 0, 0.85)",
-          backdropFilter: "saturate(180%) blur(20px)",
-          WebkitBackdropFilter: "saturate(180%) blur(20px)",
-        }}
+        className="md:hidden fixed top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-4 bg-white dark:bg-black/90 border-b border-border dark:border-white/10"
+        style={{ backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)" }}
       >
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-md bg-[#0071e3] flex items-center justify-center text-white font-semibold text-xs">
             Rx
           </div>
-          <span className="text-white font-semibold text-sm">{brandName}</span>
+          <span className="text-foreground dark:text-white font-semibold text-sm">{brandName}</span>
         </div>
         <div className="flex items-center gap-1">
           <button
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="p-2 rounded-lg hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+            className="p-2 rounded-lg hover:bg-muted dark:hover:bg-white/10 text-muted-foreground dark:text-white/60 hover:text-foreground dark:hover:text-white transition-colors"
             aria-label="Toggle dark mode"
           >
             {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
           </button>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-white p-1"
+            className="text-foreground dark:text-white p-1"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -426,7 +445,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       <main
         className={cn(
           "flex-1 pt-14 md:pt-0 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200 bg-background",
-          collapsed ? "md:ml-16" : "md:ml-60"
+          collapsed ? "md:ml-16" : "md:ml-64"
         )}
       >
         <div className="p-4 md:p-6 max-w-7xl mx-auto">{children}</div>

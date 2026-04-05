@@ -35,7 +35,7 @@ interface LocationOption {
 const roleColors: Record<string, string> = {
   OWNER: "bg-[#0071e3]/10 text-[#0071e3]",
   PHARMACIST: "bg-[#22C55E]/10 text-[#22C55E]",
-  TECHNICIAN: "bg-[rgba(0,0,0,0.05)] text-[rgba(0,0,0,0.48)]",
+  TECHNICIAN: "bg-muted text-muted-foreground",
   DRUG_REP: "bg-[#F59E0B]/10 text-[#F59E0B]",
 };
 
@@ -236,8 +236,8 @@ export default function TeamPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">Team</h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">{users.length} member{users.length !== 1 ? "s" : ""}</p>
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">Team</h1>
+          <p className="mt-1 text-[17px] text-muted-foreground">{users.length} member{users.length !== 1 ? "s" : ""}</p>
         </div>
         <button onClick={() => setShowInvite(true)} className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors">
           <UserPlus className="w-4 h-4" /> Invite member
@@ -247,13 +247,13 @@ export default function TeamPage() {
       {/* Pending invitations */}
       {invites.length > 0 && (
         <div className="mt-6">
-          <h2 className="text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide mb-2">Pending invitations</h2>
-          <div className="bg-white rounded-xl divide-y divide-[rgba(0,0,0,0.03)]">
+          <h2 className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide mb-2">Pending invitations</h2>
+          <div className="bg-card rounded-xl divide-y divide-border/50">
             {invites.map((inv) => (
               <div key={inv.id} className="px-4 py-2.5 flex items-center justify-between">
                 <div>
-                  <p className="text-[14px] text-[#1d1d1f]">{inv.email}</p>
-                  <p className="text-[12px] text-[rgba(0,0,0,0.48)]">Expires {new Date(inv.expiresAt).toLocaleDateString()}</p>
+                  <p className="text-[14px] text-foreground">{inv.email}</p>
+                  <p className="text-[12px] text-muted-foreground">Expires {new Date(inv.expiresAt).toLocaleDateString()}</p>
                 </div>
                 <Badge variant="secondary" className="text-[10px] uppercase tracking-wide">{inv.role}</Badge>
               </div>
@@ -263,12 +263,12 @@ export default function TeamPage() {
       )}
 
       {/* Team list */}
-      <div className="mt-6 bg-white rounded-xl overflow-hidden">
+      <div className="mt-6 bg-card rounded-xl overflow-hidden">
         {loading ? (
           <div className="p-4 space-y-3">
             {[1,2,3,4,5].map(i => (
               <div key={i} className="flex items-center gap-3 py-2">
-                <div className="w-32 h-4 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
+                <div className="w-32 h-4 bg-muted rounded animate-pulse" />
                 <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
                 <div className="flex-1" />
                 <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
@@ -277,24 +277,24 @@ export default function TeamPage() {
           </div>
         ) : users.length === 0 ? (
           <div className="p-12 text-center">
-            <p className="text-[17px] font-semibold text-[#1d1d1f]">No team members yet</p>
-            <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)]">Invite your first team member to get started.</p>
+            <p className="text-[17px] font-semibold text-foreground">No team members yet</p>
+            <p className="mt-1 text-[14px] text-muted-foreground">Invite your first team member to get started.</p>
           </div>
         ) : (
-          <div className="divide-y divide-[rgba(0,0,0,0.03)]">
+          <div className="divide-y divide-border/50">
             {users.map((user) => (
               <div key={user.id} className="px-4 py-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-[rgba(0,0,0,0.05)] flex items-center justify-center text-[14px] font-medium text-[rgba(0,0,0,0.48)] shrink-0">
+                    <div className="w-9 h-9 rounded-full bg-muted flex items-center justify-center text-[14px] font-medium text-muted-foreground shrink-0">
                       {user.name ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "?"}
                     </div>
                     <div>
-                      <p className="text-[14px] font-medium text-[#1d1d1f]">
+                      <p className="text-[14px] font-medium text-foreground">
                         {user.name || user.email}
-                        {!user.active && <span className="ml-2 text-[12px] font-normal text-[rgba(0,0,0,0.3)]">inactive</span>}
+                        {!user.active && <span className="ml-2 text-[12px] font-normal text-muted-foreground/60">inactive</span>}
                       </p>
-                      <p className="text-[12px] text-[rgba(0,0,0,0.48)]">
+                      <p className="text-[12px] text-muted-foreground">
                         {user.email}
                         {user.locations.length > 0 && (
                           <> · {user.locations.map((l) => l.location.name).join(", ")}</>
@@ -304,14 +304,14 @@ export default function TeamPage() {
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <span className={`inline-flex items-center text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full ${roleColors[user.role] ?? "bg-[rgba(0,0,0,0.05)] text-[rgba(0,0,0,0.48)]"}`}>
+                    <span className={`inline-flex items-center text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full ${roleColors[user.role] ?? "bg-muted text-muted-foreground"}`}>
                       {user.role}
                     </span>
                     {user.role !== "OWNER" && (
                       <div className="relative" ref={openMenuId === user.id ? menuRef : undefined}>
                         <button
                           onClick={() => setOpenMenuId(openMenuId === user.id ? null : user.id)}
-                          className="p-1.5 rounded-lg hover:bg-[#f5f5f7] text-[rgba(0,0,0,0.48)] transition-colors"
+                          className="p-1.5 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
                           aria-label={`Actions for ${user.name ?? user.email}`}
                         >
                           <MoreHorizontal className="w-4 h-4" />
@@ -319,25 +319,25 @@ export default function TeamPage() {
 
                         {/* Dropdown menu */}
                         {openMenuId === user.id && (
-                          <div className="absolute right-0 top-full mt-1 w-48 bg-white rounded-xl shadow-lg border border-[rgba(0,0,0,0.08)] py-1 z-20">
+                          <div className="absolute right-0 top-full mt-1 w-48 bg-card rounded-xl shadow-lg border border-border py-1 z-20">
                             <button
                               onClick={() => startEditUser(user)}
-                              className="w-full flex items-center gap-2 px-3 py-2 text-[14px] text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors text-left"
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[14px] text-foreground hover:bg-muted transition-colors text-left"
                             >
-                              <Pencil className="w-3.5 h-3.5 text-[rgba(0,0,0,0.48)]" />
+                              <Pencil className="w-3.5 h-3.5 text-muted-foreground" />
                               Edit member
                             </button>
                             <button
                               onClick={() => { startEditPermissions(user); setOpenMenuId(null); }}
-                              className="w-full flex items-center gap-2 px-3 py-2 text-[14px] text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors text-left"
+                              className="w-full flex items-center gap-2 px-3 py-2 text-[14px] text-foreground hover:bg-muted transition-colors text-left"
                             >
-                              <Shield className="w-3.5 h-3.5 text-[rgba(0,0,0,0.48)]" />
+                              <Shield className="w-3.5 h-3.5 text-muted-foreground" />
                               Edit permissions
                             </button>
-                            <div className="my-1 border-t border-[rgba(0,0,0,0.05)]" />
+                            <div className="my-1 border-t border-border" />
                             <button
                               onClick={() => handleToggleActive(user.id, !user.active)}
-                              className={`w-full flex items-center gap-2 px-3 py-2 text-[14px] hover:bg-[#f5f5f7] transition-colors text-left ${user.active ? "text-[#EF4444]" : "text-[#22C55E]"}`}
+                              className={`w-full flex items-center gap-2 px-3 py-2 text-[14px] hover:bg-muted transition-colors text-left ${user.active ? "text-[#EF4444]" : "text-[#22C55E]"}`}
                             >
                               {user.active ? (
                                 <><UserX className="w-3.5 h-3.5" /> Deactivate</>
@@ -354,22 +354,22 @@ export default function TeamPage() {
 
                 {/* Inline permission editor */}
                 {editingPermissions === user.id && (
-                  <div className="mt-3 p-3 bg-[#f5f5f7] rounded-lg">
+                  <div className="mt-3 p-3 bg-muted rounded-lg">
                     <div className="flex items-center justify-between mb-3">
-                      <p className="text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">Permissions</p>
+                      <p className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">Permissions</p>
                       <div className="flex gap-3">
-                        <button onClick={() => setEditingPermissions(null)} className="text-[13px] text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]">Cancel</button>
+                        <button onClick={() => setEditingPermissions(null)} className="text-[13px] text-muted-foreground hover:text-foreground">Cancel</button>
                         <button onClick={savePermissions} className="text-[13px] font-semibold text-[#0071e3] hover:text-[#0077ED]">Save</button>
                       </div>
                     </div>
                     <div className="space-y-2">
                       {(Object.entries(MODULE_LABELS) as [string, string][]).map(([mod, label]) => (
                         <div key={mod} className="flex items-center justify-between">
-                          <span className="text-[13px] text-[#1d1d1f]">{label}</span>
+                          <span className="text-[13px] text-foreground">{label}</span>
                           <select
                             value={permissionEdits[mod] ?? "NONE"}
                             onChange={(e) => setPermissionEdits({ ...permissionEdits, [mod]: e.target.value })}
-                            className="h-7 rounded-md border border-[rgba(0,0,0,0.08)] px-2 text-[12px] bg-white"
+                            className="h-7 rounded-md border border-border px-2 text-[12px] bg-card"
                             aria-label={`${label} access level`}
                           >
                             {ACCESS_OPTIONS.map((opt) => (
@@ -390,19 +390,19 @@ export default function TeamPage() {
       {/* Edit user modal */}
       {editingUser && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setEditingUser(null)}>
-          <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-card rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-[21px] font-bold text-[#1d1d1f]">Edit member</h2>
-              <button onClick={() => setEditingUser(null)} className="text-[rgba(0,0,0,0.48)]"><X className="w-5 h-5" /></button>
+              <h2 className="text-[21px] font-bold text-foreground">Edit member</h2>
+              <button onClick={() => setEditingUser(null)} className="text-muted-foreground"><X className="w-5 h-5" /></button>
             </div>
 
             <div className="mb-4 flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-[rgba(0,0,0,0.05)] flex items-center justify-center text-[14px] font-medium text-[rgba(0,0,0,0.48)]">
+              <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center text-[14px] font-medium text-muted-foreground">
                 {editingUser.name ? editingUser.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2) : "?"}
               </div>
               <div>
-                <p className="text-[14px] font-medium text-[#1d1d1f]">{editingUser.name || editingUser.email}</p>
-                <p className="text-[12px] text-[rgba(0,0,0,0.48)]">{editingUser.email}</p>
+                <p className="text-[14px] font-medium text-foreground">{editingUser.name || editingUser.email}</p>
+                <p className="text-[12px] text-muted-foreground">{editingUser.email}</p>
               </div>
             </div>
 
@@ -412,13 +412,13 @@ export default function TeamPage() {
                 <select
                   value={editForm.role}
                   onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
-                  className="w-full h-10 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white"
+                  className="w-full h-10 rounded-lg border border-border px-3 text-[14px] bg-card"
                 >
                   <option value="PHARMACIST">Pharmacist</option>
                   <option value="TECHNICIAN">Technician</option>
                   <option value="DRUG_REP">Drug Rep</option>
                 </select>
-                <p className="text-[12px] text-[rgba(0,0,0,0.48)]">
+                <p className="text-[12px] text-muted-foreground">
                   {editForm.role === "PHARMACIST"
                     ? "Full access to providers, prescriptions, drug reps, and time tracking. View-only reports."
                     : editForm.role === "DRUG_REP"
@@ -429,9 +429,9 @@ export default function TeamPage() {
 
               <div className="space-y-1.5">
                 <Label className="text-[13px]">Locations</Label>
-                <div className="space-y-2 max-h-40 overflow-y-auto border border-[rgba(0,0,0,0.08)] rounded-lg p-2.5">
+                <div className="space-y-2 max-h-40 overflow-y-auto border border-border rounded-lg p-2.5">
                   {locations.length === 0 ? (
-                    <p className="text-[13px] text-[rgba(0,0,0,0.48)]">No locations configured</p>
+                    <p className="text-[13px] text-muted-foreground">No locations configured</p>
                   ) : (
                     locations.map((loc) => (
                       <label key={loc.id} className="flex items-center gap-2 text-[14px] cursor-pointer">
@@ -452,7 +452,7 @@ export default function TeamPage() {
                           }}
                           className="rounded"
                         />
-                        <span className="flex-1 text-[#1d1d1f]">{loc.name}</span>
+                        <span className="flex-1 text-foreground">{loc.name}</span>
                         {editForm.locationIds.includes(loc.id) && (
                           <button
                             type="button"
@@ -460,7 +460,7 @@ export default function TeamPage() {
                             className={`text-[11px] px-1.5 py-0.5 rounded transition-colors ${
                               editForm.primaryLocationId === loc.id
                                 ? "bg-[#0071e3] text-white"
-                                : "bg-[rgba(0,0,0,0.05)] text-[rgba(0,0,0,0.48)] hover:bg-[rgba(0,0,0,0.08)]"
+                                : "bg-muted text-muted-foreground hover:bg-[rgba(0,0,0,0.08)]"
                             }`}
                           >
                             {editForm.primaryLocationId === loc.id ? "Primary" : "Set primary"}
@@ -473,7 +473,7 @@ export default function TeamPage() {
               </div>
 
               <div className="flex gap-2 pt-2">
-                <button onClick={() => setEditingUser(null)} className="flex-1 h-10 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-[#f5f5f7]">
+                <button onClick={() => setEditingUser(null)} className="flex-1 h-10 border border-border text-foreground rounded-lg text-[14px] hover:bg-muted">
                   Cancel
                 </button>
                 <button onClick={handleSaveUser} className="flex-1 h-10 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED]">
@@ -488,10 +488,10 @@ export default function TeamPage() {
       {/* Invite modal */}
       {showInvite && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4" onClick={() => setShowInvite(false)}>
-          <div className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+          <div className="bg-card rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-[21px] font-bold text-[#1d1d1f]">Invite team member</h2>
-              <button onClick={() => setShowInvite(false)} className="text-[rgba(0,0,0,0.48)]"><X className="w-5 h-5" /></button>
+              <h2 className="text-[21px] font-bold text-foreground">Invite team member</h2>
+              <button onClick={() => setShowInvite(false)} className="text-muted-foreground"><X className="w-5 h-5" /></button>
             </div>
             <form onSubmit={handleInvite} className="space-y-4">
               <div className="space-y-1.5">
@@ -500,7 +500,7 @@ export default function TeamPage() {
               </div>
               <div className="space-y-1.5">
                 <Label className="text-[13px]">Role</Label>
-                <select value={inviteForm.role} onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })} className="w-full h-10 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white">
+                <select value={inviteForm.role} onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })} className="w-full h-10 rounded-lg border border-border px-3 text-[14px] bg-card">
                   <option value="PHARMACIST">Pharmacist</option>
                   <option value="TECHNICIAN">Technician</option>
                   <option value="DRUG_REP">Drug Rep</option>

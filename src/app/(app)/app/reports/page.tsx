@@ -374,13 +374,13 @@ export default function ReportsPage() {
       {/* Left sidebar — report list */}
       <aside
         className={cn(
-          "w-full md:w-64 md:min-w-64 md:max-w-64 border-r border-black/5 bg-white",
+          "w-full md:w-64 md:min-w-64 md:max-w-64 border-r border-border bg-card",
           "md:block",
           mobileView === "detail" ? "hidden" : "block"
         )}
       >
-        <div className="sticky top-0 bg-white border-b border-black/5 px-4 py-3">
-          <h1 className="text-[22px] font-semibold tracking-tight text-[#1d1d1f]">
+        <div className="sticky top-0 bg-card border-b border-border px-4 py-3">
+          <h1 className="text-[22px] font-semibold tracking-tight text-foreground">
             Reports & Analytics
           </h1>
         </div>
@@ -394,7 +394,7 @@ export default function ReportsPage() {
               <div key={cat.name}>
                 <button
                   onClick={() => toggleCategory(cat.name)}
-                  className="w-full flex items-center gap-2 px-4 py-2 text-left text-[13px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hover:text-[#1d1d1f] transition-colors"
+                  className="w-full flex items-center gap-2 px-4 py-2 text-left text-[13px] font-semibold text-muted-foreground uppercase tracking-wide hover:text-foreground transition-colors"
                 >
                   <Icon className="w-3.5 h-3.5 shrink-0" />
                   <span className="flex-1 truncate">{cat.name}</span>
@@ -417,7 +417,7 @@ export default function ReportsPage() {
                             "w-full text-left px-4 py-2 transition-colors group",
                             isActive
                               ? "bg-[#0071e3]/8"
-                              : "hover:bg-[#f5f5f7]"
+                              : "hover:bg-muted"
                           )}
                         >
                           <p
@@ -425,12 +425,12 @@ export default function ReportsPage() {
                               "text-[14px] font-medium leading-snug",
                               isActive
                                 ? "text-[#0071e3]"
-                                : "text-[#1d1d1f] group-hover:text-[#0071e3]"
+                                : "text-foreground group-hover:text-[#0071e3]"
                             )}
                           >
                             {report.label}
                           </p>
-                          <p className="text-[12px] text-[rgba(0,0,0,0.48)] mt-0.5 leading-snug">
+                          <p className="text-[12px] text-muted-foreground mt-0.5 leading-snug">
                             {report.desc}
                           </p>
                         </button>
@@ -447,13 +447,13 @@ export default function ReportsPage() {
       {/* Right panel — report content */}
       <main
         className={cn(
-          "flex-1 min-w-0 bg-[#f5f5f7]",
+          "flex-1 min-w-0 bg-muted",
           "md:block",
           mobileView === "list" ? "hidden" : "block"
         )}
       >
         {/* Mobile back button */}
-        <div className="md:hidden border-b border-black/5 bg-white px-4 py-3">
+        <div className="md:hidden border-b border-border bg-card px-4 py-3">
           <button
             onClick={() => setMobileView("list")}
             className="flex items-center gap-1.5 text-[#0071e3] text-[14px] font-medium"
@@ -470,10 +470,10 @@ export default function ReportsPage() {
             {/* Header */}
             <div className="flex items-start justify-between gap-4">
               <div>
-                <h2 className="text-[22px] font-semibold tracking-tight text-[#1d1d1f]">
+                <h2 className="text-[22px] font-semibold tracking-tight text-foreground">
                   {selectedReportDef?.label}
                 </h2>
-                <p className="text-[14px] text-[rgba(0,0,0,0.48)] mt-0.5">
+                <p className="text-[14px] text-muted-foreground mt-0.5">
                   {selectedReportDef?.desc}
                 </p>
               </div>
@@ -490,18 +490,18 @@ export default function ReportsPage() {
             </div>
 
             {/* Filters */}
-            <div className="flex flex-wrap items-center gap-2 p-3 bg-white rounded-xl border border-black/5">
-              <label className="flex items-center gap-1.5 text-[13px] text-[rgba(0,0,0,0.48)]">
+            <div className="flex flex-wrap items-center gap-2 p-3 bg-card rounded-xl border border-border">
+              <label className="flex items-center gap-1.5 text-[13px] text-muted-foreground">
                 From
                 <input
                   type="date"
                   value={startDate}
                   max={endDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="h-8 px-2 rounded-md border border-black/10 text-[13px] text-[#1d1d1f] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
+                  className="h-8 px-2 rounded-md border border-border text-[13px] text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
                 />
               </label>
-              <label className="flex items-center gap-1.5 text-[13px] text-[rgba(0,0,0,0.48)]">
+              <label className="flex items-center gap-1.5 text-[13px] text-muted-foreground">
                 To
                 <input
                   type="date"
@@ -509,14 +509,14 @@ export default function ReportsPage() {
                   min={startDate}
                   max={new Date().toISOString().split("T")[0]}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="h-8 px-2 rounded-md border border-black/10 text-[13px] text-[#1d1d1f] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
+                  className="h-8 px-2 rounded-md border border-border text-[13px] text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
                 />
               </label>
               {locations.length > 0 && (
                 <select
                   value={locationId}
                   onChange={(e) => setLocationId(e.target.value)}
-                  className="h-8 px-2 rounded-md border border-black/10 text-[13px] text-[#1d1d1f] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
+                  className="h-8 px-2 rounded-md border border-border text-[13px] text-foreground bg-card focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
                 >
                   <option value="">All locations</option>
                   {locations.map((l) => (
@@ -527,7 +527,7 @@ export default function ReportsPage() {
                 </select>
               )}
               {loading && (
-                <Loader2 className="w-4 h-4 animate-spin text-[rgba(0,0,0,0.32)]" />
+                <Loader2 className="w-4 h-4 animate-spin text-muted-foreground/60" />
               )}
             </div>
 
@@ -546,16 +546,16 @@ export default function ReportsPage() {
                     {summaryCards.map((card) => (
                       <div
                         key={card.label}
-                        className="bg-white rounded-xl border border-black/5 px-4 py-3"
+                        className="bg-card rounded-xl border border-border px-4 py-3"
                       >
-                        <p className="text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                        <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                           {card.label}
                         </p>
-                        <p className="text-[22px] font-semibold text-[#1d1d1f] mt-1 leading-tight">
+                        <p className="text-[22px] font-semibold text-foreground mt-1 leading-tight">
                           {card.value}
                         </p>
                         {card.sub && (
-                          <p className="text-[12px] text-[rgba(0,0,0,0.32)] mt-0.5">
+                          <p className="text-[12px] text-muted-foreground/60 mt-0.5">
                             {card.sub}
                           </p>
                         )}
@@ -568,19 +568,19 @@ export default function ReportsPage() {
                 {tableRows.length === 0 ? (
                   <EmptyData />
                 ) : (
-                  <div className="bg-white rounded-xl border border-black/5 overflow-hidden">
+                  <div className="bg-card rounded-xl border border-border overflow-hidden">
                     <div className="overflow-x-auto">
                       <table className="w-full text-[13px]">
                         <thead>
-                          <tr className="border-b border-black/5">
+                          <tr className="border-b border-border">
                             {columns.map((col) => (
                               <th
                                 key={col}
-                                className="px-4 py-3 text-left font-semibold text-[rgba(0,0,0,0.48)] whitespace-nowrap"
+                                className="px-4 py-3 text-left font-semibold text-muted-foreground whitespace-nowrap"
                               >
                                 <button
                                   onClick={() => handleSort(col)}
-                                  className="flex items-center gap-1 hover:text-[#1d1d1f] transition-colors"
+                                  className="flex items-center gap-1 hover:text-foreground transition-colors"
                                 >
                                   {columnLabels[col] || col}
                                   <SortIcon sortKey={col} sort={sort} />
@@ -593,14 +593,14 @@ export default function ReportsPage() {
                           {tableRows.map((row, i) => (
                             <tr
                               key={i}
-                              className="border-b border-black/5 last:border-0 hover:bg-[#f5f5f7] transition-colors"
+                              className="border-b border-border last:border-0 hover:bg-muted transition-colors"
                             >
                               {columns.map((col) => {
                                 const val = (row as Record<string, unknown>)[col];
                                 return (
                                   <td
                                     key={col}
-                                    className="px-4 py-2.5 text-[#1d1d1f] whitespace-nowrap"
+                                    className="px-4 py-2.5 text-foreground whitespace-nowrap"
                                   >
                                     <CellValue col={col} value={val} />
                                   </td>
@@ -611,7 +611,7 @@ export default function ReportsPage() {
                         </tbody>
                       </table>
                     </div>
-                    <div className="px-4 py-2 border-t border-black/5 text-[12px] text-[rgba(0,0,0,0.32)]">
+                    <div className="px-4 py-2 border-t border-border text-[12px] text-muted-foreground/60">
                       {tableRows.length.toLocaleString()} row{tableRows.length !== 1 ? "s" : ""}
                     </div>
                   </div>
@@ -637,7 +637,7 @@ function SortIcon({ sortKey, sort }: { sortKey: string; sort: SortState | null }
 }
 
 function CellValue({ col, value }: { col: string; value: unknown }) {
-  if (value === null || value === undefined) return <span className="text-[rgba(0,0,0,0.32)]">—</span>;
+  if (value === null || value === undefined) return <span className="text-muted-foreground/60">—</span>;
 
   const numericCols = [
     "count", "quantity", "genericRate", "percentOfTotal", "percent",
@@ -664,7 +664,7 @@ function CellValue({ col, value }: { col: string; value: unknown }) {
   }
 
   if (changeCols.includes(col) && !isNaN(num)) {
-    const color = num > 0 ? "text-green-600" : num < 0 ? "text-red-600" : "text-[rgba(0,0,0,0.48)]";
+    const color = num > 0 ? "text-green-600" : num < 0 ? "text-red-600" : "text-muted-foreground";
     return <span className={color}>{num > 0 ? "+" : ""}{num}%</span>;
   }
 
@@ -696,8 +696,8 @@ function EmptySelection() {
       <div className="w-12 h-12 rounded-full bg-[#0071e3]/8 flex items-center justify-center mb-4">
         <Activity className="w-6 h-6 text-[#0071e3]" />
       </div>
-      <h3 className="text-[17px] font-semibold text-[#1d1d1f]">Select a report</h3>
-      <p className="text-[14px] text-[rgba(0,0,0,0.48)] mt-1 max-w-xs">
+      <h3 className="text-[17px] font-semibold text-foreground">Select a report</h3>
+      <p className="text-[14px] text-muted-foreground mt-1 max-w-xs">
         Choose a report from the left panel to view data, set filters, and export results.
       </p>
     </div>
@@ -706,10 +706,10 @@ function EmptySelection() {
 
 function EmptyData() {
   return (
-    <div className="bg-white rounded-xl border border-black/5 flex flex-col items-center justify-center py-16 text-center">
-      <Inbox className="w-10 h-10 text-[rgba(0,0,0,0.16)] mb-3" />
-      <p className="text-[15px] font-medium text-[#1d1d1f]">No data for this period</p>
-      <p className="text-[13px] text-[rgba(0,0,0,0.48)] mt-1">
+    <div className="bg-card rounded-xl border border-border flex flex-col items-center justify-center py-16 text-center">
+      <Inbox className="w-10 h-10 text-muted-foreground/30 mb-3" />
+      <p className="text-[15px] font-medium text-foreground">No data for this period</p>
+      <p className="text-[13px] text-muted-foreground mt-1">
         Try adjusting the date range or location filter.
       </p>
     </div>
@@ -718,10 +718,10 @@ function EmptyData() {
 
 function ErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div className="bg-white rounded-xl border border-red-200 flex flex-col items-center justify-center py-12 text-center px-6">
+    <div className="bg-card rounded-xl border border-red-200 flex flex-col items-center justify-center py-12 text-center px-6">
       <AlertCircle className="w-8 h-8 text-red-500 mb-3" />
-      <p className="text-[15px] font-semibold text-[#1d1d1f]">Failed to load report</p>
-      <p className="text-[13px] text-[rgba(0,0,0,0.48)] mt-1 mb-4">{message}</p>
+      <p className="text-[15px] font-semibold text-foreground">Failed to load report</p>
+      <p className="text-[13px] text-muted-foreground mt-1 mb-4">{message}</p>
       <Button variant="outline" size="sm" onClick={onRetry}>
         Try again
       </Button>
@@ -734,15 +734,15 @@ function KpiSkeleton() {
     <div className="space-y-5">
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="bg-white rounded-xl border border-black/5 px-4 py-3 space-y-2">
+          <div key={i} className="bg-card rounded-xl border border-border px-4 py-3 space-y-2">
             <Skeleton className="h-3 w-20" />
             <Skeleton className="h-7 w-16" />
           </div>
         ))}
       </div>
-      <div className="bg-white rounded-xl border border-black/5 overflow-hidden">
+      <div className="bg-card rounded-xl border border-border overflow-hidden">
         {[...Array(6)].map((_, i) => (
-          <div key={i} className="flex gap-6 px-4 py-3 border-b border-black/5 last:border-0">
+          <div key={i} className="flex gap-6 px-4 py-3 border-b border-border last:border-0">
             <Skeleton className="h-4 w-32" />
             <Skeleton className="h-4 w-16" />
             <Skeleton className="h-4 w-16" />

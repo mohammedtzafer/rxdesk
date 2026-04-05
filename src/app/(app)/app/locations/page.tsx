@@ -87,10 +87,10 @@ export default function LocationsPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Locations
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             {locations.length} location{locations.length !== 1 ? "s" : ""}
           </p>
         </div>
@@ -105,24 +105,24 @@ export default function LocationsPage() {
       <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
         {loading ? (
           [1, 2].map((i) => (
-            <div key={i} className="bg-white rounded-xl p-6 h-40 animate-pulse" />
+            <div key={i} className="bg-card rounded-xl p-6 h-40 animate-pulse" />
           ))
         ) : locations.length === 0 ? (
-          <div className="col-span-2 bg-white rounded-xl p-12 text-center">
-            <MapPin className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
-            <h2 className="mt-4 text-[21px] font-bold text-[#1d1d1f]">No locations</h2>
-            <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <div className="col-span-2 bg-card rounded-xl p-12 text-center">
+            <MapPin className="w-12 h-12 mx-auto text-muted-foreground/30" />
+            <h2 className="mt-4 text-[21px] font-bold text-foreground">No locations</h2>
+            <p className="mt-2 text-[17px] text-muted-foreground">
               Add your first pharmacy location.
             </p>
           </div>
         ) : (
           locations.map((loc) => (
-            <div key={loc.id} className="bg-white rounded-xl p-5">
+            <div key={loc.id} className="bg-card rounded-xl p-5">
               <div className="flex items-start justify-between">
                 <div>
-                  <h3 className="text-[17px] font-semibold text-[#1d1d1f]">{loc.name}</h3>
+                  <h3 className="text-[17px] font-semibold text-foreground">{loc.name}</h3>
                   {loc.address && (
-                    <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)]">
+                    <p className="mt-1 text-[14px] text-muted-foreground">
                       {loc.address}
                       {loc.city ? `, ${loc.city}` : ""}
                       {loc.state ? `, ${loc.state}` : ""} {loc.zip}
@@ -135,7 +135,7 @@ export default function LocationsPage() {
                   </Badge>
                 )}
               </div>
-              <div className="mt-3 flex flex-wrap gap-3 text-[12px] text-[rgba(0,0,0,0.48)]">
+              <div className="mt-3 flex flex-wrap gap-3 text-[12px] text-muted-foreground">
                 <span className="flex items-center gap-1">
                   <Users className="w-3 h-3" /> {loc._count.users} staff
                 </span>
@@ -154,14 +154,14 @@ export default function LocationsPage() {
           onClick={() => setShowCreate(false)}
         >
           <div
-            className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+            className="bg-card rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-[21px] font-bold text-[#1d1d1f]">Add location</h2>
+              <h2 className="text-[21px] font-bold text-foreground">Add location</h2>
               <button
                 onClick={() => setShowCreate(false)}
-                className="text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
+                className="text-muted-foreground hover:text-foreground"
                 aria-label="Close dialog"
               >
                 <X className="w-5 h-5" />

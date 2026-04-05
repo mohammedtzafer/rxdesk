@@ -130,28 +130,28 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div>
-        <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+        <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
           Settings
         </h1>
-        <div className="mt-6 flex gap-1 bg-white rounded-lg p-1 w-fit">
-          <div className="h-9 w-24 rounded-md bg-[rgba(0,0,0,0.05)] animate-pulse" />
-          <div className="h-9 w-24 rounded-md bg-[rgba(0,0,0,0.05)] animate-pulse" />
-          <div className="h-9 w-24 rounded-md bg-[rgba(0,0,0,0.05)] animate-pulse" />
+        <div className="mt-6 flex gap-1 bg-card rounded-lg p-1 w-fit">
+          <div className="h-9 w-24 rounded-md bg-muted animate-pulse" />
+          <div className="h-9 w-24 rounded-md bg-muted animate-pulse" />
+          <div className="h-9 w-24 rounded-md bg-muted animate-pulse" />
         </div>
-        <div className="mt-4 bg-white rounded-xl p-6 max-w-lg h-48 animate-pulse" />
+        <div className="mt-4 bg-card rounded-xl p-6 max-w-lg h-48 animate-pulse" />
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+      <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
         Settings
       </h1>
 
       {/* Tab bar */}
       <div
-        className="mt-6 flex gap-1 bg-white rounded-lg p-1 w-fit"
+        className="mt-6 flex gap-1 bg-card rounded-lg p-1 w-fit"
         role="tablist"
         aria-label="Settings sections"
       >
@@ -164,7 +164,7 @@ export default function SettingsPage() {
             className={`inline-flex items-center gap-1.5 px-4 py-1.5 rounded-md text-[14px] font-medium transition-colors ${
               tab === t.key
                 ? "bg-[#0071e3] text-white"
-                : "text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
+                : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <t.icon className="w-3.5 h-3.5" />
@@ -177,7 +177,7 @@ export default function SettingsPage() {
       {tab === "general" && (
         <form
           onSubmit={handleSave}
-          className="mt-4 bg-white rounded-xl p-6 space-y-4 max-w-lg"
+          className="mt-4 bg-card rounded-xl p-6 space-y-4 max-w-lg"
           role="tabpanel"
           aria-label="General settings"
         >
@@ -198,7 +198,7 @@ export default function SettingsPage() {
               id="org-timezone"
               value={form.timezone}
               onChange={(e) => setForm({ ...form, timezone: e.target.value })}
-              className="w-full h-10 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+              className="w-full h-10 rounded-lg border border-border px-3 text-[14px] bg-card focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
             >
               <option value="America/New_York">Eastern (ET)</option>
               <option value="America/Chicago">Central (CT)</option>
@@ -222,7 +222,7 @@ export default function SettingsPage() {
       {tab === "branding" && (
         <form
           onSubmit={handleSave}
-          className="mt-4 bg-white rounded-xl p-6 space-y-5 max-w-lg"
+          className="mt-4 bg-card rounded-xl p-6 space-y-5 max-w-lg"
           role="tabpanel"
           aria-label="Branding settings"
         >
@@ -243,7 +243,7 @@ export default function SettingsPage() {
             <Label>Logo</Label>
             <div className="flex items-start gap-4">
               {/* Preview */}
-              <div className="w-16 h-16 rounded-xl border border-[rgba(0,0,0,0.08)] bg-[#f5f5f7] flex items-center justify-center shrink-0 overflow-hidden">
+              <div className="w-16 h-16 rounded-xl border border-border bg-muted flex items-center justify-center shrink-0 overflow-hidden">
                 {form.logoUrl ? (
                   isEmojiLogo(form.logoUrl) ? (
                     <span className="text-3xl" role="img" aria-label="Logo emoji">{form.logoUrl}</span>
@@ -252,7 +252,7 @@ export default function SettingsPage() {
                     <img src={form.logoUrl} alt="Logo preview" className="w-full h-full object-contain" />
                   )
                 ) : (
-                  <span className="text-[11px] text-[rgba(0,0,0,0.3)] text-center leading-tight px-1">No logo</span>
+                  <span className="text-[11px] text-muted-foreground/60 text-center leading-tight px-1">No logo</span>
                 )}
               </div>
 
@@ -269,18 +269,18 @@ export default function SettingsPage() {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="inline-flex items-center gap-2 px-3 py-2 border border-[rgba(0,0,0,0.08)] rounded-lg text-[13px] text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors"
+                  className="inline-flex items-center gap-2 px-3 py-2 border border-border rounded-lg text-[13px] text-foreground hover:bg-muted transition-colors"
                 >
-                  <Upload className="w-3.5 h-3.5 text-[rgba(0,0,0,0.48)]" />
+                  <Upload className="w-3.5 h-3.5 text-muted-foreground" />
                   Upload image
                 </button>
-                <p className="text-[11px] text-[rgba(0,0,0,0.48)]">PNG, JPG, SVG up to 2 MB</p>
+                <p className="text-[11px] text-muted-foreground">PNG, JPG, SVG up to 2 MB</p>
 
                 {form.logoUrl && !isEmojiLogo(form.logoUrl) && (
                   <button
                     type="button"
                     onClick={() => setForm({ ...form, logoUrl: "" })}
-                    className="inline-flex items-center gap-1 text-[12px] text-[rgba(0,0,0,0.48)] hover:text-[#EF4444] transition-colors"
+                    className="inline-flex items-center gap-1 text-[12px] text-muted-foreground hover:text-[#EF4444] transition-colors"
                   >
                     <X className="w-3 h-3" />
                     Remove logo
@@ -291,7 +291,7 @@ export default function SettingsPage() {
 
             {/* Emoji selector */}
             <div className="space-y-1.5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)]">Or choose an emoji</p>
+              <p className="text-[12px] text-muted-foreground">Or choose an emoji</p>
               <div className="flex flex-wrap gap-2">
                 {LOGO_EMOJIS.map((emoji) => (
                   <button
@@ -301,7 +301,7 @@ export default function SettingsPage() {
                     className={`w-10 h-10 rounded-lg border text-xl flex items-center justify-center transition-colors ${
                       form.logoUrl === emoji
                         ? "border-[#0071e3] bg-[#0071e3]/5"
-                        : "border-[rgba(0,0,0,0.08)] hover:border-[rgba(0,0,0,0.2)] hover:bg-[#f5f5f7]"
+                        : "border-border hover:border-[rgba(0,0,0,0.2)] hover:bg-muted"
                     }`}
                     aria-label={`Use ${emoji} as logo`}
                     aria-pressed={form.logoUrl === emoji}
@@ -321,7 +321,7 @@ export default function SettingsPage() {
                 type="color"
                 value={form.brandColor || "#0071e3"}
                 onChange={(e) => setForm({ ...form, brandColor: e.target.value })}
-                className="w-10 h-10 rounded-lg border border-[rgba(0,0,0,0.08)] cursor-pointer p-0.5"
+                className="w-10 h-10 rounded-lg border border-border cursor-pointer p-0.5"
                 aria-label="Color picker"
               />
               <Input
@@ -347,16 +347,16 @@ export default function SettingsPage() {
       {/* Billing tab */}
       {tab === "billing" && (
         <div
-          className="mt-4 bg-white rounded-xl p-6 max-w-lg"
+          className="mt-4 bg-card rounded-xl p-6 max-w-lg"
           role="tabpanel"
           aria-label="Billing settings"
         >
           <div className="flex items-start justify-between mb-6">
             <div>
-              <p className="text-[13px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+              <p className="text-[13px] font-semibold text-muted-foreground uppercase tracking-wide">
                 Current plan
               </p>
-              <p className="text-[28px] font-semibold text-[#1d1d1f] mt-1 capitalize">
+              <p className="text-[28px] font-semibold text-foreground mt-1 capitalize">
                 {settings?.plan?.toLowerCase() ?? "—"}
               </p>
             </div>
@@ -381,21 +381,21 @@ export default function SettingsPage() {
                   className={`p-4 rounded-xl border transition-colors ${
                     isActive
                       ? "border-[#0071e3] bg-[#0071e3]/5"
-                      : "border-[rgba(0,0,0,0.08)]"
+                      : "border-border"
                   }`}
                 >
-                  <p className="text-[14px] font-semibold text-[#1d1d1f]">
+                  <p className="text-[14px] font-semibold text-foreground">
                     {plan.name}
                   </p>
-                  <p className="text-[21px] font-bold text-[#1d1d1f] mt-1">
+                  <p className="text-[21px] font-bold text-foreground mt-1">
                     {plan.price}
-                    <span className="text-[12px] font-normal text-[rgba(0,0,0,0.48)]">
+                    <span className="text-[12px] font-normal text-muted-foreground">
                       /mo
                     </span>
                   </p>
                   <ul className="mt-3 space-y-1">
                     {plan.features.map((f) => (
-                      <li key={f} className="text-[12px] text-[rgba(0,0,0,0.48)]">
+                      <li key={f} className="text-[12px] text-muted-foreground">
                         · {f}
                       </li>
                     ))}

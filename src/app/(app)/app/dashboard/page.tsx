@@ -322,7 +322,7 @@ export default function DashboardPage() {
   if (error) {
     return (
       <div>
-        <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+        <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
           Dashboard
         </h1>
         <div className="mt-8">
@@ -343,10 +343,10 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-end gap-3 flex-wrap">
           <div>
-            <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+            <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
               Dashboard
             </h1>
-            <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">Your pharmacy at a glance</p>
+            <p className="mt-1 text-[17px] text-muted-foreground">Your pharmacy at a glance</p>
           </div>
 
           {/* Location filter */}
@@ -354,20 +354,20 @@ export default function DashboardPage() {
             <button
               type="button"
               onClick={() => setShowLocationFilter((v) => !v)}
-              className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border border-[rgba(0,0,0,0.1)] rounded-lg text-[14px] text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3] focus-visible:ring-offset-1"
+              className="inline-flex items-center gap-2 px-3 py-1.5 bg-card border border-border rounded-lg text-[14px] text-foreground hover:bg-muted transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3] focus-visible:ring-offset-1"
               aria-haspopup="listbox"
               aria-expanded={showLocationFilter}
             >
-              <MapPin className="w-3.5 h-3.5 text-[rgba(0,0,0,0.48)]" />
+              <MapPin className="w-3.5 h-3.5 text-muted-foreground" />
               <span>{locationFilterLabel}</span>
               <ChevronDown
-                className={`w-3.5 h-3.5 text-[rgba(0,0,0,0.48)] transition-transform ${showLocationFilter ? "rotate-180" : ""}`}
+                className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${showLocationFilter ? "rotate-180" : ""}`}
               />
             </button>
 
             {showLocationFilter && (
               <div
-                className="absolute top-full mt-1.5 left-0 z-50 w-56 bg-white rounded-xl shadow-lg border border-[rgba(0,0,0,0.08)] py-1.5 overflow-hidden"
+                className="absolute top-full mt-1.5 left-0 z-50 w-56 bg-card rounded-xl shadow-lg border border-border py-1.5 overflow-hidden"
                 role="listbox"
                 aria-label="Filter by location"
               >
@@ -376,7 +376,7 @@ export default function DashboardPage() {
                   role="option"
                   aria-selected={selectedLocationIds.length === 0}
                   onClick={selectAllLocations}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 text-[14px] text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors text-left"
+                  className="w-full flex items-center gap-2.5 px-3 py-2 text-[14px] text-foreground hover:bg-muted transition-colors text-left"
                 >
                   <div
                     className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
@@ -393,7 +393,7 @@ export default function DashboardPage() {
                 </button>
 
                 {locations.length > 0 && (
-                  <div className="border-t border-[rgba(0,0,0,0.06)] mt-1 pt-1">
+                  <div className="border-t border-border/70 mt-1 pt-1">
                     {locations.map((loc) => {
                       const checked = selectedLocationIds.includes(loc.id);
                       return (
@@ -403,7 +403,7 @@ export default function DashboardPage() {
                           role="option"
                           aria-selected={checked}
                           onClick={() => toggleLocation(loc.id)}
-                          className="w-full flex items-center gap-2.5 px-3 py-2 text-[14px] text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors text-left"
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-[14px] text-foreground hover:bg-muted transition-colors text-left"
                         >
                           <div
                             className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
@@ -422,7 +422,7 @@ export default function DashboardPage() {
                 )}
 
                 {locations.length === 0 && (
-                  <p className="px-3 py-2 text-[13px] text-[rgba(0,0,0,0.48)]">
+                  <p className="px-3 py-2 text-[13px] text-muted-foreground">
                     No locations found
                   </p>
                 )}
@@ -435,7 +435,7 @@ export default function DashboardPage() {
         {notifications && notifications.unreadCount > 0 && (
           <Link
             href="/app/profile"
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-white rounded-lg text-[14px] text-[#1d1d1f] hover:bg-[#f5f5f7]"
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-card rounded-lg text-[14px] text-foreground hover:bg-muted"
           >
             <Bell className="w-4 h-4" />
             <Badge className="bg-[#0071e3] text-white text-[10px]">
@@ -451,7 +451,7 @@ export default function DashboardPage() {
       {loading ? (
         <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-white rounded-lg p-5 h-24 animate-pulse" />
+            <div key={i} className="bg-card rounded-lg p-5 h-24 animate-pulse" />
           ))}
         </div>
       ) : !hasData ? (
@@ -472,25 +472,25 @@ export default function DashboardPage() {
                 sub: "Unread",
               },
             ].map((stat) => (
-              <div key={stat.label} className="bg-white rounded-lg p-5">
-                <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+              <div key={stat.label} className="bg-card rounded-lg p-5">
+                <p className="text-[12px] text-muted-foreground uppercase tracking-wide">
                   {stat.label}
                 </p>
-                <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">
+                <p className="text-[28px] font-normal leading-[1.14] text-foreground mt-1">
                   {stat.value}
                 </p>
-                <p className="text-[12px] text-[rgba(0,0,0,0.48)] mt-1">{stat.sub}</p>
+                <p className="text-[12px] text-muted-foreground mt-1">{stat.sub}</p>
               </div>
             ))}
           </div>
 
           {/* Onboarding CTA */}
-          <div className="mt-8 bg-white rounded-xl p-8 text-center">
-            <Pill className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
-            <h2 className="mt-4 text-[21px] font-bold leading-[1.19] text-[#1d1d1f]">
+          <div className="mt-8 bg-card rounded-xl p-8 text-center">
+            <Pill className="w-12 h-12 mx-auto text-muted-foreground/30" />
+            <h2 className="mt-4 text-[21px] font-bold leading-[1.19] text-foreground">
               Get started with RxDesk
             </h2>
-            <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)] max-w-md mx-auto">
+            <p className="mt-2 text-[17px] text-muted-foreground max-w-md mx-auto">
               Upload your prescription data to see analytics, or add providers to start tracking
               prescriber relationships.
             </p>
@@ -503,7 +503,7 @@ export default function DashboardPage() {
               </Link>
               <Link
                 href="/app/providers/search"
-                className="inline-flex items-center gap-2 px-5 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[17px] hover:bg-[#f5f5f7]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 border border-border text-foreground rounded-lg text-[17px] hover:bg-muted"
               >
                 <Users className="w-4 h-4" /> Add providers
               </Link>
@@ -514,11 +514,11 @@ export default function DashboardPage() {
         <>
           {/* Live stat cards */}
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-lg p-5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+            <div className="bg-card rounded-lg p-5">
+              <p className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 Total Rx (90d)
               </p>
-              <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">
+              <p className="text-[28px] font-normal leading-[1.14] text-foreground mt-1">
                 {data!.totalRx.toLocaleString()}
               </p>
               <div className="flex items-center gap-1 mt-1">
@@ -529,33 +529,33 @@ export default function DashboardPage() {
                 </span>
               </div>
             </div>
-            <div className="bg-white rounded-lg p-5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+            <div className="bg-card rounded-lg p-5">
+              <p className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 Active providers
               </p>
-              <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">
+              <p className="text-[28px] font-normal leading-[1.14] text-foreground mt-1">
                 {data!.activeProviders}
               </p>
             </div>
-            <div className="bg-white rounded-lg p-5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+            <div className="bg-card rounded-lg p-5">
+              <p className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 Concentration
               </p>
-              <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">
+              <p className="text-[28px] font-normal leading-[1.14] text-foreground mt-1">
                 {data!.concentrationRisk.percentOfTotal}%
               </p>
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] mt-1">
+              <p className="text-[12px] text-muted-foreground mt-1">
                 Top {data!.concentrationRisk.topN} providers
               </p>
             </div>
-            <div className="bg-white rounded-lg p-5">
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+            <div className="bg-card rounded-lg p-5">
+              <p className="text-[12px] text-muted-foreground uppercase tracking-wide">
                 Notifications
               </p>
-              <p className="text-[28px] font-normal leading-[1.14] text-[#1d1d1f] mt-1">
+              <p className="text-[28px] font-normal leading-[1.14] text-foreground mt-1">
                 {notifications?.unreadCount || 0}
               </p>
-              <p className="text-[12px] text-[rgba(0,0,0,0.48)] mt-1">Unread</p>
+              <p className="text-[12px] text-muted-foreground mt-1">Unread</p>
             </div>
           </div>
 
@@ -565,11 +565,11 @@ export default function DashboardPage() {
           <div className="mt-6">
             {/* Section header */}
             <div className="flex items-center gap-2 flex-wrap mb-3">
-              <h2 className="text-[17px] font-semibold text-[#1d1d1f] mr-1">Schedule</h2>
+              <h2 className="text-[17px] font-semibold text-foreground mr-1">Schedule</h2>
 
               {/* Weekly / Daily toggle */}
               <div
-                className="flex items-center gap-0.5 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg p-0.5"
+                className="flex items-center gap-0.5 bg-card border border-border rounded-lg p-0.5"
                 role="radiogroup"
                 aria-label="Schedule view"
               >
@@ -583,7 +583,7 @@ export default function DashboardPage() {
                     className={`h-7 px-3 text-[12px] font-medium rounded-md transition-all capitalize ${
                       scheduleView === v
                         ? "bg-[#0071e3] text-white shadow-sm"
-                        : "text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     {v}
@@ -594,7 +594,7 @@ export default function DashboardPage() {
               {/* Granularity selector — only in daily view */}
               {scheduleView === "daily" && (
                 <div
-                  className="flex items-center gap-0.5 bg-white border border-[rgba(0,0,0,0.08)] rounded-lg p-0.5"
+                  className="flex items-center gap-0.5 bg-card border border-border rounded-lg p-0.5"
                   role="radiogroup"
                   aria-label="Timeline granularity"
                 >
@@ -607,8 +607,8 @@ export default function DashboardPage() {
                       onClick={() => setGranularity(g)}
                       className={`h-7 px-2.5 text-[12px] font-medium rounded-md transition-all ${
                         granularity === g
-                          ? "bg-[#f5f5f7] text-[#1d1d1f] shadow-sm"
-                          : "text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
+                          ? "bg-muted text-foreground shadow-sm"
+                          : "text-muted-foreground hover:text-foreground"
                       }`}
                     >
                       {g}
@@ -624,7 +624,7 @@ export default function DashboardPage() {
               <button
                 type="button"
                 onClick={toggleShowSchedule}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f] hover:bg-white transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3] focus-visible:ring-offset-1"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[12px] text-muted-foreground hover:text-foreground hover:bg-card transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3] focus-visible:ring-offset-1"
                 aria-label={showSchedule ? "Hide schedule" : "Show schedule"}
               >
                 {showSchedule ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -636,18 +636,18 @@ export default function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setWeekStart((w) => shiftDate(w, -7))}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white transition-colors text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-card transition-colors text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]"
                   aria-label="Previous week"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="text-[13px] text-[rgba(0,0,0,0.48)] min-w-[130px] text-center select-none">
+                <span className="text-[13px] text-muted-foreground min-w-[130px] text-center select-none">
                   {weekRangeLabel(weekStart)}
                 </span>
                 <button
                   type="button"
                   onClick={() => setWeekStart((w) => shiftDate(w, 7))}
-                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white transition-colors text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]"
+                  className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-card transition-colors text-muted-foreground hover:text-foreground focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]"
                   aria-label="Next week"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -657,8 +657,8 @@ export default function DashboardPage() {
 
             {/* Schedule body */}
             {!showSchedule ? (
-              <div className="bg-white rounded-xl border border-[rgba(0,0,0,0.06)] px-4 py-3">
-                <p className="text-[14px] text-[rgba(0,0,0,0.48)]">
+              <div className="bg-card rounded-xl border border-border/70 px-4 py-3">
+                <p className="text-[14px] text-muted-foreground">
                   Schedule hidden.{" "}
                   <button
                     type="button"
@@ -670,10 +670,10 @@ export default function DashboardPage() {
                 </p>
               </div>
             ) : scheduleLoading ? (
-              <div className="bg-white rounded-xl border border-[rgba(0,0,0,0.06)] h-48 animate-pulse" />
+              <div className="bg-card rounded-xl border border-border/70 h-48 animate-pulse" />
             ) : !hasSchedule ? (
-              <div className="bg-white rounded-xl border border-[rgba(0,0,0,0.06)] p-8 text-center">
-                <p className="text-[14px] text-[rgba(0,0,0,0.48)]">No schedule for this week</p>
+              <div className="bg-card rounded-xl border border-border/70 p-8 text-center">
+                <p className="text-[14px] text-muted-foreground">No schedule for this week</p>
                 <Link
                   href="/app/schedule"
                   className="mt-3 inline-block text-[14px] text-[#0066cc] hover:underline"
@@ -691,8 +691,8 @@ export default function DashboardPage() {
                     {/* Location header — only when multiple locations */}
                     {schedulesByLocation.size > 1 && (
                       <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-[15px] font-semibold text-[#1d1d1f] flex items-center gap-2">
-                          <MapPin className="w-4 h-4 text-[rgba(0,0,0,0.48)]" />
+                        <h3 className="text-[15px] font-semibold text-foreground flex items-center gap-2">
+                          <MapPin className="w-4 h-4 text-muted-foreground" />
                           {locationName}
                         </h3>
                         <PrintSchedule
@@ -748,9 +748,9 @@ export default function DashboardPage() {
           {/* ---------------------------------------------------------------- */}
           <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Top prescribers */}
-            <div className="bg-white rounded-xl p-5">
+            <div className="bg-card rounded-xl p-5">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-[17px] font-semibold text-[#1d1d1f]">Top prescribers</h2>
+                <h2 className="text-[17px] font-semibold text-foreground">Top prescribers</h2>
                 <Link
                   href="/app/prescriptions"
                   className="text-[14px] text-[#0066cc] hover:underline"
@@ -763,15 +763,15 @@ export default function DashboardPage() {
                   const max = data!.topPrescribers[0]?.count || 1;
                   return (
                     <div key={p.npi} className="flex items-center gap-3">
-                      <span className="w-5 text-right text-[12px] text-[rgba(0,0,0,0.3)]">
+                      <span className="w-5 text-right text-[12px] text-muted-foreground/60">
                         {i + 1}
                       </span>
                       <div className="flex-1">
                         <div className="flex justify-between mb-0.5">
-                          <span className="text-[14px] text-[#1d1d1f]">{p.name}</span>
+                          <span className="text-[14px] text-foreground">{p.name}</span>
                           <span className="text-[14px] font-medium">{p.count}</span>
                         </div>
-                        <div className="h-1 bg-[#f5f5f7] rounded-full overflow-hidden">
+                        <div className="h-1 bg-muted rounded-full overflow-hidden">
                           <div
                             className="h-full bg-[#0071e3] rounded-full"
                             style={{ width: `${(p.count / max) * 100}%` }}
@@ -787,16 +787,16 @@ export default function DashboardPage() {
             {/* Alerts + quick actions */}
             <div className="space-y-4">
               {alerts && alerts.newPrescribers.length > 0 && (
-                <div className="bg-white rounded-xl p-5">
+                <div className="bg-card rounded-xl p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <UserPlus className="w-4 h-4 text-[#22C55E]" />
-                    <h2 className="text-[17px] font-semibold text-[#1d1d1f]">New prescribers</h2>
+                    <h2 className="text-[17px] font-semibold text-foreground">New prescribers</h2>
                   </div>
                   {alerts.newPrescribers.slice(0, 3).map((p) => (
                     <div key={p.npi} className="text-[14px] py-1">
-                      <span className="text-[#1d1d1f]">{p.name}</span>
+                      <span className="text-foreground">{p.name}</span>
                       {p.specialty && (
-                        <span className="text-[rgba(0,0,0,0.48)]"> &middot; {p.specialty}</span>
+                        <span className="text-muted-foreground"> &middot; {p.specialty}</span>
                       )}
                     </div>
                   ))}
@@ -812,18 +812,18 @@ export default function DashboardPage() {
               )}
 
               {alerts && alerts.dormantPrescribers.length > 0 && (
-                <div className="bg-white rounded-xl p-5">
+                <div className="bg-card rounded-xl p-5">
                   <div className="flex items-center gap-2 mb-3">
                     <UserX className="w-4 h-4 text-[#EF4444]" />
-                    <h2 className="text-[17px] font-semibold text-[#1d1d1f]">
+                    <h2 className="text-[17px] font-semibold text-foreground">
                       Dormant prescribers
                     </h2>
                   </div>
                   {alerts.dormantPrescribers.slice(0, 3).map((p) => (
                     <div key={p.npi} className="text-[14px] py-1">
-                      <span className="text-[#1d1d1f]">{p.name}</span>
+                      <span className="text-foreground">{p.name}</span>
                       {p.specialty && (
-                        <span className="text-[rgba(0,0,0,0.48)]"> &middot; {p.specialty}</span>
+                        <span className="text-muted-foreground"> &middot; {p.specialty}</span>
                       )}
                     </div>
                   ))}
@@ -831,32 +831,32 @@ export default function DashboardPage() {
               )}
 
               {/* Quick actions */}
-              <div className="bg-white rounded-xl p-5">
-                <h2 className="text-[17px] font-semibold text-[#1d1d1f] mb-3">Quick actions</h2>
+              <div className="bg-card rounded-xl p-5">
+                <h2 className="text-[17px] font-semibold text-foreground mb-3">Quick actions</h2>
                 <div className="grid grid-cols-2 gap-2">
                   <Link
                     href="/app/prescriptions/upload"
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#f5f5f7] hover:bg-[rgba(0,0,0,0.06)] text-[14px] text-[#1d1d1f] transition-colors"
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-muted hover:bg-muted text-[14px] text-foreground transition-colors"
                   >
-                    <Upload className="w-4 h-4 text-[rgba(0,0,0,0.48)]" /> Upload Rx
+                    <Upload className="w-4 h-4 text-muted-foreground" /> Upload Rx
                   </Link>
                   <Link
                     href="/app/providers/search"
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#f5f5f7] hover:bg-[rgba(0,0,0,0.06)] text-[14px] text-[#1d1d1f] transition-colors"
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-muted hover:bg-muted text-[14px] text-foreground transition-colors"
                   >
-                    <Users className="w-4 h-4 text-[rgba(0,0,0,0.48)]" /> Search NPI
+                    <Users className="w-4 h-4 text-muted-foreground" /> Search NPI
                   </Link>
                   <Link
                     href="/app/drug-reps"
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#f5f5f7] hover:bg-[rgba(0,0,0,0.06)] text-[14px] text-[#1d1d1f] transition-colors"
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-muted hover:bg-muted text-[14px] text-foreground transition-colors"
                   >
-                    <Briefcase className="w-4 h-4 text-[rgba(0,0,0,0.48)]" /> Log visit
+                    <Briefcase className="w-4 h-4 text-muted-foreground" /> Log visit
                   </Link>
                   <Link
                     href="/app/time-tracking"
-                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-[#f5f5f7] hover:bg-[rgba(0,0,0,0.06)] text-[14px] text-[#1d1d1f] transition-colors"
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-muted hover:bg-muted text-[14px] text-foreground transition-colors"
                   >
-                    <Clock className="w-4 h-4 text-[rgba(0,0,0,0.48)]" /> Clock in
+                    <Clock className="w-4 h-4 text-muted-foreground" /> Clock in
                   </Link>
                 </div>
               </div>

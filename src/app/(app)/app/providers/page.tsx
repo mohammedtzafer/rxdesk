@@ -88,10 +88,10 @@ export default function ProvidersPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Providers
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             {total} provider{total !== 1 ? "s" : ""} in your directory
           </p>
         </div>
@@ -111,14 +111,14 @@ export default function ProvidersPage() {
           </Link>
           <Link
             href="/app/providers/upload"
-            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-white dark:hover:bg-white/10 transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-border text-foreground dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-card dark:hover:bg-white/10 transition-colors"
           >
             <Upload className="w-4 h-4" />
             Upload Rx Data
           </Link>
           <Link
             href="/app/providers/import"
-            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-white dark:hover:bg-white/10 transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-border text-foreground dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-card dark:hover:bg-white/10 transition-colors"
           >
             <Plus className="w-4 h-4" />
             Import providers
@@ -127,7 +127,7 @@ export default function ProvidersPage() {
       </div>
 
       <div className="mt-6 relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[rgba(0,0,0,0.3)]" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60" />
         <Input
           placeholder="Search by name, NPI, or practice..."
           value={search}
@@ -135,7 +135,7 @@ export default function ProvidersPage() {
             setSearch(e.target.value);
             setPage(1);
           }}
-          className="pl-10 h-11 bg-white"
+          className="pl-10 h-11 bg-card"
         />
       </div>
 
@@ -143,12 +143,12 @@ export default function ProvidersPage() {
         <div className="mt-4"><ErrorState onRetry={() => fetchProviders(search, page)} /></div>
       )}
 
-      <div className="mt-4 bg-white rounded-xl overflow-hidden">
+      <div className="mt-4 bg-card rounded-xl overflow-hidden">
         {loading ? (
           <div className="p-4 space-y-3">
             {[1,2,3,4,5].map(i => (
               <div key={i} className="flex items-center gap-3 py-2">
-                <div className="w-32 h-4 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
+                <div className="w-32 h-4 bg-muted rounded animate-pulse" />
                 <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
                 <div className="flex-1" />
                 <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
@@ -157,32 +157,32 @@ export default function ProvidersPage() {
           </div>
         ) : providers.length === 0 ? (
           <div className="p-12 text-center">
-            <Users className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
-            <h2 className="mt-4 text-[21px] font-bold text-[#1d1d1f]">No providers yet</h2>
-            <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+            <Users className="w-12 h-12 mx-auto text-muted-foreground/30" />
+            <h2 className="mt-4 text-[21px] font-bold text-foreground">No providers yet</h2>
+            <p className="mt-2 text-[17px] text-muted-foreground">
               Search the NPI registry or import a CSV to get started.
             </p>
           </div>
         ) : (
           <div className="overflow-x-auto"><table className="w-full min-w-[600px]">
             <thead>
-              <tr className="border-b border-[rgba(0,0,0,0.05)]">
-                <th className="text-left px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+              <tr className="border-b border-border">
+                <th className="text-left px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">
                   Provider
                 </th>
-                <th className="text-left px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden md:table-cell">
+                <th className="text-left px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide hidden md:table-cell">
                   NPI
                 </th>
-                <th className="text-left px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden lg:table-cell">
+                <th className="text-left px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide hidden lg:table-cell">
                   Specialty
                 </th>
-                <th className="text-left px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden lg:table-cell">
+                <th className="text-left px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide hidden lg:table-cell">
                   Location
                 </th>
-                <th className="text-center px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden sm:table-cell">
+                <th className="text-center px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide hidden sm:table-cell">
                   Trend
                 </th>
-                <th className="text-right px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                <th className="text-right px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">
                   Rx count
                 </th>
               </tr>
@@ -191,7 +191,7 @@ export default function ProvidersPage() {
               {providers.map((p) => (
                 <tr
                   key={p.id}
-                  className="border-b border-[rgba(0,0,0,0.03)] hover:bg-[#f5f5f7] transition-colors"
+                  className="border-b border-border/50 hover:bg-muted transition-colors"
                 >
                   <td className="px-4 py-3">
                     <Link
@@ -214,13 +214,13 @@ export default function ProvidersPage() {
                       </div>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-[14px] text-[rgba(0,0,0,0.48)] hidden md:table-cell font-mono">
+                  <td className="px-4 py-3 text-[14px] text-muted-foreground hidden md:table-cell font-mono">
                     {p.npi}
                   </td>
-                  <td className="px-4 py-3 text-[14px] text-[rgba(0,0,0,0.48)] hidden lg:table-cell">
+                  <td className="px-4 py-3 text-[14px] text-muted-foreground hidden lg:table-cell">
                     {p.specialty || "—"}
                   </td>
-                  <td className="px-4 py-3 text-[14px] text-[rgba(0,0,0,0.48)] hidden lg:table-cell">
+                  <td className="px-4 py-3 text-[14px] text-muted-foreground hidden lg:table-cell">
                     {p.practiceCity && p.practiceState
                       ? `${p.practiceCity}, ${p.practiceState}`
                       : "—"}
@@ -231,10 +231,10 @@ export default function ProvidersPage() {
                         <TrendIndicator trend={trendMap.get(p.npi)!} />
                       </span>
                     ) : (
-                      <span className="text-[rgba(0,0,0,0.20)]">—</span>
+                      <span className="text-muted-foreground/40">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right text-[14px] font-medium text-[#1d1d1f]">
+                  <td className="px-4 py-3 text-right text-[14px] font-medium text-foreground">
                     {p._count.prescriptionRecords}
                   </td>
                 </tr>
@@ -246,21 +246,21 @@ export default function ProvidersPage() {
 
       {total > 25 && (
         <div className="mt-4 flex items-center justify-between">
-          <p className="text-[14px] text-[rgba(0,0,0,0.48)]">
+          <p className="text-[14px] text-muted-foreground">
             Page {page} of {Math.ceil(total / 25)}
           </p>
           <div className="flex gap-2">
             <button
               onClick={() => setPage(Math.max(1, page - 1))}
               disabled={page === 1}
-              className="px-3 py-1.5 border border-[rgba(0,0,0,0.08)] rounded-lg text-[14px] disabled:opacity-30"
+              className="px-3 py-1.5 border border-border rounded-lg text-[14px] disabled:opacity-30"
             >
               Previous
             </button>
             <button
               onClick={() => setPage(page + 1)}
               disabled={page >= Math.ceil(total / 25)}
-              className="px-3 py-1.5 border border-[rgba(0,0,0,0.08)] rounded-lg text-[14px] disabled:opacity-30"
+              className="px-3 py-1.5 border border-border rounded-lg text-[14px] disabled:opacity-30"
             >
               Next
             </button>

@@ -281,10 +281,10 @@ export default function DrugRepsPage() {
       {/* Page header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f] dark:text-white">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground dark:text-white">
             Visit log
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)] dark:text-white/48">
+          <p className="mt-1 text-[17px] text-muted-foreground dark:text-white/48">
             Log office visits and track provider relationships
           </p>
         </div>
@@ -300,32 +300,32 @@ export default function DrugRepsPage() {
         {/* Left: Calendar + visit list */}
         <div className="space-y-4">
           {/* Calendar */}
-          <div className="bg-white dark:bg-[#1c1c1e] rounded-xl p-4 border border-[rgba(0,0,0,0.06)] dark:border-white/10">
+          <div className="bg-card dark:bg-[#1c1c1e] rounded-xl p-4 border border-border/70 dark:border-white/10">
             {/* Month nav */}
             <div className="flex items-center justify-between mb-4">
               <button
                 onClick={() => setViewMonth(subMonths(viewMonth, 1))}
-                className="p-1.5 rounded-lg hover:bg-[#f5f5f7] dark:hover:bg-white/10 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-muted dark:hover:bg-white/10 transition-colors"
                 aria-label="Previous month"
               >
-                <ChevronLeft className="w-4 h-4 text-[#1d1d1f] dark:text-white" />
+                <ChevronLeft className="w-4 h-4 text-foreground dark:text-white" />
               </button>
-              <h2 className="text-[16px] font-semibold text-[#1d1d1f] dark:text-white">
+              <h2 className="text-[16px] font-semibold text-foreground dark:text-white">
                 {format(viewMonth, "MMMM yyyy")}
               </h2>
               <button
                 onClick={() => setViewMonth(addMonths(viewMonth, 1))}
-                className="p-1.5 rounded-lg hover:bg-[#f5f5f7] dark:hover:bg-white/10 transition-colors"
+                className="p-1.5 rounded-lg hover:bg-muted dark:hover:bg-white/10 transition-colors"
                 aria-label="Next month"
               >
-                <ChevronRight className="w-4 h-4 text-[#1d1d1f] dark:text-white" />
+                <ChevronRight className="w-4 h-4 text-foreground dark:text-white" />
               </button>
             </div>
 
             {/* Day-of-week headers */}
             <div className="grid grid-cols-7 mb-2">
               {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((d) => (
-                <div key={d} className="text-center text-[11px] font-semibold text-[rgba(0,0,0,0.40)] dark:text-white/40 py-1">
+                <div key={d} className="text-center text-[11px] font-semibold text-muted-foreground/80 dark:text-white/40 py-1">
                   {d}
                 </div>
               ))}
@@ -351,8 +351,8 @@ export default function DrugRepsPage() {
                         : todayDay
                         ? "bg-[#0071e3]/10 text-[#0071e3] dark:bg-[#0071e3]/20"
                         : inMonth
-                        ? "hover:bg-[#f5f5f7] dark:hover:bg-white/10 text-[#1d1d1f] dark:text-white"
-                        : "text-[rgba(0,0,0,0.20)] dark:text-white/20",
+                        ? "hover:bg-muted dark:hover:bg-white/10 text-foreground dark:text-white"
+                        : "text-muted-foreground/40 dark:text-white/20",
                     ].join(" ")}
                     aria-label={format(day, "MMMM d, yyyy")}
                     aria-pressed={isSelected}
@@ -362,7 +362,7 @@ export default function DrugRepsPage() {
                       <span
                         className={[
                           "w-1.5 h-1.5 rounded-full mt-0.5",
-                          isSelected ? "bg-white" : "bg-[#0071e3]",
+                          isSelected ? "bg-card" : "bg-[#0071e3]",
                         ].join(" ")}
                         aria-hidden="true"
                       />
@@ -374,9 +374,9 @@ export default function DrugRepsPage() {
           </div>
 
           {/* Visits for selected day */}
-          <div className="bg-white dark:bg-[#1c1c1e] rounded-xl border border-[rgba(0,0,0,0.06)] dark:border-white/10 overflow-hidden">
-            <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.05)] dark:border-white/10 flex items-center justify-between">
-              <h3 className="text-[15px] font-semibold text-[#1d1d1f] dark:text-white">
+          <div className="bg-card dark:bg-[#1c1c1e] rounded-xl border border-border/70 dark:border-white/10 overflow-hidden">
+            <div className="px-4 py-3 border-b border-border dark:border-white/10 flex items-center justify-between">
+              <h3 className="text-[15px] font-semibold text-foreground dark:text-white">
                 {format(selectedDate, "EEEE, MMMM d")}
               </h3>
               <button
@@ -395,11 +395,11 @@ export default function DrugRepsPage() {
               </div>
             ) : visitsForDate.length === 0 ? (
               <div className="px-4 py-8 text-center">
-                <Calendar className="w-8 h-8 mx-auto text-[rgba(0,0,0,0.15)] dark:text-white/20 mb-2" />
-                <p className="text-[14px] text-[rgba(0,0,0,0.40)] dark:text-white/40">No visits on this day</p>
+                <Calendar className="w-8 h-8 mx-auto text-muted-foreground/30 dark:text-white/20 mb-2" />
+                <p className="text-[14px] text-muted-foreground/80 dark:text-white/40">No visits on this day</p>
               </div>
             ) : (
-              <div className="divide-y divide-[rgba(0,0,0,0.03)] dark:divide-white/5">
+              <div className="divide-y divide-border/50 dark:divide-white/5">
                 {visitsForDate.map((v) => {
                   const { startTime, endTime, lunchProvided } = parseNotesHeader(v.notes);
                   const noteBody = stripNotesHeader(v.notes);
@@ -410,32 +410,32 @@ export default function DrugRepsPage() {
                           {/* Providers */}
                           <div className="flex items-center gap-1.5 flex-wrap">
                             {v.providers.map((vp) => (
-                              <span key={vp.provider.id} className="text-[14px] font-medium text-[#1d1d1f] dark:text-white">
+                              <span key={vp.provider.id} className="text-[14px] font-medium text-foreground dark:text-white">
                                 {vp.provider.practiceName || `${vp.provider.firstName} ${vp.provider.lastName}`}
                               </span>
                             ))}
                             {v.providers.length === 0 && (
-                              <span className="text-[14px] text-[rgba(0,0,0,0.40)] dark:text-white/40">No providers</span>
+                              <span className="text-[14px] text-muted-foreground/80 dark:text-white/40">No providers</span>
                             )}
                           </div>
                           {/* Doctors list */}
                           {v.providers.length > 0 && (
                             <div className="flex items-center gap-1 mt-0.5">
-                              <Users className="w-3 h-3 text-[rgba(0,0,0,0.30)] dark:text-white/30 shrink-0" />
-                              <p className="text-[12px] text-[rgba(0,0,0,0.48)] dark:text-white/48 truncate">
+                              <Users className="w-3 h-3 text-muted-foreground/60 dark:text-white/30 shrink-0" />
+                              <p className="text-[12px] text-muted-foreground dark:text-white/48 truncate">
                                 {v.providers.map((vp) => `${vp.provider.firstName} ${vp.provider.lastName}`).join(", ")}
                               </p>
                             </div>
                           )}
                           {noteBody && (
-                            <p className="mt-1 text-[12px] text-[rgba(0,0,0,0.48)] dark:text-white/48 line-clamp-1">
+                            <p className="mt-1 text-[12px] text-muted-foreground dark:text-white/48 line-clamp-1">
                               {noteBody}
                             </p>
                           )}
                         </div>
                         <div className="flex flex-col items-end gap-1 shrink-0">
                           {startTime && endTime && (
-                            <span className="flex items-center gap-1 text-[12px] text-[rgba(0,0,0,0.40)] dark:text-white/40">
+                            <span className="flex items-center gap-1 text-[12px] text-muted-foreground/80 dark:text-white/40">
                               <Clock className="w-3 h-3" />
                               {startTime} – {endTime}
                             </span>
@@ -458,20 +458,20 @@ export default function DrugRepsPage() {
 
         {/* Right: Stats sidebar */}
         <div className="space-y-4">
-          <h3 className="text-[13px] font-semibold text-[rgba(0,0,0,0.40)] dark:text-white/40 uppercase tracking-wide">
+          <h3 className="text-[13px] font-semibold text-muted-foreground/80 dark:text-white/40 uppercase tracking-wide">
             This month
           </h3>
 
-          <div className="bg-white dark:bg-[#1c1c1e] rounded-xl border border-[rgba(0,0,0,0.06)] dark:border-white/10 overflow-hidden divide-y divide-[rgba(0,0,0,0.04)] dark:divide-white/5">
+          <div className="bg-card dark:bg-[#1c1c1e] rounded-xl border border-border/70 dark:border-white/10 overflow-hidden divide-y divide-border/50 dark:divide-white/5">
             <div className="px-4 py-4 flex items-center gap-3">
               <div className="w-9 h-9 rounded-lg bg-[#0071e3]/10 flex items-center justify-center shrink-0">
                 <Calendar className="w-4 h-4 text-[#0071e3]" />
               </div>
               <div>
-                <p className="text-[24px] font-bold text-[#1d1d1f] dark:text-white leading-none">
+                <p className="text-[24px] font-bold text-foreground dark:text-white leading-none">
                   {thisMonthVisits.length}
                 </p>
-                <p className="text-[12px] text-[rgba(0,0,0,0.48)] dark:text-white/48 mt-0.5">
+                <p className="text-[12px] text-muted-foreground dark:text-white/48 mt-0.5">
                   Total visits
                 </p>
               </div>
@@ -482,10 +482,10 @@ export default function DrugRepsPage() {
                 <Users className="w-4 h-4 text-[#22C55E]" />
               </div>
               <div>
-                <p className="text-[24px] font-bold text-[#1d1d1f] dark:text-white leading-none">
+                <p className="text-[24px] font-bold text-foreground dark:text-white leading-none">
                   {uniqueProvidersThisMonth}
                 </p>
-                <p className="text-[12px] text-[rgba(0,0,0,0.48)] dark:text-white/48 mt-0.5">
+                <p className="text-[12px] text-muted-foreground dark:text-white/48 mt-0.5">
                   Providers visited
                 </p>
               </div>
@@ -496,10 +496,10 @@ export default function DrugRepsPage() {
                 <UtensilsCrossed className="w-4 h-4 text-[#F59E0B]" />
               </div>
               <div>
-                <p className="text-[24px] font-bold text-[#1d1d1f] dark:text-white leading-none">
+                <p className="text-[24px] font-bold text-foreground dark:text-white leading-none">
                   {lunchesThisMonth}
                 </p>
-                <p className="text-[12px] text-[rgba(0,0,0,0.48)] dark:text-white/48 mt-0.5">
+                <p className="text-[12px] text-muted-foreground dark:text-white/48 mt-0.5">
                   Lunches provided
                 </p>
               </div>
@@ -508,21 +508,21 @@ export default function DrugRepsPage() {
 
           {/* Recent visits summary */}
           {visits.slice(0, 5).length > 0 && (
-            <div className="bg-white dark:bg-[#1c1c1e] rounded-xl border border-[rgba(0,0,0,0.06)] dark:border-white/10 overflow-hidden">
-              <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.05)] dark:border-white/10">
-                <p className="text-[13px] font-semibold text-[rgba(0,0,0,0.40)] dark:text-white/40 uppercase tracking-wide">
+            <div className="bg-card dark:bg-[#1c1c1e] rounded-xl border border-border/70 dark:border-white/10 overflow-hidden">
+              <div className="px-4 py-3 border-b border-border dark:border-white/10">
+                <p className="text-[13px] font-semibold text-muted-foreground/80 dark:text-white/40 uppercase tracking-wide">
                   Recent visits
                 </p>
               </div>
-              <div className="divide-y divide-[rgba(0,0,0,0.03)] dark:divide-white/5">
+              <div className="divide-y divide-border/50 dark:divide-white/5">
                 {visits.slice(0, 5).map((v) => (
                   <div key={v.id} className="px-4 py-2.5">
-                    <p className="text-[13px] font-medium text-[#1d1d1f] dark:text-white truncate">
+                    <p className="text-[13px] font-medium text-foreground dark:text-white truncate">
                       {v.providers[0]?.provider.practiceName ||
                         v.providers.map((vp) => `${vp.provider.lastName}`).join(", ") ||
                         "No providers"}
                     </p>
-                    <p className="text-[11px] text-[rgba(0,0,0,0.40)] dark:text-white/40">
+                    <p className="text-[11px] text-muted-foreground/80 dark:text-white/40">
                       {format(new Date(v.visitDate), "MMM d, yyyy")}
                     </p>
                   </div>
@@ -540,15 +540,15 @@ export default function DrugRepsPage() {
           onClick={() => setShowLogVisit(false)}
         >
           <div
-            className="bg-white dark:bg-[#1c1c1e] rounded-xl w-full max-w-lg max-h-[92vh] overflow-y-auto shadow-xl"
+            className="bg-card dark:bg-[#1c1c1e] rounded-xl w-full max-w-lg max-h-[92vh] overflow-y-auto shadow-xl"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal header */}
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[rgba(0,0,0,0.06)] dark:border-white/10 sticky top-0 bg-white dark:bg-[#1c1c1e] z-10">
-              <h2 className="text-[18px] font-semibold text-[#1d1d1f] dark:text-white">Log visit</h2>
+            <div className="flex items-center justify-between px-5 py-4 border-b border-border/70 dark:border-white/10 sticky top-0 bg-card dark:bg-[#1c1c1e] z-10">
+              <h2 className="text-[18px] font-semibold text-foreground dark:text-white">Log visit</h2>
               <button
                 onClick={() => setShowLogVisit(false)}
-                className="p-1.5 rounded-lg hover:bg-[#f5f5f7] dark:hover:bg-white/10 text-[rgba(0,0,0,0.48)] dark:text-white/48"
+                className="p-1.5 rounded-lg hover:bg-muted dark:hover:bg-white/10 text-muted-foreground dark:text-white/48"
                 aria-label="Close"
               >
                 <X className="w-5 h-5" />
@@ -558,7 +558,7 @@ export default function DrugRepsPage() {
             <form onSubmit={handleLogVisit} className="p-5 space-y-5">
               {/* Provider search */}
               <div>
-                <Label className="text-[13px] font-medium text-[#1d1d1f] dark:text-white mb-1.5 block">
+                <Label className="text-[13px] font-medium text-foreground dark:text-white mb-1.5 block">
                   Providers visited
                 </Label>
 
@@ -585,15 +585,15 @@ export default function DrugRepsPage() {
 
                 {/* Search input */}
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[rgba(0,0,0,0.30)] dark:text-white/30" />
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/60 dark:text-white/30" />
                   <Input
                     placeholder="Search provider by name or NPI..."
                     value={providerSearch}
                     onChange={(e) => setProviderSearch(e.target.value)}
-                    className="pl-9 h-10 bg-[#f5f5f7] dark:bg-[#2c2c2e] border-0 text-[14px]"
+                    className="pl-9 h-10 bg-muted dark:bg-[#2c2c2e] border-0 text-[14px]"
                   />
                   {searchingProviders && (
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-[rgba(0,0,0,0.40)] dark:text-white/40">
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[11px] text-muted-foreground/80 dark:text-white/40">
                       Searching...
                     </span>
                   )}
@@ -601,10 +601,10 @@ export default function DrugRepsPage() {
 
                 {/* Results dropdown */}
                 {displayResults.length > 0 && (
-                  <div className="mt-1.5 border border-[rgba(0,0,0,0.08)] dark:border-white/10 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
+                  <div className="mt-1.5 border border-border dark:border-white/10 rounded-lg overflow-hidden max-h-48 overflow-y-auto">
                     {showFavoritesLabel && (
-                      <div className="px-3 py-1.5 bg-[#f5f5f7] dark:bg-[#2c2c2e] border-b border-[rgba(0,0,0,0.05)] dark:border-white/5">
-                        <span className="text-[11px] font-semibold text-[rgba(0,0,0,0.40)] dark:text-white/40 uppercase tracking-wide flex items-center gap-1">
+                      <div className="px-3 py-1.5 bg-muted dark:bg-[#2c2c2e] border-b border-border dark:border-white/5">
+                        <span className="text-[11px] font-semibold text-muted-foreground/80 dark:text-white/40 uppercase tracking-wide flex items-center gap-1">
                           <Star className="w-3 h-3" /> Frequently visited
                         </span>
                       </div>
@@ -618,7 +618,7 @@ export default function DrugRepsPage() {
                             "flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors",
                             isSelected
                               ? "bg-[#0071e3]/5 dark:bg-[#0071e3]/10"
-                              : "hover:bg-[#f5f5f7] dark:hover:bg-white/5",
+                              : "hover:bg-muted dark:hover:bg-white/5",
                           ].join(" ")}
                         >
                           <input
@@ -628,10 +628,10 @@ export default function DrugRepsPage() {
                             className="rounded w-4 h-4 accent-[#0071e3]"
                           />
                           <div className="flex-1 min-w-0">
-                            <p className="text-[13px] font-medium text-[#1d1d1f] dark:text-white truncate">
+                            <p className="text-[13px] font-medium text-foreground dark:text-white truncate">
                               {provider.lastName}, {provider.firstName}
                             </p>
-                            <p className="text-[11px] text-[rgba(0,0,0,0.40)] dark:text-white/40 truncate">
+                            <p className="text-[11px] text-muted-foreground/80 dark:text-white/40 truncate">
                               {provider.practiceName || provider.specialty || "—"}
                             </p>
                           </div>
@@ -647,7 +647,7 @@ export default function DrugRepsPage() {
 
               {/* Date */}
               <div>
-                <Label className="text-[13px] font-medium text-[#1d1d1f] dark:text-white mb-1.5 block">
+                <Label className="text-[13px] font-medium text-foreground dark:text-white mb-1.5 block">
                   Visit date
                 </Label>
                 <input
@@ -655,30 +655,30 @@ export default function DrugRepsPage() {
                   value={visitDate}
                   onChange={(e) => setVisitDate(e.target.value)}
                   required
-                  className="w-full h-10 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 px-3 text-[14px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white"
+                  className="w-full h-10 rounded-lg border border-border dark:border-white/10 px-3 text-[14px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
                 />
               </div>
 
               {/* Time range */}
               <div>
-                <Label className="text-[13px] font-medium text-[#1d1d1f] dark:text-white mb-1.5 block">
+                <Label className="text-[13px] font-medium text-foreground dark:text-white mb-1.5 block">
                   Time range
                 </Label>
                 <div className="flex items-center gap-2">
                   <select
                     value={startTime}
                     onChange={(e) => setStartTime(e.target.value)}
-                    className="flex-1 h-10 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 px-3 text-[14px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white"
+                    className="flex-1 h-10 rounded-lg border border-border dark:border-white/10 px-3 text-[14px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
                   >
                     {TIME_OPTIONS.map((t) => (
                       <option key={t} value={t}>{t}</option>
                     ))}
                   </select>
-                  <span className="text-[rgba(0,0,0,0.40)] dark:text-white/40 text-[13px]">to</span>
+                  <span className="text-muted-foreground/80 dark:text-white/40 text-[13px]">to</span>
                   <select
                     value={endTime}
                     onChange={(e) => setEndTime(e.target.value)}
-                    className="flex-1 h-10 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 px-3 text-[14px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white"
+                    className="flex-1 h-10 rounded-lg border border-border dark:border-white/10 px-3 text-[14px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
                   >
                     {TIME_OPTIONS.map((t) => (
                       <option key={t} value={t}>{t}</option>
@@ -690,8 +690,8 @@ export default function DrugRepsPage() {
               {/* Lunch toggle */}
               <div className="flex items-center justify-between py-1">
                 <div className="flex items-center gap-2">
-                  <UtensilsCrossed className="w-4 h-4 text-[rgba(0,0,0,0.40)] dark:text-white/40" />
-                  <Label className="text-[14px] text-[#1d1d1f] dark:text-white cursor-pointer" htmlFor="lunch-toggle">
+                  <UtensilsCrossed className="w-4 h-4 text-muted-foreground/80 dark:text-white/40" />
+                  <Label className="text-[14px] text-foreground dark:text-white cursor-pointer" htmlFor="lunch-toggle">
                     Lunch provided
                   </Label>
                 </div>
@@ -708,7 +708,7 @@ export default function DrugRepsPage() {
                 >
                   <span
                     className={[
-                      "inline-block h-4 w-4 rounded-full bg-white shadow transition-transform",
+                      "inline-block h-4 w-4 rounded-full bg-card shadow transition-transform",
                       lunchProvided ? "translate-x-6" : "translate-x-1",
                     ].join(" ")}
                   />
@@ -717,7 +717,7 @@ export default function DrugRepsPage() {
 
               {/* Notes */}
               <div>
-                <Label className="text-[13px] font-medium text-[#1d1d1f] dark:text-white mb-1.5 block">
+                <Label className="text-[13px] font-medium text-foreground dark:text-white mb-1.5 block">
                   Notes
                 </Label>
                 <textarea
@@ -729,7 +729,7 @@ export default function DrugRepsPage() {
                       ? `Visited ${selectedProviders[0].practiceName || selectedProviders[0].lastName + " office"}, spoke with ${selectedProviders.map((p) => `Dr. ${p.lastName}`).join(" and ")}, discussed specific drugs, and additional notes for future reference.`
                       : "Visited [Provider Office], spoke with [Doctor(s)], discussed [specific drugs], and additional notes for future reference."
                   }
-                  className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 px-3 py-2.5 text-[14px] resize-none bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white placeholder:text-[rgba(0,0,0,0.30)] dark:placeholder:text-white/30"
+                  className="w-full rounded-lg border border-border dark:border-white/10 px-3 py-2.5 text-[14px] resize-none bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white placeholder:text-muted-foreground/60 dark:placeholder:text-white/30"
                 />
               </div>
 
