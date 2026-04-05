@@ -134,8 +134,10 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
   const [collapsed, setCollapsed] = useState(false);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set());
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  // Auto-expand the section that contains the current path
+  useEffect(() => setMounted(true), []);
+
   useEffect(() => {
     for (const item of navItems) {
       if (item.children && pathname.startsWith(item.href)) {
@@ -144,7 +146,6 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     }
   }, [pathname]);
 
-  // Prevent body scroll when mobile menu or more menu is open
   useEffect(() => {
     if (mobileMenuOpen || moreMenuOpen) {
       document.body.style.overflow = "hidden";
@@ -161,7 +162,6 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     return perm ? perm.access !== "NONE" : false;
   };
 
-  // Drug Rep role: only sees the Visit Log page — nothing else
   const isDrugRepOnly = user.role === "DRUG_REP";
 
   const toggleSection = (href: string) => {
@@ -173,15 +173,8 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     });
   };
 
-  // In Drug Rep-only mode, show only the Drug Reps visit log — no other nav items
   const drugRepOnlyNav: NavItem[] = [
-    {
-      label: "Drug Reps",
-      href: "/app/drug-reps",
-      icon: Briefcase,
-      module: "DRUG_REPS",
-      mobileTab: true,
-    },
+    { label: "Drug Reps", href: "/app/drug-reps", icon: Briefcase, module: "DRUG_REPS", mobileTab: true },
   ];
 
   const visibleNav = isDrugRepOnly
@@ -195,79 +188,67 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     : "?";
 
   const brandName = branding?.brandName || "RxDesk";
-
   const isExactActive = (href: string) => pathname === href;
   const isSectionActive = (href: string) => pathname.startsWith(href);
 
+  const sidebarWidth = collapsed ? "md:w-16" : "md:w-64";
+  const mainMargin = collapsed ? "md:ml-16" : "md:ml-64";
+
   return (
-    <div className="flex h-screen bg-background">
-      {/* Desktop sidebar */}
+    <div className="flex h-screen bg-background text-foreground">
+      {/* ── Desktop: Brand banner (OUTSIDE sidebar, fixed at top-left) ── */}
+      <div
+        className={cn(
+          "hidden md:flex items-center gap-3 fixed top-0 left-0 z-50 h-16 border-b border-r border-border bg-card transition-all duration-200",
+          collapsed ? "w-16 justify-center px-2" : "w-64 px-4"
+        )}
+      >
+        {branding?.logoUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={branding.logoUrl} alt={brandName} className="w-10 h-10 rounded-xl object-cover shrink-0" />
+        ) : (
+          <div className="w-10 h-10 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-sm shrink-0">
+            Rx
+          </div>
+        )}
+        {!collapsed && (
+          <div className="min-w-0 flex-1">
+            <p className="text-[15px] font-semibold text-foreground leading-tight truncate">{brandName}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">Pharmacy Management</p>
+          </div>
+        )}
+      </div>
+
+      {/* ── Desktop sidebar (below brand banner) ── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col fixed inset-y-0 left-0 z-40 transition-all duration-200 border-r",
-          collapsed ? "md:w-16" : "md:w-64",
-          "bg-white dark:bg-black/90 border-border dark:border-white/10"
+          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 border-r border-border bg-card",
+          sidebarWidth,
+          "top-16 bottom-0" // starts below the brand banner
         )}
-        style={{
-          backdropFilter: "saturate(180%) blur(20px)",
-          WebkitBackdropFilter: "saturate(180%) blur(20px)",
-        }}
       >
-        {/* Brand area */}
-        <div className={cn("border-b border-border dark:border-white/10", collapsed ? "px-2 py-3" : "px-4 py-4")}>
-          {collapsed ? (
-            <div className="flex justify-center">
-              {branding?.logoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={branding.logoUrl} alt={brandName} className="w-10 h-10 rounded-xl object-cover" />
-              ) : (
-                <div className="w-10 h-10 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-sm">
-                  Rx
-                </div>
-              )}
-            </div>
-          ) : (
-            <div>
-              <div className="flex items-center gap-3">
-                {branding?.logoUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={branding.logoUrl} alt={brandName} className="w-10 h-10 rounded-xl object-cover shrink-0" />
-                ) : (
-                  <div className="w-10 h-10 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-sm shrink-0">
-                    Rx
-                  </div>
-                )}
-                <div className="min-w-0 flex-1">
-                  <p className="text-[15px] font-semibold text-foreground dark:text-white leading-tight">
-                    {brandName}
-                  </p>
-                  <p className="text-[11px] text-muted-foreground dark:text-white/40 mt-0.5">
-                    Pharmacy Management
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center justify-end gap-1 mt-2">
-                <button
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="p-1.5 rounded-md hover:bg-muted dark:hover:bg-white/10 text-muted-foreground dark:text-white/50 hover:text-foreground dark:hover:text-white transition-colors"
-                  aria-label="Toggle dark mode"
-                >
-                  {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-                </button>
-                <button
-                  onClick={() => setCollapsed(!collapsed)}
-                  className="p-1.5 rounded-md hover:bg-muted dark:hover:bg-white/10 text-muted-foreground dark:text-white/50 hover:text-foreground dark:hover:text-white transition-colors"
-                  aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-                >
-                  {collapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
-                </button>
-              </div>
-            </div>
+        {/* Toolbar: theme toggle + collapse */}
+        <div className="flex items-center justify-end gap-1 px-2 py-1.5 border-b border-border">
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
           )}
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          >
+            {collapsed ? <PanelLeft className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
+          </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 py-3 px-2 space-y-0.5 overflow-y-auto">
+        <nav className="flex-1 py-2 px-2 space-y-0.5 overflow-y-auto">
           {visibleNav.map((item) => {
             const Icon = item.icon;
             const isActive = isSectionActive(item.href);
@@ -276,7 +257,6 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
 
             return (
               <div key={item.href}>
-                {/* Parent nav item */}
                 <div className="flex items-center">
                   <Link
                     href={item.href}
@@ -285,8 +265,8 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                       isActive && !hasChildren
                         ? "bg-[#0071e3] text-white"
                         : isActive && hasChildren
-                        ? "text-foreground dark:text-white"
-                        : "text-muted-foreground dark:text-white/70 hover:text-foreground dark:hover:text-white hover:bg-muted dark:hover:bg-white/10"
+                        ? "text-foreground font-medium"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted"
                     )}
                     title={collapsed ? item.label : undefined}
                   >
@@ -296,21 +276,15 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                   {hasChildren && !collapsed && (
                     <button
                       onClick={() => toggleSection(item.href)}
-                      className="p-1.5 rounded-md hover:bg-muted dark:hover:bg-white/10 text-muted-foreground/60 dark:text-white/40 hover:text-foreground dark:hover:text-white transition-colors shrink-0"
-                      aria-label={isExpanded ? `Collapse ${item.label}` : `Expand ${item.label}`}
+                      className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors shrink-0"
                     >
-                      {isExpanded ? (
-                        <ChevronDown className="w-3.5 h-3.5" />
-                      ) : (
-                        <ChevronRight className="w-3.5 h-3.5" />
-                      )}
+                      {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                     </button>
                   )}
                 </div>
 
-                {/* Sub-navigation */}
                 {hasChildren && isExpanded && !collapsed && (
-                  <div className="ml-4 pl-3 border-l border-border dark:border-white/10 mt-0.5 space-y-0.5">
+                  <div className="ml-4 pl-3 border-l border-border mt-0.5 space-y-0.5">
                     {item.children!.map((child) => {
                       const ChildIcon = child.icon;
                       const isChildActive = isExactActive(child.href);
@@ -322,7 +296,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                             "flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] transition-colors",
                             isChildActive
                               ? "bg-[#0071e3] text-white"
-                              : "text-muted-foreground dark:text-white/50 hover:text-foreground dark:hover:text-white hover:bg-muted dark:hover:bg-white/10"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted"
                           )}
                         >
                           <ChildIcon className="w-3.5 h-3.5 shrink-0" />
@@ -338,54 +312,56 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
         </nav>
 
         {/* User section */}
-        <div className="px-2 py-3 border-t border-border dark:border-white/10">
+        <div className="px-2 py-3 border-t border-border">
           <Link
             href="/app/profile"
-            className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted dark:hover:bg-white/10 transition-colors"
+            className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted transition-colors"
             title={collapsed ? user.name : undefined}
           >
-            <div className="w-8 h-8 rounded-full bg-muted dark:bg-white/20 flex items-center justify-center text-foreground dark:text-white text-xs font-medium shrink-0">
+            <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-foreground text-xs font-medium shrink-0">
               {initials}
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-foreground dark:text-white text-sm font-medium truncate">{user.name}</p>
-                <p className="text-muted-foreground dark:text-white/50 text-xs truncate">{user.role}</p>
+                <p className="text-foreground text-sm font-medium truncate">{user.name}</p>
+                <p className="text-muted-foreground text-xs truncate">{user.role}</p>
               </div>
             )}
           </Link>
           {!collapsed && (
             <div className="mt-1 px-2">
-              <Badge variant="outline" className="text-muted-foreground dark:text-white/60 border-border dark:border-white/20 text-[10px]">
-                {plan}
-              </Badge>
+              <Badge variant="outline" className="text-muted-foreground text-[10px]">{plan}</Badge>
             </div>
           )}
         </div>
       </aside>
 
-      {/* Mobile top header */}
-      <header
-        className="md:hidden fixed top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-4 bg-white dark:bg-black/90 border-b border-border dark:border-white/10"
-        style={{ backdropFilter: "saturate(180%) blur(20px)", WebkitBackdropFilter: "saturate(180%) blur(20px)" }}
-      >
+      {/* ── Mobile top header ── */}
+      <header className="md:hidden fixed top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-4 bg-card border-b border-border">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-md bg-[#0071e3] flex items-center justify-center text-white font-semibold text-xs">
-            Rx
-          </div>
-          <span className="text-foreground dark:text-white font-semibold text-sm">{brandName}</span>
+          {branding?.logoUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={branding.logoUrl} alt={brandName} className="w-7 h-7 rounded-md object-cover" />
+          ) : (
+            <div className="w-7 h-7 rounded-md bg-[#0071e3] flex items-center justify-center text-white font-semibold text-xs">
+              Rx
+            </div>
+          )}
+          <span className="text-foreground font-semibold text-sm">{brandName}</span>
         </div>
         <div className="flex items-center gap-1">
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="p-2 rounded-lg hover:bg-muted dark:hover:bg-white/10 text-muted-foreground dark:text-white/60 hover:text-foreground dark:hover:text-white transition-colors"
-            aria-label="Toggle dark mode"
-          >
-            {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
+          {mounted && (
+            <button
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="p-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors"
+              aria-label="Toggle dark mode"
+            >
+              {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+          )}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="text-foreground dark:text-white p-1"
+            className="text-foreground p-1"
             aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -395,7 +371,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
 
       {/* Mobile menu overlay */}
       {mobileMenuOpen && (
-        <div className="md:hidden fixed inset-0 z-30 bg-black/90 pt-14">
+        <div className="md:hidden fixed inset-0 z-30 bg-background/95 pt-14">
           <nav className="p-4 space-y-1 overflow-y-auto max-h-[calc(100vh-3.5rem)]">
             {visibleNav.map((item) => {
               const Icon = item.icon;
@@ -407,7 +383,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                     onClick={() => setMobileMenuOpen(false)}
                     className={cn(
                       "flex items-center gap-3 px-4 py-3 rounded-lg text-base",
-                      isActive ? "bg-[#0071e3] text-white" : "text-white/70"
+                      isActive ? "bg-[#0071e3] text-white" : "text-foreground"
                     )}
                   >
                     <Icon className="w-5 h-5" />
@@ -424,7 +400,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                             onClick={() => setMobileMenuOpen(false)}
                             className={cn(
                               "flex items-center gap-2.5 px-3 py-2 rounded-md text-[14px]",
-                              isExactActive(child.href) ? "text-white" : "text-white/50"
+                              isExactActive(child.href) ? "text-[#0071e3] font-medium" : "text-muted-foreground"
                             )}
                           >
                             <ChildIcon className="w-4 h-4" />
@@ -441,18 +417,18 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
         </div>
       )}
 
-      {/* Main content */}
+      {/* ── Main content (offset by brand banner height + sidebar width) ── */}
       <main
         className={cn(
-          "flex-1 pt-14 md:pt-0 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200 bg-background",
-          collapsed ? "md:ml-16" : "md:ml-64"
+          "flex-1 pt-14 md:pt-16 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200",
+          mainMargin
         )}
       >
         <div className="p-4 md:p-6 max-w-7xl mx-auto">{children}</div>
       </main>
 
       {/* Mobile bottom tabs */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[72px] bg-white dark:bg-[#1c1c1e] border-t border-black/5 dark:border-white/10 flex items-center justify-around z-40 px-2">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 h-[72px] bg-card border-t border-border flex items-center justify-around z-40 px-2">
         {mobileTabs.map((item) => {
           const Icon = item.icon;
           const isActive = isSectionActive(item.href);
@@ -462,7 +438,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
               href={item.href}
               className={cn(
                 "flex flex-col items-center gap-0.5 px-3 py-1 min-h-[48px] min-w-[48px] justify-center",
-                isActive ? "text-[#0071e3]" : "text-[rgba(0,0,0,0.48)] dark:text-white/48"
+                isActive ? "text-[#0071e3]" : "text-muted-foreground"
               )}
             >
               <Icon className="w-6 h-6" />
@@ -475,7 +451,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
             onClick={() => setMoreMenuOpen(!moreMenuOpen)}
             className={cn(
               "flex flex-col items-center gap-0.5 px-3 py-1 min-h-[48px] min-w-[48px] justify-center",
-              moreMenuOpen ? "text-[#0071e3]" : "text-[rgba(0,0,0,0.48)] dark:text-white/48"
+              moreMenuOpen ? "text-[#0071e3]" : "text-muted-foreground"
             )}
             aria-label="More navigation options"
           >
@@ -489,7 +465,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {moreMenuOpen && (
         <>
           <div className="md:hidden fixed inset-0 bg-black/20 z-20" onClick={() => setMoreMenuOpen(false)} />
-          <div className="md:hidden fixed bottom-[72px] left-0 right-0 bg-white dark:bg-[#1c1c1e] border-t border-black/5 dark:border-white/10 z-30 p-3 rounded-t-xl shadow-lg">
+          <div className="md:hidden fixed bottom-[72px] left-0 right-0 bg-card border-t border-border z-30 p-3 rounded-t-xl shadow-lg">
             {moreItems.map((item) => {
               const Icon = item.icon;
               return (
@@ -499,9 +475,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                   onClick={() => setMoreMenuOpen(false)}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors",
-                    isSectionActive(item.href)
-                      ? "bg-[#0071e3]/10 text-[#0071e3] font-medium"
-                      : "text-[#1d1d1f] dark:text-white hover:bg-[#f5f5f7] dark:hover:bg-white/10"
+                    isSectionActive(item.href) ? "bg-[#0071e3]/10 text-[#0071e3] font-medium" : "text-foreground hover:bg-muted"
                   )}
                 >
                   <Icon className="w-4 h-4" />
