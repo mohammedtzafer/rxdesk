@@ -198,26 +198,41 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     <div className="flex h-screen bg-background text-foreground">
       {/* ── Desktop: Brand banner (OUTSIDE sidebar, fixed at top) ── */}
       <div
-        className="hidden md:flex items-center gap-3 fixed top-0 left-0 z-50 h-16 w-64 px-4 bg-background transition-all duration-200"
+        className={cn(
+          "hidden md:flex items-center fixed top-0 left-0 z-50 h-20 bg-background transition-all duration-200",
+          collapsed ? "w-16 justify-center px-1" : "w-64 gap-4 px-4"
+        )}
       >
         {branding?.logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={branding.logoUrl} alt={brandName} className="w-10 h-10 rounded-xl object-cover shrink-0" />
+          <img
+            src={branding.logoUrl}
+            alt={brandName}
+            className={cn(
+              "rounded-xl object-contain shrink-0 transition-all duration-200",
+              collapsed ? "h-9 max-w-[36px]" : "h-12 max-w-[56px]"
+            )}
+          />
         ) : (
-          <div className="w-10 h-10 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-sm shrink-0">
+          <div className={cn(
+            "rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold shrink-0 transition-all duration-200",
+            collapsed ? "w-9 h-9 text-xs" : "w-12 h-12 text-base"
+          )}>
             Rx
           </div>
         )}
-        <div className="min-w-0 flex-1">
-          <p className="text-[15px] font-semibold text-foreground leading-tight">{brandName}</p>
-          <p className="text-[11px] text-muted-foreground mt-0.5">Pharmacy Management</p>
-        </div>
+        {!collapsed && (
+          <div className="min-w-0 flex-1">
+            <p className="text-[16px] font-semibold text-foreground leading-tight">{brandName}</p>
+            <p className="text-[11px] text-muted-foreground mt-1">Pharmacy Management</p>
+          </div>
+        )}
       </div>
 
       {/* ── Desktop sidebar (below brand banner) ── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 bg-background top-16 bottom-0",
+          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 bg-background top-20 bottom-0",
           sidebarWidth
         )}
       >
@@ -414,7 +429,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {/* ── Main content (offset by brand banner height + sidebar width) ── */}
       <main
         className={cn(
-          "flex-1 pt-14 md:pt-16 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200",
+          "flex-1 pt-14 md:pt-20 pb-[88px] md:pb-0 overflow-y-auto transition-all duration-200",
           mainMargin
         )}
       >

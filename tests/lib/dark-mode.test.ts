@@ -195,8 +195,8 @@ describe("App shell structure", () => {
     expect(shellContent).toMatch(/hidden md:flex.*z-50.*w-64|hidden md:flex.*w-64.*z-50/s);
   });
 
-  it("sidebar starts below brand (top-16)", () => {
-    expect(shellContent).toContain("top-16 bottom-0");
+  it("sidebar starts below brand (top-20)", () => {
+    expect(shellContent).toContain("top-20 bottom-0");
   });
 
   it("collapse toggle is always visible (in toolbar, not brand)", () => {
