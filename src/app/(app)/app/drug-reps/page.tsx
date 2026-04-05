@@ -390,7 +390,7 @@ export default function DrugRepsPage() {
             {loading ? (
               <div className="p-4 space-y-3">
                 {[1, 2].map((i) => (
-                  <div key={i} className="h-14 bg-[rgba(0,0,0,0.04)] rounded-lg animate-pulse" />
+                  <div key={i} className="h-14 bg-muted/50 rounded-lg animate-pulse" />
                 ))}
               </div>
             ) : visitsForDate.length === 0 ? (
@@ -618,7 +618,7 @@ export default function DrugRepsPage() {
                             "flex items-center gap-3 px-3 py-2.5 cursor-pointer transition-colors",
                             isSelected
                               ? "bg-[#0071e3]/5 dark:bg-[#0071e3]/10"
-                              : "hover:bg-muted dark:hover:bg-white/5",
+                              : "hover:bg-muted dark:hover:bg-card/5",
                           ].join(" ")}
                         >
                           <input
@@ -703,7 +703,7 @@ export default function DrugRepsPage() {
                   onClick={() => setLunchProvided(!lunchProvided)}
                   className={[
                     "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
-                    lunchProvided ? "bg-[#0071e3]" : "bg-[rgba(0,0,0,0.12)] dark:bg-white/20",
+                    lunchProvided ? "bg-[#0071e3]" : "bg-[rgba(0,0,0,0.12)] dark:bg-card/20",
                   ].join(" ")}
                 >
                   <span

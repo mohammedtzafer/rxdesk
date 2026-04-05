@@ -117,10 +117,10 @@ export default function PatientsPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Patients
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             {total} patient{total !== 1 ? "s" : ""} in your directory
           </p>
         </div>
@@ -153,24 +153,24 @@ export default function PatientsPage() {
       {loading ? (
         <div className="mt-6 space-y-2">
           {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="bg-white rounded-xl p-4 animate-pulse">
+            <div key={i} className="bg-card rounded-xl p-4 animate-pulse">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#f5f5f7] rounded-full" />
+                <div className="w-10 h-10 bg-muted rounded-full" />
                 <div className="flex-1">
-                  <div className="h-4 w-32 bg-[#f5f5f7] rounded" />
-                  <div className="mt-2 h-3 w-48 bg-[#f5f5f7] rounded" />
+                  <div className="h-4 w-32 bg-muted rounded" />
+                  <div className="mt-2 h-3 w-48 bg-muted rounded" />
                 </div>
               </div>
             </div>
           ))}
         </div>
       ) : patients.length === 0 ? (
-        <div className="mt-12 bg-white rounded-xl p-12 text-center">
+        <div className="mt-12 bg-card rounded-xl p-12 text-center">
           <Heart className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.24)]" />
-          <h3 className="mt-4 text-[17px] font-semibold text-[#1d1d1f]">
+          <h3 className="mt-4 text-[17px] font-semibold text-foreground">
             {search ? "No patients match your search" : "No patients yet"}
           </h3>
-          <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)] max-w-md mx-auto">
+          <p className="mt-1 text-[14px] text-muted-foreground max-w-md mx-auto">
             {search
               ? "Try a different search term."
               : "Patients are created automatically from PMS webhook events, or you can add them manually."}
@@ -191,16 +191,16 @@ export default function PatientsPage() {
             <table className="w-full">
               <thead>
                 <tr className="border-b border-[rgba(0,0,0,0.06)]">
-                  <th className="text-left text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide py-3 px-4">
+                  <th className="text-left text-[12px] font-medium text-muted-foreground uppercase tracking-wide py-3 px-4">
                     Patient
                   </th>
-                  <th className="text-left text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide py-3 px-4 hidden sm:table-cell">
+                  <th className="text-left text-[12px] font-medium text-muted-foreground uppercase tracking-wide py-3 px-4 hidden sm:table-cell">
                     Contact
                   </th>
-                  <th className="text-left text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide py-3 px-4 hidden md:table-cell">
+                  <th className="text-left text-[12px] font-medium text-muted-foreground uppercase tracking-wide py-3 px-4 hidden md:table-cell">
                     Notifications
                   </th>
-                  <th className="text-right text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide py-3 px-4">
+                  <th className="text-right text-[12px] font-medium text-muted-foreground uppercase tracking-wide py-3 px-4">
                     Rx events
                   </th>
                 </tr>
@@ -209,7 +209,7 @@ export default function PatientsPage() {
                 {patients.map((patient) => (
                   <tr
                     key={patient.id}
-                    className="border-b border-[rgba(0,0,0,0.04)] hover:bg-[#f5f5f7]/50 transition-colors"
+                    className="border-b border-[rgba(0,0,0,0.04)] hover:bg-muted/50 transition-colors"
                   >
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
@@ -218,10 +218,10 @@ export default function PatientsPage() {
                           {patient.lastName[0]}
                         </div>
                         <div>
-                          <p className="text-[14px] font-medium text-[#1d1d1f]">
+                          <p className="text-[14px] font-medium text-foreground">
                             {patient.firstName} {patient.lastName}
                           </p>
-                          <p className="text-[12px] text-[rgba(0,0,0,0.48)] sm:hidden">
+                          <p className="text-[12px] text-muted-foreground sm:hidden">
                             {patient.phone || patient.email || "No contact info"}
                           </p>
                         </div>
@@ -230,12 +230,12 @@ export default function PatientsPage() {
                     <td className="py-3 px-4 hidden sm:table-cell">
                       <div className="space-y-0.5">
                         {patient.phone && (
-                          <p className="text-[13px] text-[#1d1d1f]">
+                          <p className="text-[13px] text-foreground">
                             {patient.phone}
                           </p>
                         )}
                         {patient.email && (
-                          <p className="text-[13px] text-[rgba(0,0,0,0.48)]">
+                          <p className="text-[13px] text-muted-foreground">
                             {patient.email}
                           </p>
                         )}
@@ -275,7 +275,7 @@ export default function PatientsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-4 text-right">
-                      <span className="text-[14px] font-medium text-[#1d1d1f]">
+                      <span className="text-[14px] font-medium text-foreground">
                         {patient._count.prescriptionEvents}
                       </span>
                     </td>
@@ -287,21 +287,21 @@ export default function PatientsPage() {
 
           {totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between">
-              <p className="text-[13px] text-[rgba(0,0,0,0.48)]">
+              <p className="text-[13px] text-muted-foreground">
                 Page {page} of {totalPages}
               </p>
               <div className="flex gap-1">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="p-2 rounded-lg hover:bg-[#f5f5f7] disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-2 rounded-lg hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="p-2 rounded-lg hover:bg-[#f5f5f7] disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-2 rounded-lg hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>
@@ -314,14 +314,14 @@ export default function PatientsPage() {
       {/* Add patient modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto p-6">
+          <div className="bg-card rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-[20px] font-semibold text-[#1d1d1f]">
+              <h2 className="text-[20px] font-semibold text-foreground">
                 Add patient
               </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className="p-1.5 rounded-md hover:bg-[#f5f5f7] text-[rgba(0,0,0,0.48)]"
+                className="p-1.5 rounded-md hover:bg-muted text-muted-foreground"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -336,7 +336,7 @@ export default function PatientsPage() {
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-[13px] font-medium text-[#1d1d1f]">
+                  <label className="text-[13px] font-medium text-foreground">
                     First name
                   </label>
                   <Input
@@ -348,7 +348,7 @@ export default function PatientsPage() {
                   />
                 </div>
                 <div>
-                  <label className="text-[13px] font-medium text-[#1d1d1f]">
+                  <label className="text-[13px] font-medium text-foreground">
                     Last name
                   </label>
                   <Input
@@ -362,7 +362,7 @@ export default function PatientsPage() {
               </div>
 
               <div>
-                <label className="text-[13px] font-medium text-[#1d1d1f]">
+                <label className="text-[13px] font-medium text-foreground">
                   Phone
                 </label>
                 <Input
@@ -376,7 +376,7 @@ export default function PatientsPage() {
               </div>
 
               <div>
-                <label className="text-[13px] font-medium text-[#1d1d1f]">
+                <label className="text-[13px] font-medium text-foreground">
                   Email
                 </label>
                 <Input
@@ -391,11 +391,11 @@ export default function PatientsPage() {
               </div>
 
               <div>
-                <label className="text-[13px] font-medium text-[#1d1d1f] mb-2 block">
+                <label className="text-[13px] font-medium text-foreground mb-2 block">
                   Notification preferences
                 </label>
                 <div className="space-y-2">
-                  <label className="flex items-center gap-2 text-[14px] text-[#1d1d1f]">
+                  <label className="flex items-center gap-2 text-[14px] text-foreground">
                     <input
                       type="checkbox"
                       checked={form.smsOptIn}
@@ -406,7 +406,7 @@ export default function PatientsPage() {
                     />
                     SMS opt-in
                   </label>
-                  <label className="flex items-center gap-2 text-[14px] text-[#1d1d1f]">
+                  <label className="flex items-center gap-2 text-[14px] text-foreground">
                     <input
                       type="checkbox"
                       checked={form.voiceOptIn}
@@ -417,7 +417,7 @@ export default function PatientsPage() {
                     />
                     Voice opt-in
                   </label>
-                  <label className="flex items-center gap-2 text-[14px] text-[#1d1d1f]">
+                  <label className="flex items-center gap-2 text-[14px] text-foreground">
                     <input
                       type="checkbox"
                       checked={form.emailOptIn}
@@ -435,7 +435,7 @@ export default function PatientsPage() {
               </div>
 
               <div>
-                <label className="text-[13px] font-medium text-[#1d1d1f]">
+                <label className="text-[13px] font-medium text-foreground">
                   Preferred channel
                 </label>
                 <select
@@ -446,7 +446,7 @@ export default function PatientsPage() {
                       preferredChannel: e.target.value as "SMS" | "VOICE" | "EMAIL",
                     }))
                   }
-                  className="mt-1 w-full h-10 px-3 border border-[rgba(0,0,0,0.08)] rounded-lg text-[14px] bg-white"
+                  className="mt-1 w-full h-10 px-3 border border-border rounded-lg text-[14px] bg-card"
                 >
                   <option value="SMS">SMS</option>
                   <option value="VOICE">Voice</option>
@@ -458,7 +458,7 @@ export default function PatientsPage() {
             <div className="mt-6 flex gap-2">
               <button
                 onClick={() => setShowModal(false)}
-                className="flex-1 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-[#f5f5f7] transition-colors"
+                className="flex-1 px-4 py-2.5 border border-border text-foreground rounded-lg text-[14px] hover:bg-muted transition-colors"
               >
                 Cancel
               </button>

@@ -85,14 +85,14 @@ export default function NppesSearchPage() {
 
   return (
     <div>
-      <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+      <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
         Search NPI registry
       </h1>
-      <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+      <p className="mt-1 text-[17px] text-muted-foreground">
         Find and import providers from the national NPI database.
       </p>
 
-      <div className="mt-6 bg-white rounded-xl p-6">
+      <div className="mt-6 bg-card rounded-xl p-6">
         <form
           onSubmit={handleSearch}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
@@ -148,26 +148,26 @@ export default function NppesSearchPage() {
       </div>
 
       {results.length > 0 && (
-        <div className="mt-6 bg-white rounded-xl overflow-hidden">
-          <div className="px-4 py-3 border-b border-[rgba(0,0,0,0.05)]">
-            <p className="text-[14px] font-semibold text-[#1d1d1f]">
+        <div className="mt-6 bg-card rounded-xl overflow-hidden">
+          <div className="px-4 py-3 border-b border-border">
+            <p className="text-[14px] font-semibold text-foreground">
               {results.length} result{results.length !== 1 ? "s" : ""}
             </p>
           </div>
-          <div className="divide-y divide-[rgba(0,0,0,0.03)]">
+          <div className="divide-y divide-border/50">
             {results.map((r) => (
               <div
                 key={r.npi}
-                className="px-4 py-3 flex items-center justify-between hover:bg-[#f5f5f7] transition-colors"
+                className="px-4 py-3 flex items-center justify-between hover:bg-muted transition-colors"
               >
                 <div className="flex-1 min-w-0">
-                  <p className="text-[14px] font-medium text-[#1d1d1f]">
+                  <p className="text-[14px] font-medium text-foreground">
                     {r.lastName}, {r.firstName} {r.suffix}{" "}
                     {r.credential && (
-                      <span className="text-[rgba(0,0,0,0.48)]">{r.credential}</span>
+                      <span className="text-muted-foreground">{r.credential}</span>
                     )}
                   </p>
-                  <p className="text-[12px] text-[rgba(0,0,0,0.48)]">
+                  <p className="text-[12px] text-muted-foreground">
                     NPI {r.npi} &middot; {r.specialty || "No specialty"} &middot;{" "}
                     {r.practiceCity}, {r.practiceState}
                   </p>

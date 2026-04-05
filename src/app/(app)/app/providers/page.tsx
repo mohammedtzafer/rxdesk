@@ -111,14 +111,14 @@ export default function ProvidersPage() {
           </Link>
           <Link
             href="/app/providers/upload"
-            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-border text-foreground dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-card dark:hover:bg-white/10 transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-border text-foreground dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-card dark:hover:bg-card/10 transition-colors"
           >
             <Upload className="w-4 h-4" />
             Upload Rx Data
           </Link>
           <Link
             href="/app/providers/import"
-            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-border text-foreground dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-card dark:hover:bg-white/10 transition-colors"
+            className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-border text-foreground dark:text-white dark:border-white/10 rounded-lg text-[14px] hover:bg-card dark:hover:bg-card/10 transition-colors"
           >
             <Plus className="w-4 h-4" />
             Import providers
@@ -149,9 +149,9 @@ export default function ProvidersPage() {
             {[1,2,3,4,5].map(i => (
               <div key={i} className="flex items-center gap-3 py-2">
                 <div className="w-32 h-4 bg-muted rounded animate-pulse" />
-                <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="w-24 h-4 bg-muted/50 rounded animate-pulse" />
                 <div className="flex-1" />
-                <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="w-12 h-4 bg-muted/50 rounded animate-pulse" />
               </div>
             ))}
           </div>

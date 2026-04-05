@@ -120,20 +120,20 @@ export default function ComparisonPage() {
   return (
     <div>
       {/* Breadcrumbs */}
-      <nav className="flex items-center gap-1.5 text-[13px] text-[rgba(0,0,0,0.48)] mb-4">
-        <Link href="/app/time-tracking" className="hover:text-[#1d1d1f] transition-colors">
+      <nav className="flex items-center gap-1.5 text-[13px] text-muted-foreground mb-4">
+        <Link href="/app/time-tracking" className="hover:text-foreground transition-colors">
           Time tracking
         </Link>
         <span>/</span>
-        <span className="text-[#1d1d1f]">Planned vs actual</span>
+        <span className="text-foreground">Planned vs actual</span>
       </nav>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Planned vs actual
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             Compare scheduled hours against logged hours
           </p>
         </div>
@@ -143,7 +143,7 @@ export default function ComparisonPage() {
             <select
               value={selectedLocationId}
               onChange={(e) => setSelectedLocationId(e.target.value)}
-              className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] text-[14px] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+              className="h-9 px-3 rounded-lg border border-border text-[14px] bg-card focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
             >
               {locations.map((l) => (
                 <option key={l.id} value={l.id}>
@@ -152,20 +152,20 @@ export default function ComparisonPage() {
               ))}
             </select>
           )}
-          <div className="flex items-center gap-1 bg-white rounded-lg border border-[rgba(0,0,0,0.08)] px-1">
+          <div className="flex items-center gap-1 bg-card rounded-lg border border-border px-1">
             <button
               onClick={() => setViewWeek((w) => subWeeks(w, 1))}
-              className="h-8 w-8 flex items-center justify-center rounded-md text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]"
+              className="h-8 w-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]"
               aria-label="Previous week"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-[13px] font-medium text-[#1d1d1f] px-2 min-w-[160px] text-center select-none">
+            <span className="text-[13px] font-medium text-foreground px-2 min-w-[160px] text-center select-none">
               {weekLabel}
             </span>
             <button
               onClick={() => setViewWeek((w) => addDays(w, 7))}
-              className="h-8 w-8 flex items-center justify-center rounded-md text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f] hover:bg-[#f5f5f7] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]"
+              className="h-8 w-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0071e3]"
               aria-label="Next week"
             >
               <ChevronRight className="w-4 h-4" />
@@ -176,16 +176,16 @@ export default function ComparisonPage() {
 
       {/* Summary cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white rounded-xl p-5">
-          <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">Planned hours</p>
-          <p className="text-[28px] font-normal text-[#1d1d1f] mt-1">{totalPlanned.toFixed(1)}h</p>
+        <div className="bg-card rounded-xl p-5">
+          <p className="text-[13px] text-muted-foreground font-medium">Planned hours</p>
+          <p className="text-[28px] font-normal text-foreground mt-1">{totalPlanned.toFixed(1)}h</p>
         </div>
-        <div className="bg-white rounded-xl p-5">
-          <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">Actual hours</p>
-          <p className="text-[28px] font-normal text-[#1d1d1f] mt-1">{totalActual.toFixed(1)}h</p>
+        <div className="bg-card rounded-xl p-5">
+          <p className="text-[13px] text-muted-foreground font-medium">Actual hours</p>
+          <p className="text-[28px] font-normal text-foreground mt-1">{totalActual.toFixed(1)}h</p>
         </div>
-        <div className="bg-white rounded-xl p-5">
-          <p className="text-[13px] text-[rgba(0,0,0,0.48)] font-medium">Variance</p>
+        <div className="bg-card rounded-xl p-5">
+          <p className="text-[13px] text-muted-foreground font-medium">Variance</p>
           <div className="flex items-center gap-2 mt-1">
             <p
               className={`text-[28px] font-normal ${
@@ -193,7 +193,7 @@ export default function ComparisonPage() {
                   ? "text-[#EF4444]"
                   : totalVariance < 0
                     ? "text-[#22C55E]"
-                    : "text-[#1d1d1f]"
+                    : "text-foreground"
               }`}
             >
               {totalVariance > 0 ? "+" : ""}
@@ -203,7 +203,7 @@ export default function ComparisonPage() {
             {totalVariance < -1 && <TrendingDown className="w-5 h-5 text-[#22C55E]" />}
             {Math.abs(totalVariance) <= 1 && <Minus className="w-5 h-5 text-[#9CA3AF]" />}
           </div>
-          <p className="text-[12px] text-[rgba(0,0,0,0.48)] mt-1">
+          <p className="text-[12px] text-muted-foreground mt-1">
             {totalVariance > 0
               ? "Over scheduled"
               : totalVariance < 0
@@ -214,17 +214,17 @@ export default function ComparisonPage() {
       </div>
 
       {/* Employee comparison table */}
-      <div className="bg-white rounded-xl overflow-hidden">
+      <div className="bg-card rounded-xl overflow-hidden">
         {loading ? (
           <div className="p-4 space-y-3">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="h-12 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+              <div key={i} className="h-12 bg-muted/50 rounded animate-pulse" />
             ))}
           </div>
         ) : entries.length === 0 ? (
           <div className="p-12 text-center">
-            <p className="text-[17px] font-semibold text-[#1d1d1f]">No data for this week</p>
-            <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)]">
+            <p className="text-[17px] font-semibold text-foreground">No data for this week</p>
+            <p className="mt-1 text-[14px] text-muted-foreground">
               Navigate to a week with schedule and time entry data.
             </p>
           </div>
@@ -232,20 +232,20 @@ export default function ComparisonPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[500px]">
               <thead>
-                <tr className="border-b border-[rgba(0,0,0,0.05)]">
-                  <th className="text-left px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                <tr className="border-b border-border">
+                  <th className="text-left px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Employee
                   </th>
-                  <th className="text-right px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                  <th className="text-right px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Planned
                   </th>
-                  <th className="text-right px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                  <th className="text-right px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Actual
                   </th>
-                  <th className="text-right px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                  <th className="text-right px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Variance
                   </th>
-                  <th className="px-4 py-3 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide w-40">
+                  <th className="px-4 py-3 text-[12px] font-semibold text-muted-foreground uppercase tracking-wide w-40">
                     Comparison
                   </th>
                 </tr>
@@ -254,14 +254,14 @@ export default function ComparisonPage() {
                 {entries.map((entry) => {
                   const maxHours = Math.max(entry.plannedHours, entry.actualHours, 1);
                   return (
-                    <tr key={entry.employeeId} className="border-b border-[rgba(0,0,0,0.03)]">
-                      <td className="px-4 py-3 text-[14px] font-medium text-[#1d1d1f]">
+                    <tr key={entry.employeeId} className="border-b border-border/50">
+                      <td className="px-4 py-3 text-[14px] font-medium text-foreground">
                         {entry.employeeName}
                       </td>
-                      <td className="px-4 py-3 text-[14px] text-right text-[rgba(0,0,0,0.48)]">
+                      <td className="px-4 py-3 text-[14px] text-right text-muted-foreground">
                         {entry.plannedHours.toFixed(1)}h
                       </td>
-                      <td className="px-4 py-3 text-[14px] text-right text-[#1d1d1f] font-medium">
+                      <td className="px-4 py-3 text-[14px] text-right text-foreground font-medium">
                         {entry.actualHours.toFixed(1)}h
                       </td>
                       <td
@@ -270,7 +270,7 @@ export default function ComparisonPage() {
                             ? "text-[#EF4444]"
                             : entry.variance < -0.5
                               ? "text-[#22C55E]"
-                              : "text-[rgba(0,0,0,0.48)]"
+                              : "text-muted-foreground"
                         }`}
                       >
                         {entry.variance > 0 ? "+" : ""}
@@ -297,7 +297,7 @@ export default function ComparisonPage() {
                             />
                           </div>
                         </div>
-                        <div className="flex justify-between text-[10px] text-[rgba(0,0,0,0.3)] mt-0.5">
+                        <div className="flex justify-between text-[10px] text-muted-foreground/60 mt-0.5">
                           <span>Plan</span>
                           <span>Actual</span>
                         </div>
@@ -307,12 +307,12 @@ export default function ComparisonPage() {
                 })}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-[rgba(0,0,0,0.1)]">
-                  <td className="px-4 py-3 text-[14px] font-semibold text-[#1d1d1f]">Total</td>
-                  <td className="px-4 py-3 text-[14px] text-right text-[rgba(0,0,0,0.48)]">
+                <tr className="border-t-2 border-border">
+                  <td className="px-4 py-3 text-[14px] font-semibold text-foreground">Total</td>
+                  <td className="px-4 py-3 text-[14px] text-right text-muted-foreground">
                     {totalPlanned.toFixed(1)}h
                   </td>
-                  <td className="px-4 py-3 text-[14px] text-right font-semibold text-[#1d1d1f]">
+                  <td className="px-4 py-3 text-[14px] text-right font-semibold text-foreground">
                     {totalActual.toFixed(1)}h
                   </td>
                   <td
@@ -321,7 +321,7 @@ export default function ComparisonPage() {
                         ? "text-[#EF4444]"
                         : totalVariance < 0
                           ? "text-[#22C55E]"
-                          : "text-[rgba(0,0,0,0.48)]"
+                          : "text-muted-foreground"
                     }`}
                   >
                     {totalVariance > 0 ? "+" : ""}

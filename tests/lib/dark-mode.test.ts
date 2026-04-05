@@ -211,8 +211,8 @@ describe("App shell structure", () => {
     expect(shellContent).toMatch(/font-semibold text-foreground leading-tight">\s*\{brandName\}/);
   });
 
-  it("uses bg-card not hardcoded white for sidebar", () => {
-    expect(shellContent).toContain("bg-card");
+  it("uses bg-background for seamless sidebar (no hard borders)", () => {
+    expect(shellContent).toContain("bg-background");
     // Should NOT have inline rgba background on sidebar
     expect(shellContent).not.toContain('background: "rgba(0, 0, 0, 0.85)"');
   });

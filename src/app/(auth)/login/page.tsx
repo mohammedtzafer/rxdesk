@@ -42,18 +42,18 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-muted flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-lg mx-auto">
             Rx
           </div>
-          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-[#1d1d1f]">
+          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-foreground">
             Sign in to RxDesk
           </h1>
         </div>
 
-        <div className="bg-white rounded-xl p-6">
+        <div className="bg-card rounded-xl p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div role="alert" className="p-3 rounded-lg bg-red-50 text-[#EF4444] text-[14px]">
@@ -62,7 +62,7 @@ export default function LoginPage() {
             )}
 
             <div className="space-y-1.5">
-              <Label htmlFor="email" className="text-[14px] text-[rgba(0,0,0,0.8)]">
+              <Label htmlFor="email" className="text-[14px] text-foreground/80">
                 Email
               </Label>
               <Input
@@ -77,7 +77,7 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-[14px] text-[rgba(0,0,0,0.8)]">
+              <Label htmlFor="password" className="text-[14px] text-foreground/80">
                 Password
               </Label>
               <div className="relative">
@@ -93,7 +93,7 @@ export default function LoginPage() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[rgba(0,0,0,0.48)]"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -116,7 +116,7 @@ export default function LoginPage() {
           </form>
         </div>
 
-        <p className="mt-4 text-center text-[14px] text-[rgba(0,0,0,0.48)]">
+        <p className="mt-4 text-center text-[14px] text-muted-foreground">
           Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-[#0066cc] hover:underline">
             Create one

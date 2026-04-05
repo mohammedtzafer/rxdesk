@@ -132,17 +132,17 @@ export default function PrescriptionEventsPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Prescription events
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             {total} event{total !== 1 ? "s" : ""} from connected systems
           </p>
         </div>
         <button
           onClick={() => fetchEvents(true)}
           disabled={refreshing}
-          className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-white transition-colors"
+          className="w-full sm:w-auto inline-flex items-center gap-2 px-4 py-2.5 border border-border text-foreground rounded-lg text-[14px] hover:bg-card transition-colors"
         >
           <RefreshCw
             className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
@@ -159,7 +159,7 @@ export default function PrescriptionEventsPage() {
             setEventTypeFilter(e.target.value);
             setPage(1);
           }}
-          className="h-10 px-3 border border-[rgba(0,0,0,0.08)] rounded-lg text-[14px] bg-white"
+          className="h-10 px-3 border border-border rounded-lg text-[14px] bg-card"
         >
           <option value="">All event types</option>
           {EVENT_TYPES.map((type) => (
@@ -176,7 +176,7 @@ export default function PrescriptionEventsPage() {
               setLocationFilter(e.target.value);
               setPage(1);
             }}
-            className="h-10 px-3 border border-[rgba(0,0,0,0.08)] rounded-lg text-[14px] bg-white"
+            className="h-10 px-3 border border-border rounded-lg text-[14px] bg-card"
           >
             <option value="">All locations</option>
             {locations.map((loc) => (
@@ -191,25 +191,25 @@ export default function PrescriptionEventsPage() {
       {loading ? (
         <div className="mt-6 space-y-2">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-white rounded-xl p-4 animate-pulse">
+            <div key={i} className="bg-card rounded-xl p-4 animate-pulse">
               <div className="flex items-center gap-3">
-                <div className="w-16 h-6 bg-[#f5f5f7] rounded-full" />
+                <div className="w-16 h-6 bg-muted rounded-full" />
                 <div className="flex-1">
-                  <div className="h-4 w-40 bg-[#f5f5f7] rounded" />
-                  <div className="mt-2 h-3 w-64 bg-[#f5f5f7] rounded" />
+                  <div className="h-4 w-40 bg-muted rounded" />
+                  <div className="mt-2 h-3 w-64 bg-muted rounded" />
                 </div>
-                <div className="h-3 w-16 bg-[#f5f5f7] rounded" />
+                <div className="h-3 w-16 bg-muted rounded" />
               </div>
             </div>
           ))}
         </div>
       ) : events.length === 0 ? (
-        <div className="mt-12 bg-white rounded-xl p-12 text-center">
+        <div className="mt-12 bg-card rounded-xl p-12 text-center">
           <Activity className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.24)]" />
-          <h3 className="mt-4 text-[17px] font-semibold text-[#1d1d1f]">
+          <h3 className="mt-4 text-[17px] font-semibold text-foreground">
             No prescription events yet
           </h3>
-          <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)] max-w-md mx-auto">
+          <p className="mt-1 text-[14px] text-muted-foreground max-w-md mx-auto">
             Events appear here when your PMS sends prescription data via the
             webhook integration. Connect a PMS in Settings to get started.
           </p>
@@ -222,7 +222,7 @@ export default function PrescriptionEventsPage() {
               return (
                 <div
                   key={event.id}
-                  className="bg-white rounded-xl p-4 border border-[rgba(0,0,0,0.04)] hover:border-[rgba(0,0,0,0.08)] transition-colors"
+                  className="bg-card rounded-xl p-4 border border-[rgba(0,0,0,0.04)] hover:border-border transition-colors"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
                     <span
@@ -240,16 +240,16 @@ export default function PrescriptionEventsPage() {
                     </span>
 
                     <div className="flex-1 min-w-0">
-                      <p className="text-[14px] font-medium text-[#1d1d1f] truncate">
+                      <p className="text-[14px] font-medium text-foreground truncate">
                         {event.drugName}
                         {event.quantity && (
-                          <span className="text-[rgba(0,0,0,0.48)] font-normal">
+                          <span className="text-muted-foreground font-normal">
                             {" "}
                             &middot; Qty {event.quantity}
                           </span>
                         )}
                       </p>
-                      <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5 text-[12px] text-[rgba(0,0,0,0.48)]">
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5 text-[12px] text-muted-foreground">
                         {event.patient && (
                           <span>
                             {event.patient.firstName} {event.patient.lastName}
@@ -279,21 +279,21 @@ export default function PrescriptionEventsPage() {
 
           {totalPages > 1 && (
             <div className="mt-4 flex items-center justify-between">
-              <p className="text-[13px] text-[rgba(0,0,0,0.48)]">
+              <p className="text-[13px] text-muted-foreground">
                 Page {page} of {totalPages}
               </p>
               <div className="flex gap-1">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="p-2 rounded-lg hover:bg-[#f5f5f7] disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-2 rounded-lg hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="p-2 rounded-lg hover:bg-[#f5f5f7] disabled:opacity-30 disabled:cursor-not-allowed"
+                  className="p-2 rounded-lg hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ChevronRight className="w-4 h-4" />
                 </button>

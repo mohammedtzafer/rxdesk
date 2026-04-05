@@ -122,8 +122,8 @@ export default function SchedulePage() {
   const statusColors: Record<string, string> = {
     "Finalized": "bg-[#22C55E]/10 text-[#22C55E]",
     "In Progress": "bg-[#F59E0B]/10 text-[#F59E0B]",
-    "Not Started": "bg-[rgba(0,0,0,0.05)] text-[rgba(0,0,0,0.48)]",
-    "No schedule": "bg-[rgba(0,0,0,0.05)] text-[rgba(0,0,0,0.48)]",
+    "Not Started": "bg-muted text-muted-foreground",
+    "No schedule": "bg-muted text-muted-foreground",
   };
 
   if (loading && locations.length === 0) {
@@ -135,10 +135,10 @@ export default function SchedulePage() {
             { label: "Schedule" },
           ]}
         />
-        <div className="h-8 w-48 bg-[rgba(0,0,0,0.06)] rounded-lg animate-pulse mb-6" />
+        <div className="h-8 w-48 bg-muted rounded-lg animate-pulse mb-6" />
         <div className="space-y-4">
           {[1, 2].map((i) => (
-            <div key={i} className="h-40 bg-white rounded-xl animate-pulse" />
+            <div key={i} className="h-40 bg-card rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -157,14 +157,14 @@ export default function SchedulePage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <div className="flex items-center gap-3">
-            <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+            <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
               Schedule
             </h1>
             <Badge className={`text-[11px] ${statusColors[scheduleStatus] || statusColors["No schedule"]}`}>
               {scheduleStatus}
             </Badge>
           </div>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             {employees.length > 0
               ? `${employees.length} staff member${employees.length !== 1 ? "s" : ""} scheduled`
               : "Daily timeline view of staff coverage"}
@@ -176,7 +176,7 @@ export default function SchedulePage() {
             <select
               value={selectedLocationId}
               onChange={(e) => handleLocationChange(e.target.value)}
-              className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] text-[14px] bg-white"
+              className="h-9 px-3 rounded-lg border border-border text-[14px] bg-card"
               aria-label="Select location"
             >
               {locations.map((loc) => (
@@ -185,20 +185,20 @@ export default function SchedulePage() {
             </select>
           )}
 
-          <div className="flex items-center gap-1 bg-white rounded-lg border border-[rgba(0,0,0,0.08)] px-1">
+          <div className="flex items-center gap-1 bg-card rounded-lg border border-border px-1">
             <button
               onClick={() => setViewWeek((w) => subWeeks(w, 1))}
-              className="h-8 w-8 flex items-center justify-center rounded-md text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f] hover:bg-[#f5f5f7]"
+              className="h-8 w-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
               aria-label="Previous week"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-[13px] font-medium text-[#1d1d1f] px-2 min-w-[160px] text-center">
+            <span className="text-[13px] font-medium text-foreground px-2 min-w-[160px] text-center">
               {weekLabel}
             </span>
             <button
               onClick={() => setViewWeek((w) => addWeeks(w, 1))}
-              className="h-8 w-8 flex items-center justify-center rounded-md text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f] hover:bg-[#f5f5f7]"
+              className="h-8 w-8 flex items-center justify-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted"
               aria-label="Next week"
             >
               <ChevronRight className="w-4 h-4" />
@@ -209,14 +209,14 @@ export default function SchedulePage() {
 
       {loading ? (
         <div className="space-y-4">
-          <div className="h-40 bg-white rounded-xl animate-pulse" />
-          <div className="h-60 bg-white rounded-xl animate-pulse" />
+          <div className="h-40 bg-card rounded-xl animate-pulse" />
+          <div className="h-60 bg-card rounded-xl animate-pulse" />
         </div>
       ) : employees.length === 0 ? (
-        <div className="bg-white rounded-xl p-12 text-center">
-          <CalendarDays className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
-          <h2 className="mt-4 text-[21px] font-bold text-[#1d1d1f]">No schedule for this week</h2>
-          <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)] max-w-md mx-auto">
+        <div className="bg-card rounded-xl p-12 text-center">
+          <CalendarDays className="w-12 h-12 mx-auto text-muted-foreground/30" />
+          <h2 className="mt-4 text-[21px] font-bold text-foreground">No schedule for this week</h2>
+          <p className="mt-2 text-[17px] text-muted-foreground max-w-md mx-auto">
             Create a schedule in the Planner, or navigate to a week that has one.
           </p>
           <Link

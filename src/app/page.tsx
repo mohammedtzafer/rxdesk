@@ -61,7 +61,7 @@ export default function HomePage() {
             </Link>
             <Link
               href="/login"
-              className="w-full sm:w-auto px-6 py-3 border border-white/20 text-white rounded-lg text-[17px] hover:bg-white/10 transition-colors"
+              className="w-full sm:w-auto px-6 py-3 border border-white/20 text-white rounded-lg text-[17px] hover:bg-card/10 transition-colors"
             >
               Sign in
             </Link>
@@ -73,19 +73,19 @@ export default function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="bg-[#f5f5f7] py-20">
+      <section className="bg-muted py-20">
         <div className="max-w-5xl mx-auto px-4">
-          <h2 className="text-[28px] sm:text-[36px] md:text-[40px] font-semibold leading-[1.1] tracking-tight text-center text-[#1d1d1f]">
+          <h2 className="text-[28px] sm:text-[36px] md:text-[40px] font-semibold leading-[1.1] tracking-tight text-center text-foreground">
             Everything your pharmacy needs
           </h2>
           <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f) => (
-              <div key={f.title} className="bg-white rounded-xl p-6">
+              <div key={f.title} className="bg-card rounded-xl p-6">
                 <f.icon className="w-8 h-8 text-[#0071e3]" />
-                <h3 className="mt-3 text-[18px] sm:text-[21px] font-bold leading-[1.19] tracking-[0.231px] text-[#1d1d1f]">
+                <h3 className="mt-3 text-[18px] sm:text-[21px] font-bold leading-[1.19] tracking-[0.231px] text-foreground">
                   {f.title}
                 </h3>
-                <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)] leading-[1.47] tracking-[-0.374px]">
+                <p className="mt-2 text-[17px] text-muted-foreground leading-[1.47] tracking-[-0.374px]">
                   {f.desc}
                 </p>
               </div>
@@ -113,8 +113,8 @@ export default function HomePage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-[#f5f5f7] py-8 border-t border-black/5">
-        <div className="max-w-5xl mx-auto px-4 text-center text-[12px] text-[rgba(0,0,0,0.48)]">
+      <footer className="bg-muted py-8 border-t border-border">
+        <div className="max-w-5xl mx-auto px-4 text-center text-[12px] text-muted-foreground">
           &copy; 2026 RxDesk. All rights reserved.
         </div>
       </footer>

@@ -68,7 +68,7 @@ function VolumeBars({ current, prior, max }: { current: number; prior: number; m
     <div className="w-28 flex flex-col gap-1">
       <div className="flex items-center gap-1.5">
         <div className="h-2 rounded-full bg-[#0071e3]" style={{ width: `${currentPct}%`, minWidth: current > 0 ? "2px" : "0" }} />
-        <span className="text-[10px] text-[rgba(0,0,0,0.48)] whitespace-nowrap">{current}</span>
+        <span className="text-[10px] text-muted-foreground whitespace-nowrap">{current}</span>
       </div>
       <div className="flex items-center gap-1.5">
         <div className="h-2 rounded-full bg-[rgba(0,113,227,0.2)]" style={{ width: `${priorPct}%`, minWidth: prior > 0 ? "2px" : "0" }} />
@@ -147,10 +147,10 @@ export default function ProviderAnalysisPage() {
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Provider Trend Analysis
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             Rx volume changes by provider over time
           </p>
         </div>
@@ -216,15 +216,15 @@ export default function ProviderAnalysisPage() {
           return (
             <div
               key={card.label}
-              className="bg-white rounded-xl border border-[rgba(0,0,0,0.06)] px-4 py-3"
+              className="bg-card rounded-xl border border-[rgba(0,0,0,0.06)] px-4 py-3"
             >
               <div className={`w-8 h-8 rounded-lg ${card.bg} flex items-center justify-center mb-2`}>
                 <Icon className={`w-4 h-4 ${card.color}`} />
               </div>
-              <p className="text-[22px] font-bold text-[#1d1d1f] leading-none">
-                {loading ? <span className="inline-block w-12 h-6 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" /> : card.value}
+              <p className="text-[22px] font-bold text-foreground leading-none">
+                {loading ? <span className="inline-block w-12 h-6 bg-muted rounded animate-pulse" /> : card.value}
               </p>
-              <p className="mt-1 text-[12px] text-[rgba(0,0,0,0.48)]">{card.label}</p>
+              <p className="mt-1 text-[12px] text-muted-foreground">{card.label}</p>
             </div>
           );
         })}
@@ -233,7 +233,7 @@ export default function ProviderAnalysisPage() {
       {/* Controls */}
       <div className="mt-5 flex flex-wrap gap-2 items-center">
         {/* Time range */}
-        <div className="flex gap-1 bg-white dark:bg-[#1c1c1e] rounded-lg p-1 border border-[rgba(0,0,0,0.06)] dark:border-white/10">
+        <div className="flex gap-1 bg-card dark:bg-[#1c1c1e] rounded-lg p-1 border border-[rgba(0,0,0,0.06)] dark:border-white/10">
           {DAY_OPTIONS.map((d) => (
             <button
               key={d}
@@ -241,7 +241,7 @@ export default function ProviderAnalysisPage() {
               className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors ${
                 !customMode && days === d
                   ? "bg-[#0071e3] text-white"
-                  : "text-[rgba(0,0,0,0.56)] dark:text-white/56 hover:text-[#1d1d1f] dark:hover:text-white"
+                  : "text-[rgba(0,0,0,0.56)] dark:text-white/56 hover:text-foreground dark:hover:text-white"
               }`}
             >
               {d}d
@@ -252,7 +252,7 @@ export default function ProviderAnalysisPage() {
             className={`px-3 py-1.5 rounded-md text-[13px] font-medium transition-colors ${
               customMode
                 ? "bg-[#0071e3] text-white"
-                : "text-[rgba(0,0,0,0.56)] dark:text-white/56 hover:text-[#1d1d1f] dark:hover:text-white"
+                : "text-[rgba(0,0,0,0.56)] dark:text-white/56 hover:text-foreground dark:hover:text-white"
             }`}
           >
             Custom
@@ -266,7 +266,7 @@ export default function ProviderAnalysisPage() {
               type="date"
               value={customStart}
               onChange={(e) => setCustomStart(e.target.value)}
-              className="h-9 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 px-2 text-[13px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white"
+              className="h-9 rounded-lg border border-border dark:border-white/10 px-2 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
               aria-label="Start date"
             />
             <span className="text-[13px] text-[rgba(0,0,0,0.40)] dark:text-white/40">to</span>
@@ -274,7 +274,7 @@ export default function ProviderAnalysisPage() {
               type="date"
               value={customEnd}
               onChange={(e) => setCustomEnd(e.target.value)}
-              className="h-9 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 px-2 text-[13px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white"
+              className="h-9 rounded-lg border border-border dark:border-white/10 px-2 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
               aria-label="End date"
             />
             {customStart && customEnd && (
@@ -297,7 +297,7 @@ export default function ProviderAnalysisPage() {
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortBy)}
-          className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 text-[13px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
+          className="h-9 px-3 rounded-lg border border-border dark:border-white/10 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
         >
           {SORT_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -311,7 +311,7 @@ export default function ProviderAnalysisPage() {
           <select
             value={locationFilter}
             onChange={(e) => setLocationFilter(e.target.value)}
-            className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] dark:border-white/10 text-[13px] bg-white dark:bg-[#2c2c2e] text-[#1d1d1f] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
+            className="h-9 px-3 rounded-lg border border-border dark:border-white/10 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40"
           >
             <option value="">All locations</option>
             {locations.map((loc) => (
@@ -324,24 +324,24 @@ export default function ProviderAnalysisPage() {
       </div>
 
       {/* Table */}
-      <div className="mt-4 bg-white dark:bg-[#1c1c1e] rounded-xl border border-[rgba(0,0,0,0.06)] dark:border-white/10 overflow-hidden">
+      <div className="mt-4 bg-card dark:bg-[#1c1c1e] rounded-xl border border-[rgba(0,0,0,0.06)] dark:border-white/10 overflow-hidden">
         {loading ? (
           <div className="p-4 space-y-3">
             {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="flex items-center gap-4 py-2 animate-pulse">
-                <div className="w-40 h-4 bg-[rgba(0,0,0,0.06)] rounded" />
-                <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded hidden sm:block" />
+                <div className="w-40 h-4 bg-muted rounded" />
+                <div className="w-24 h-4 bg-muted/50 rounded hidden sm:block" />
                 <div className="flex-1" />
-                <div className="w-20 h-4 bg-[rgba(0,0,0,0.04)] rounded" />
-                <div className="w-16 h-4 bg-[rgba(0,0,0,0.04)] rounded hidden md:block" />
+                <div className="w-20 h-4 bg-muted/50 rounded" />
+                <div className="w-16 h-4 bg-muted/50 rounded hidden md:block" />
               </div>
             ))}
           </div>
         ) : error ? (
           <div className="p-12 text-center">
-            <TrendingUp className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
-            <h3 className="mt-4 text-[17px] font-semibold text-[#1d1d1f]">Failed to load analysis</h3>
-            <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)]">Check your connection and try again.</p>
+            <TrendingUp className="w-12 h-12 mx-auto text-muted-foreground/30" />
+            <h3 className="mt-4 text-[17px] font-semibold text-foreground">Failed to load analysis</h3>
+            <p className="mt-1 text-[14px] text-muted-foreground">Check your connection and try again.</p>
             <button
               onClick={fetchData}
               className="mt-4 px-4 py-2 bg-[#0071e3] text-white rounded-lg text-[14px] hover:bg-[#0077ED] transition-colors"
@@ -351,9 +351,9 @@ export default function ProviderAnalysisPage() {
           </div>
         ) : sorted.length === 0 ? (
           <div className="p-12 text-center">
-            <Users className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
-            <h3 className="mt-4 text-[17px] font-semibold text-[#1d1d1f]">No providers found</h3>
-            <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)]">
+            <Users className="w-12 h-12 mx-auto text-muted-foreground/30" />
+            <h3 className="mt-4 text-[17px] font-semibold text-foreground">No providers found</h3>
+            <p className="mt-1 text-[14px] text-muted-foreground">
               Upload prescription data to see trend analysis.
             </p>
           </div>
@@ -361,26 +361,26 @@ export default function ProviderAnalysisPage() {
           <div className="overflow-x-auto">
             <table className="w-full min-w-[700px]">
               <thead>
-                <tr className="border-b border-[rgba(0,0,0,0.05)]">
-                  <th className="text-left px-4 py-3 text-[11px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                <tr className="border-b border-border">
+                  <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Provider
                   </th>
-                  <th className="text-left px-4 py-3 text-[11px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden sm:table-cell">
+                  <th className="text-left px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wide hidden sm:table-cell">
                     Specialty
                   </th>
-                  <th className="text-right px-4 py-3 text-[11px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                  <th className="text-right px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Current
                   </th>
-                  <th className="text-right px-4 py-3 text-[11px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden md:table-cell">
+                  <th className="text-right px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wide hidden md:table-cell">
                     Prior
                   </th>
-                  <th className="text-right px-4 py-3 text-[11px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                  <th className="text-right px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
                     Change
                   </th>
-                  <th className="text-center px-4 py-3 text-[11px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden lg:table-cell">
+                  <th className="text-center px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wide hidden lg:table-cell">
                     Trend
                   </th>
-                  <th className="px-4 py-3 text-[11px] font-semibold text-[rgba(0,0,0,0.48)] uppercase tracking-wide hidden lg:table-cell">
+                  <th className="px-4 py-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wide hidden lg:table-cell">
                     Volume
                   </th>
                 </tr>
@@ -389,7 +389,7 @@ export default function ProviderAnalysisPage() {
                 {sorted.map((p) => (
                   <tr
                     key={p.providerId}
-                    className="border-b border-[rgba(0,0,0,0.03)] last:border-0 hover:bg-[#f5f5f7] transition-colors cursor-pointer"
+                    className="border-b border-border/50 last:border-0 hover:bg-muted transition-colors cursor-pointer"
                     onClick={() => (window.location.href = `/app/providers/${p.providerId}`)}
                   >
                     <td className="px-4 py-3">
@@ -409,10 +409,10 @@ export default function ProviderAnalysisPage() {
                     <td className="px-4 py-3 text-[14px] text-[rgba(0,0,0,0.56)] hidden sm:table-cell">
                       {p.specialty || "—"}
                     </td>
-                    <td className="px-4 py-3 text-right text-[14px] font-semibold text-[#1d1d1f]">
+                    <td className="px-4 py-3 text-right text-[14px] font-semibold text-foreground">
                       {p.currentVolume.toLocaleString()}
                     </td>
-                    <td className="px-4 py-3 text-right text-[14px] text-[rgba(0,0,0,0.48)] hidden md:table-cell">
+                    <td className="px-4 py-3 text-right text-[14px] text-muted-foreground hidden md:table-cell">
                       {p.priorVolume.toLocaleString()}
                     </td>
                     <td className="px-4 py-3 text-right">

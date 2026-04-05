@@ -94,10 +94,10 @@ export default function TimeOffPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Time Off
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             Request and manage time off
           </p>
         </div>
@@ -110,13 +110,13 @@ export default function TimeOffPage() {
       </div>
 
       {/* Filters */}
-      <div className="mt-6 flex gap-1 bg-white rounded-lg p-1 w-fit">
+      <div className="mt-6 flex gap-1 bg-card rounded-lg p-1 w-fit">
         {["all", "PENDING", "APPROVED", "DENIED"].map((f) => (
           <button
             key={f}
             onClick={() => setFilter(f)}
             className={`px-4 py-1.5 rounded-md text-[14px] transition-colors ${
-              filter === f ? "bg-[#0071e3] text-white" : "text-[rgba(0,0,0,0.48)] hover:text-[#1d1d1f]"
+              filter === f ? "bg-[#0071e3] text-white" : "text-muted-foreground hover:text-foreground"
             }`}
           >
             {f === "all" ? "All" : f.charAt(0) + f.slice(1).toLowerCase()}
@@ -125,33 +125,33 @@ export default function TimeOffPage() {
       </div>
 
       {/* Requests list */}
-      <div className="mt-4 bg-white rounded-xl overflow-hidden">
+      <div className="mt-4 bg-card rounded-xl overflow-hidden">
         {loading ? (
           <div className="p-4 space-y-3">
             {[1,2,3,4,5].map(i => (
               <div key={i} className="flex items-center gap-3 py-2">
-                <div className="w-32 h-4 bg-[rgba(0,0,0,0.06)] rounded animate-pulse" />
-                <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="w-32 h-4 bg-muted rounded animate-pulse" />
+                <div className="w-24 h-4 bg-muted/50 rounded animate-pulse" />
                 <div className="flex-1" />
-                <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="w-12 h-4 bg-muted/50 rounded animate-pulse" />
               </div>
             ))}
           </div>
         ) : requests.length === 0 ? (
           <div className="p-12 text-center">
-            <Calendar className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]" />
-            <h3 className="mt-4 text-[21px] font-bold text-[#1d1d1f]">No time off requests</h3>
-            <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+            <Calendar className="w-12 h-12 mx-auto text-muted-foreground/30" />
+            <h3 className="mt-4 text-[21px] font-bold text-foreground">No time off requests</h3>
+            <p className="mt-2 text-[17px] text-muted-foreground">
               Submit a request when you need time off.
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-[rgba(0,0,0,0.03)]">
+          <div className="divide-y divide-border/50">
             {requests.map((req) => (
               <div key={req.id} className="px-4 py-3 flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-2 flex-wrap">
-                    <p className="text-[14px] font-medium text-[#1d1d1f]">
+                    <p className="text-[14px] font-medium text-foreground">
                       {new Date(req.startDate).toLocaleDateString()} –{" "}
                       {new Date(req.endDate).toLocaleDateString()}
                     </p>
@@ -167,10 +167,10 @@ export default function TimeOffPage() {
                     </span>
                   </div>
                   {req.note && (
-                    <p className="mt-0.5 text-[12px] text-[rgba(0,0,0,0.48)]">{req.note}</p>
+                    <p className="mt-0.5 text-[12px] text-muted-foreground">{req.note}</p>
                   )}
                   {req.responseNote && (
-                    <p className="mt-0.5 text-[12px] text-[rgba(0,0,0,0.48)]">
+                    <p className="mt-0.5 text-[12px] text-muted-foreground">
                       Response: {req.responseNote}
                     </p>
                   )}
@@ -215,14 +215,14 @@ export default function TimeOffPage() {
           onClick={() => setShowCreate(false)}
         >
           <div
-            className="bg-white rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+            className="bg-card rounded-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <h2 className="text-[21px] font-bold text-[#1d1d1f] mb-4">Request time off</h2>
+            <h2 className="text-[21px] font-bold text-foreground mb-4">Request time off</h2>
             <form onSubmit={handleSubmit} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[12px] font-medium text-[rgba(0,0,0,0.48)] mb-1">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-1">
                     Start date
                   </label>
                   <input
@@ -230,11 +230,11 @@ export default function TimeOffPage() {
                     value={form.startDate}
                     onChange={(e) => setForm({ ...form, startDate: e.target.value })}
                     required
-                    className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                    className="w-full h-11 rounded-lg border border-border px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                   />
                 </div>
                 <div>
-                  <label className="block text-[12px] font-medium text-[rgba(0,0,0,0.48)] mb-1">
+                  <label className="block text-[12px] font-medium text-muted-foreground mb-1">
                     End date
                   </label>
                   <input
@@ -242,18 +242,18 @@ export default function TimeOffPage() {
                     value={form.endDate}
                     onChange={(e) => setForm({ ...form, endDate: e.target.value })}
                     required
-                    className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                    className="w-full h-11 rounded-lg border border-border px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                   />
                 </div>
               </div>
               <div>
-                <label className="block text-[12px] font-medium text-[rgba(0,0,0,0.48)] mb-1">
+                <label className="block text-[12px] font-medium text-muted-foreground mb-1">
                   Type
                 </label>
                 <select
                   value={form.type}
                   onChange={(e) => setForm({ ...form, type: e.target.value })}
-                  className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                  className="w-full h-11 rounded-lg border border-border px-3 text-[14px] bg-card focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                 >
                   <option value="VACATION">Vacation</option>
                   <option value="SICK">Sick</option>
@@ -262,20 +262,20 @@ export default function TimeOffPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-[12px] font-medium text-[rgba(0,0,0,0.48)] mb-1">
+                <label className="block text-[12px] font-medium text-muted-foreground mb-1">
                   Note (optional)
                 </label>
                 <textarea
                   value={form.note}
                   onChange={(e) => setForm({ ...form, note: e.target.value })}
-                  className="w-full rounded-lg border border-[rgba(0,0,0,0.08)] px-3 py-2 text-[14px] h-16 resize-none focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
+                  className="w-full rounded-lg border border-border px-3 py-2 text-[14px] h-16 resize-none focus:outline-none focus:ring-2 focus:ring-[#0071e3] focus:ring-offset-1"
                 />
               </div>
               <div className="flex gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => setShowCreate(false)}
-                  className="flex-1 h-10 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-[#f5f5f7] transition-colors"
+                  className="flex-1 h-10 border border-border text-foreground rounded-lg text-[14px] hover:bg-muted transition-colors"
                 >
                   Cancel
                 </button>

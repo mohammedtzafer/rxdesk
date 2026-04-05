@@ -78,17 +78,17 @@ export default function UploadPage() {
 
   return (
     <div>
-      <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+      <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
         Upload prescriptions
       </h1>
-      <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+      <p className="mt-1 text-[17px] text-muted-foreground">
         Import prescription data from a CSV file.
       </p>
 
       {/* Drop zone */}
       <div
-        className={`mt-6 bg-white rounded-xl border-2 border-dashed p-12 text-center cursor-pointer transition-colors ${
-          dragOver ? "border-[#0071e3] bg-[#0071e3]/5" : "border-[rgba(0,0,0,0.1)]"
+        className={`mt-6 bg-card rounded-xl border-2 border-dashed p-12 text-center cursor-pointer transition-colors ${
+          dragOver ? "border-[#0071e3] bg-[#0071e3]/5" : "border-border"
         }`}
         onDragOver={(e) => {
           e.preventDefault();
@@ -116,13 +116,13 @@ export default function UploadPage() {
         />
         <Upload
           className={`w-10 h-10 mx-auto ${
-            uploading ? "animate-pulse text-[#0071e3]" : "text-[rgba(0,0,0,0.2)]"
+            uploading ? "animate-pulse text-[#0071e3]" : "text-muted-foreground/40"
           }`}
         />
-        <p className="mt-3 text-[17px] text-[#1d1d1f]">
+        <p className="mt-3 text-[17px] text-foreground">
           {uploading ? "Uploading..." : "Drop a CSV file here or click to browse"}
         </p>
-        <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)]">
+        <p className="mt-1 text-[14px] text-muted-foreground">
           Expected columns: NPI, drug name, fill date, quantity, days supply, payer type, generic
           flag
         </p>
@@ -130,26 +130,26 @@ export default function UploadPage() {
 
       {/* Upload result */}
       {result && (
-        <div className="mt-4 bg-white rounded-xl p-5">
+        <div className="mt-4 bg-card rounded-xl p-5">
           <div className="flex items-center gap-2">
             {result.rowCount > 0 ? (
               <CheckCircle className="w-5 h-5 text-[#22C55E]" />
             ) : (
               <XCircle className="w-5 h-5 text-[#EF4444]" />
             )}
-            <p className="text-[17px] font-semibold text-[#1d1d1f]">
+            <p className="text-[17px] font-semibold text-foreground">
               {result.rowCount > 0 ? `${result.rowCount} rows imported` : "Import failed"}
             </p>
           </div>
           {result.errors.length > 0 && (
             <div className="mt-3">
-              <p className="text-[14px] text-[rgba(0,0,0,0.48)] flex items-center gap-1">
+              <p className="text-[14px] text-muted-foreground flex items-center gap-1">
                 <AlertTriangle className="w-3 h-3" /> {result.errors.length} row
                 {result.errors.length !== 1 ? "s" : ""} skipped
               </p>
               <div className="mt-2 max-h-40 overflow-y-auto">
                 {result.errors.slice(0, 10).map((err, i) => (
-                  <p key={i} className="text-[12px] text-[rgba(0,0,0,0.48)]">
+                  <p key={i} className="text-[12px] text-muted-foreground">
                     Row {err.row}: {err.message}
                   </p>
                 ))}
@@ -162,41 +162,41 @@ export default function UploadPage() {
       {/* Upload history */}
       {history.length > 0 && (
         <div className="mt-6">
-          <h2 className="text-[17px] font-semibold text-[#1d1d1f]">Upload history</h2>
-          <div className="mt-3 bg-white rounded-xl overflow-hidden">
+          <h2 className="text-[17px] font-semibold text-foreground">Upload history</h2>
+          <div className="mt-3 bg-card rounded-xl overflow-hidden">
             <div className="overflow-x-auto"><table className="w-full min-w-[600px]">
               <thead>
-                <tr className="border-b border-[rgba(0,0,0,0.05)]">
-                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase">
+                <tr className="border-b border-border">
+                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground uppercase">
                     File
                   </th>
-                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase">
+                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground uppercase">
                     Rows
                   </th>
-                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase hidden md:table-cell">
+                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground uppercase hidden md:table-cell">
                     Date range
                   </th>
-                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase">
+                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground uppercase">
                     Status
                   </th>
-                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] uppercase hidden md:table-cell">
+                  <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground uppercase hidden md:table-cell">
                     Uploaded
                   </th>
                 </tr>
               </thead>
               <tbody>
                 {history.map((u) => (
-                  <tr key={u.id} className="border-b border-[rgba(0,0,0,0.03)]">
-                    <td className="px-4 py-2.5 text-[14px] text-[#1d1d1f]">
+                  <tr key={u.id} className="border-b border-border/50">
+                    <td className="px-4 py-2.5 text-[14px] text-foreground">
                       <div className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-[rgba(0,0,0,0.3)] shrink-0" />
+                        <FileText className="w-4 h-4 text-muted-foreground/60 shrink-0" />
                         <span className="truncate max-w-[180px]">{u.fileName}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-2.5 text-[14px] text-[rgba(0,0,0,0.48)]">
+                    <td className="px-4 py-2.5 text-[14px] text-muted-foreground">
                       {u.rowCount}
                     </td>
-                    <td className="px-4 py-2.5 text-[14px] text-[rgba(0,0,0,0.48)] hidden md:table-cell">
+                    <td className="px-4 py-2.5 text-[14px] text-muted-foreground hidden md:table-cell">
                       {u.dateRangeStart && u.dateRangeEnd
                         ? `${new Date(u.dateRangeStart).toLocaleDateString()} – ${new Date(u.dateRangeEnd).toLocaleDateString()}`
                         : "—"}
@@ -216,7 +216,7 @@ export default function UploadPage() {
                         {u.status.toLowerCase()}
                       </span>
                     </td>
-                    <td className="px-4 py-2.5 text-[14px] text-[rgba(0,0,0,0.48)] hidden md:table-cell">
+                    <td className="px-4 py-2.5 text-[14px] text-muted-foreground hidden md:table-cell">
                       {new Date(u.createdAt).toLocaleDateString()}
                     </td>
                   </tr>

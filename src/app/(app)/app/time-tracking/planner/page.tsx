@@ -135,10 +135,10 @@ export default function PlannerPage() {
             { label: "Planner" },
           ]}
         />
-        <div className="h-8 w-48 bg-[rgba(0,0,0,0.06)] rounded-lg animate-pulse mb-6" />
+        <div className="h-8 w-48 bg-muted rounded-lg animate-pulse mb-6" />
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 bg-white rounded-xl animate-pulse" />
+            <div key={i} className="h-32 bg-card rounded-xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -158,10 +158,10 @@ export default function PlannerPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Planner
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             Build and finalize weekly schedules
           </p>
         </div>
@@ -170,7 +170,7 @@ export default function PlannerPage() {
           <select
             value={selectedLocationId}
             onChange={(e) => handleLocationChange(e.target.value)}
-            className="h-9 px-3 rounded-lg border border-[rgba(0,0,0,0.08)] text-[14px] bg-white text-[#1d1d1f] focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
+            className="h-9 px-3 rounded-lg border border-border text-[14px] bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-[#0071e3]"
             aria-label="Select location"
           >
             {locations.map((loc) => (
@@ -183,8 +183,8 @@ export default function PlannerPage() {
       </div>
 
       {employees.length === 0 ? (
-        <div className="bg-white rounded-xl p-12 text-center">
-          <p className="text-[17px] text-[rgba(0,0,0,0.48)]">
+        <div className="bg-card rounded-xl p-12 text-center">
+          <p className="text-[17px] text-muted-foreground">
             No employees found for{" "}
             {selectedLocation?.name ?? "this location"}. Add team members first.
           </p>

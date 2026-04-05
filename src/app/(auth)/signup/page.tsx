@@ -113,15 +113,15 @@ export default function SignupPage() {
 
   if (step === "verify") {
     return (
-      <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-muted flex items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
           <div className="w-16 h-16 rounded-full bg-[#0071e3]/10 flex items-center justify-center mx-auto">
             <Mail className="w-8 h-8 text-[#0071e3]" />
           </div>
-          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-[#1d1d1f]">
+          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-foreground">
             Check your email
           </h1>
-          <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-2 text-[17px] text-muted-foreground">
             We sent a verification link to <strong>{email}</strong>. Click it to verify your account and then sign in.
           </p>
           <button
@@ -137,15 +137,15 @@ export default function SignupPage() {
 
   if (step === "done") {
     return (
-      <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-muted flex items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
           <div className="w-16 h-16 rounded-full bg-[#22C55E] flex items-center justify-center mx-auto">
             <Check className="w-8 h-8 text-white" />
           </div>
-          <h1 className="mt-6 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-[#1d1d1f]">
+          <h1 className="mt-6 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-foreground">
             You&apos;re all set
           </h1>
-          <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-2 text-[17px] text-muted-foreground">
             Your pharmacy is ready. Start by adding providers or uploading prescription data.
           </p>
           <button
@@ -163,13 +163,13 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-muted flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-lg mx-auto">
             Rx
           </div>
-          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-[#1d1d1f]">
+          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-foreground">
             {step === "account" ? "Create your account" : "Set up your pharmacy"}
           </h1>
           <div className="mt-3 flex gap-2 justify-center" role="progressbar" aria-valuenow={step === "account" ? 1 : 2} aria-valuemin={1} aria-valuemax={2}>
@@ -182,7 +182,7 @@ export default function SignupPage() {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl p-6">
+        <div className="bg-card rounded-xl p-6">
           {error && (
             <div role="alert" className="mb-4 p-3 rounded-lg bg-red-50 text-[#EF4444] text-[14px]">
               {error}
@@ -229,7 +229,7 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[rgba(0,0,0,0.3)] hover:text-[rgba(0,0,0,0.6)] transition-colors"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/60 hover:text-[rgba(0,0,0,0.6)] transition-colors"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -240,11 +240,11 @@ export default function SignupPage() {
                     <div className="flex gap-1">
                       {[1,2,3,4].map(i => (
                         <div key={i} className={`h-1 flex-1 rounded-full transition-colors ${
-                          i <= strength ? strengthColors[strength] : "bg-[rgba(0,0,0,0.06)]"
+                          i <= strength ? strengthColors[strength] : "bg-muted"
                         }`} />
                       ))}
                     </div>
-                    <p className="text-[12px] mt-0.5 text-[rgba(0,0,0,0.48)]">{strengthLabels[strength]}</p>
+                    <p className="text-[12px] mt-0.5 text-muted-foreground">{strengthLabels[strength]}</p>
                   </div>
                 )}
               </div>
@@ -280,7 +280,7 @@ export default function SignupPage() {
                   placeholder="Main store"
                   className="h-11"
                 />
-                <p className="text-[12px] text-[rgba(0,0,0,0.48)]">
+                <p className="text-[12px] text-muted-foreground">
                   Leave blank to use pharmacy name
                 </p>
               </div>
@@ -290,7 +290,7 @@ export default function SignupPage() {
                   id="timezone"
                   value={timezone}
                   onChange={(e) => setTimezone(e.target.value)}
-                  className="w-full h-11 rounded-lg border border-[rgba(0,0,0,0.08)] px-3 text-[14px] bg-white"
+                  className="w-full h-11 rounded-lg border border-border px-3 text-[14px] bg-card"
                 >
                   <option value="America/New_York">Eastern</option>
                   <option value="America/Chicago">Central</option>
@@ -312,7 +312,7 @@ export default function SignupPage() {
         </div>
 
         {step === "account" && (
-          <p className="mt-4 text-center text-[14px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-4 text-center text-[14px] text-muted-foreground">
             Already have an account?{" "}
             <Link href="/login" className="text-[#0066cc] hover:underline">
               Sign in

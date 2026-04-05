@@ -155,10 +155,10 @@ export default function IntegrationsPage() {
     <div>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
             Integrations
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-1 text-[17px] text-muted-foreground">
             Connect your pharmacy management system
           </p>
         </div>
@@ -177,19 +177,19 @@ export default function IntegrationsPage() {
       {loading ? (
         <div className="mt-8 space-y-3">
           {[1, 2].map((i) => (
-            <div key={i} className="bg-white rounded-xl p-6 animate-pulse">
-              <div className="h-5 w-48 bg-[#f5f5f7] rounded" />
-              <div className="mt-3 h-4 w-32 bg-[#f5f5f7] rounded" />
+            <div key={i} className="bg-card rounded-xl p-6 animate-pulse">
+              <div className="h-5 w-48 bg-muted rounded" />
+              <div className="mt-3 h-4 w-32 bg-muted rounded" />
             </div>
           ))}
         </div>
       ) : connections.length === 0 ? (
-        <div className="mt-12 bg-white rounded-xl p-12 text-center">
+        <div className="mt-12 bg-card rounded-xl p-12 text-center">
           <Plug className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.24)]" />
-          <h3 className="mt-4 text-[17px] font-semibold text-[#1d1d1f]">
+          <h3 className="mt-4 text-[17px] font-semibold text-foreground">
             No connections yet
           </h3>
-          <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)] max-w-md mx-auto">
+          <p className="mt-1 text-[14px] text-muted-foreground max-w-md mx-auto">
             Connect your PMS to automatically sync prescription events, patient
             data, and send notifications.
           </p>
@@ -209,7 +209,7 @@ export default function IntegrationsPage() {
           {connections.map((conn) => (
             <div
               key={conn.id}
-              className="bg-white rounded-xl p-5 border border-[rgba(0,0,0,0.04)]"
+              className="bg-card rounded-xl p-5 border border-[rgba(0,0,0,0.04)]"
             >
               <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                 <div className="flex items-start gap-3">
@@ -217,7 +217,7 @@ export default function IntegrationsPage() {
                     className={`mt-0.5 w-10 h-10 rounded-lg flex items-center justify-center ${
                       conn.isActive
                         ? "bg-[#34C759]/10 text-[#34C759]"
-                        : "bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.24)]"
+                        : "bg-muted/50 text-[rgba(0,0,0,0.24)]"
                     }`}
                   >
                     {conn.isActive ? (
@@ -227,10 +227,10 @@ export default function IntegrationsPage() {
                     )}
                   </div>
                   <div>
-                    <h3 className="text-[15px] font-semibold text-[#1d1d1f]">
+                    <h3 className="text-[15px] font-semibold text-foreground">
                       {conn.name}
                     </h3>
-                    <p className="text-[13px] text-[rgba(0,0,0,0.48)]">
+                    <p className="text-[13px] text-muted-foreground">
                       {PMS_TYPES.find((t) => t.value === conn.pmsType)?.label ||
                         conn.pmsType}{" "}
                       &middot; {conn.location.name}
@@ -242,7 +242,7 @@ export default function IntegrationsPage() {
                     className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[12px] font-medium ${
                       conn.isActive
                         ? "bg-[#34C759]/10 text-[#34C759]"
-                        : "bg-[rgba(0,0,0,0.04)] text-[rgba(0,0,0,0.48)]"
+                        : "bg-muted/50 text-muted-foreground"
                     }`}
                   >
                     <span
@@ -255,7 +255,7 @@ export default function IntegrationsPage() {
                 </div>
               </div>
 
-              <div className="mt-4 flex flex-col sm:flex-row gap-4 text-[13px] text-[rgba(0,0,0,0.48)]">
+              <div className="mt-4 flex flex-col sm:flex-row gap-4 text-[13px] text-muted-foreground">
                 <div>
                   <span className="text-[rgba(0,0,0,0.32)]">Last sync:</span>{" "}
                   {formatDate(conn.lastSyncAt)}
@@ -277,7 +277,7 @@ export default function IntegrationsPage() {
                   Webhook URL
                 </p>
                 <div className="flex items-center gap-2">
-                  <code className="flex-1 text-[12px] bg-[#f5f5f7] px-3 py-1.5 rounded-md text-[#1d1d1f] truncate">
+                  <code className="flex-1 text-[12px] bg-muted px-3 py-1.5 rounded-md text-foreground truncate">
                     {typeof window !== "undefined"
                       ? `${window.location.origin}/api/integrations/webhook`
                       : "/api/integrations/webhook"}
@@ -289,7 +289,7 @@ export default function IntegrationsPage() {
                         `url-${conn.id}`
                       )
                     }
-                    className="p-1.5 rounded-md hover:bg-[#f5f5f7] text-[rgba(0,0,0,0.48)] transition-colors"
+                    className="p-1.5 rounded-md hover:bg-muted text-muted-foreground transition-colors"
                   >
                     {copiedId === `url-${conn.id}` ? (
                       <Check className="w-3.5 h-3.5 text-[#34C759]" />
@@ -307,38 +307,38 @@ export default function IntegrationsPage() {
       {/* Add connection modal */}
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-card rounded-2xl w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
             {newConnection ? (
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-[20px] font-semibold text-[#1d1d1f]">
+                  <h2 className="text-[20px] font-semibold text-foreground">
                     Connection created
                   </h2>
                   <button
                     onClick={closeModal}
-                    className="p-1.5 rounded-md hover:bg-[#f5f5f7] text-[rgba(0,0,0,0.48)]"
+                    className="p-1.5 rounded-md hover:bg-muted text-muted-foreground"
                   >
                     <X className="w-5 h-5" />
                   </button>
                 </div>
-                <p className="text-[14px] text-[rgba(0,0,0,0.48)] mb-4">
+                <p className="text-[14px] text-muted-foreground mb-4">
                   Save these credentials. The webhook secret will not be shown
                   again.
                 </p>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                    <label className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                       Webhook URL
                     </label>
                     <div className="flex items-center gap-2 mt-1">
-                      <code className="flex-1 text-[13px] bg-[#f5f5f7] px-3 py-2 rounded-lg text-[#1d1d1f] break-all">
+                      <code className="flex-1 text-[13px] bg-muted px-3 py-2 rounded-lg text-foreground break-all">
                         {newConnection.webhookUrl}
                       </code>
                       <button
                         onClick={() =>
                           copyToClipboard(newConnection.webhookUrl, "new-url")
                         }
-                        className="p-2 rounded-lg hover:bg-[#f5f5f7] text-[rgba(0,0,0,0.48)]"
+                        className="p-2 rounded-lg hover:bg-muted text-muted-foreground"
                       >
                         {copiedId === "new-url" ? (
                           <Check className="w-4 h-4 text-[#34C759]" />
@@ -349,11 +349,11 @@ export default function IntegrationsPage() {
                     </div>
                   </div>
                   <div>
-                    <label className="text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                    <label className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                       Webhook secret
                     </label>
                     <div className="flex items-center gap-2 mt-1">
-                      <code className="flex-1 text-[13px] bg-[#FFF3CD] px-3 py-2 rounded-lg text-[#1d1d1f] break-all font-mono">
+                      <code className="flex-1 text-[13px] bg-[#FFF3CD] px-3 py-2 rounded-lg text-foreground break-all font-mono">
                         {newConnection.webhookSecret}
                       </code>
                       <button
@@ -363,7 +363,7 @@ export default function IntegrationsPage() {
                             "new-secret"
                           )
                         }
-                        className="p-2 rounded-lg hover:bg-[#f5f5f7] text-[rgba(0,0,0,0.48)]"
+                        className="p-2 rounded-lg hover:bg-muted text-muted-foreground"
                       >
                         {copiedId === "new-secret" ? (
                           <Check className="w-4 h-4 text-[#34C759]" />
@@ -384,12 +384,12 @@ export default function IntegrationsPage() {
             ) : (
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-[20px] font-semibold text-[#1d1d1f]">
+                  <h2 className="text-[20px] font-semibold text-foreground">
                     Add PMS connection
                   </h2>
                   <button
                     onClick={closeModal}
-                    className="p-1.5 rounded-md hover:bg-[#f5f5f7] text-[rgba(0,0,0,0.48)]"
+                    className="p-1.5 rounded-md hover:bg-muted text-muted-foreground"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -403,7 +403,7 @@ export default function IntegrationsPage() {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="text-[13px] font-medium text-[#1d1d1f]">
+                    <label className="text-[13px] font-medium text-foreground">
                       Connection name
                     </label>
                     <Input
@@ -417,7 +417,7 @@ export default function IntegrationsPage() {
                   </div>
 
                   <div>
-                    <label className="text-[13px] font-medium text-[#1d1d1f]">
+                    <label className="text-[13px] font-medium text-foreground">
                       PMS type
                     </label>
                     <select
@@ -425,7 +425,7 @@ export default function IntegrationsPage() {
                       onChange={(e) =>
                         setForm((f) => ({ ...f, pmsType: e.target.value }))
                       }
-                      className="mt-1 w-full h-10 px-3 border border-[rgba(0,0,0,0.08)] rounded-lg text-[14px] bg-white"
+                      className="mt-1 w-full h-10 px-3 border border-border rounded-lg text-[14px] bg-card"
                     >
                       {PMS_TYPES.map((t) => (
                         <option key={t.value} value={t.value}>
@@ -436,7 +436,7 @@ export default function IntegrationsPage() {
                   </div>
 
                   <div>
-                    <label className="text-[13px] font-medium text-[#1d1d1f]">
+                    <label className="text-[13px] font-medium text-foreground">
                       Location
                     </label>
                     <select
@@ -444,7 +444,7 @@ export default function IntegrationsPage() {
                       onChange={(e) =>
                         setForm((f) => ({ ...f, locationId: e.target.value }))
                       }
-                      className="mt-1 w-full h-10 px-3 border border-[rgba(0,0,0,0.08)] rounded-lg text-[14px] bg-white"
+                      className="mt-1 w-full h-10 px-3 border border-border rounded-lg text-[14px] bg-card"
                     >
                       {locations.map((loc) => (
                         <option key={loc.id} value={loc.id}>
@@ -455,7 +455,7 @@ export default function IntegrationsPage() {
                   </div>
 
                   <div>
-                    <label className="text-[13px] font-medium text-[#1d1d1f]">
+                    <label className="text-[13px] font-medium text-foreground">
                       API URL{" "}
                       <span className="text-[rgba(0,0,0,0.32)]">
                         (optional)
@@ -472,7 +472,7 @@ export default function IntegrationsPage() {
                   </div>
 
                   <div>
-                    <label className="text-[13px] font-medium text-[#1d1d1f]">
+                    <label className="text-[13px] font-medium text-foreground">
                       API key{" "}
                       <span className="text-[rgba(0,0,0,0.32)]">
                         (optional)
@@ -489,7 +489,7 @@ export default function IntegrationsPage() {
                   </div>
 
                   <div>
-                    <label className="text-[13px] font-medium text-[#1d1d1f]">
+                    <label className="text-[13px] font-medium text-foreground">
                       API secret{" "}
                       <span className="text-[rgba(0,0,0,0.32)]">
                         (optional)
@@ -510,7 +510,7 @@ export default function IntegrationsPage() {
                 <div className="mt-6 flex gap-2">
                   <button
                     onClick={closeModal}
-                    className="flex-1 px-4 py-2.5 border border-[rgba(0,0,0,0.08)] text-[#1d1d1f] rounded-lg text-[14px] hover:bg-[#f5f5f7] transition-colors"
+                    className="flex-1 px-4 py-2.5 border border-border text-foreground rounded-lg text-[14px] hover:bg-muted transition-colors"
                   >
                     Cancel
                   </button>

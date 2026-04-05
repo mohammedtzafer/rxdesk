@@ -113,12 +113,12 @@ export default function DrugSearchPage() {
         </button>
 
         {detailLoading ? (
-          <div className="bg-white rounded-xl p-8 animate-pulse">
-            <div className="h-6 w-64 bg-[#f5f5f7] rounded" />
-            <div className="mt-4 h-4 w-48 bg-[#f5f5f7] rounded" />
+          <div className="bg-card rounded-xl p-8 animate-pulse">
+            <div className="h-6 w-64 bg-muted rounded" />
+            <div className="mt-4 h-4 w-48 bg-muted rounded" />
             <div className="mt-8 space-y-3">
-              <div className="h-4 w-full bg-[#f5f5f7] rounded" />
-              <div className="h-4 w-3/4 bg-[#f5f5f7] rounded" />
+              <div className="h-4 w-full bg-muted rounded" />
+              <div className="h-4 w-3/4 bg-muted rounded" />
             </div>
           </div>
         ) : detailError ? (
@@ -132,61 +132,61 @@ export default function DrugSearchPage() {
           />
         ) : selectedDrug ? (
           <div>
-            <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+            <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
               {selectedDrug.name}
             </h1>
             {selectedDrug.genericName && (
-              <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+              <p className="mt-1 text-[17px] text-muted-foreground">
                 Generic: {selectedDrug.genericName}
               </p>
             )}
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {selectedDrug.brandName && (
-                <div className="bg-white rounded-xl p-4">
-                  <p className="text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                <div className="bg-card rounded-xl p-4">
+                  <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                     Brand name
                   </p>
-                  <p className="mt-1 text-[15px] font-medium text-[#1d1d1f]">
+                  <p className="mt-1 text-[15px] font-medium text-foreground">
                     {selectedDrug.brandName}
                   </p>
                 </div>
               )}
               {selectedDrug.dosageForm && (
-                <div className="bg-white rounded-xl p-4">
-                  <p className="text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                <div className="bg-card rounded-xl p-4">
+                  <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                     Dosage form
                   </p>
-                  <p className="mt-1 text-[15px] font-medium text-[#1d1d1f]">
+                  <p className="mt-1 text-[15px] font-medium text-foreground">
                     {selectedDrug.dosageForm}
                   </p>
                 </div>
               )}
               {selectedDrug.route && (
-                <div className="bg-white rounded-xl p-4">
-                  <p className="text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                <div className="bg-card rounded-xl p-4">
+                  <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                     Route
                   </p>
-                  <p className="mt-1 text-[15px] font-medium text-[#1d1d1f]">
+                  <p className="mt-1 text-[15px] font-medium text-foreground">
                     {selectedDrug.route}
                   </p>
                 </div>
               )}
               {selectedDrug.strength && (
-                <div className="bg-white rounded-xl p-4">
-                  <p className="text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+                <div className="bg-card rounded-xl p-4">
+                  <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                     Strength
                   </p>
-                  <p className="mt-1 text-[15px] font-medium text-[#1d1d1f]">
+                  <p className="mt-1 text-[15px] font-medium text-foreground">
                     {selectedDrug.strength}
                   </p>
                 </div>
               )}
-              <div className="bg-white rounded-xl p-4">
-                <p className="text-[12px] font-medium text-[rgba(0,0,0,0.48)] uppercase tracking-wide">
+              <div className="bg-card rounded-xl p-4">
+                <p className="text-[12px] font-medium text-muted-foreground uppercase tracking-wide">
                   RxCUI
                 </p>
-                <p className="mt-1 text-[15px] font-mono text-[#1d1d1f]">
+                <p className="mt-1 text-[15px] font-mono text-foreground">
                   {selectedDrug.rxcui}
                 </p>
               </div>
@@ -195,15 +195,15 @@ export default function DrugSearchPage() {
             {/* NDC codes */}
             {selectedDrug.ndc && selectedDrug.ndc.length > 0 && (
               <div className="mt-6">
-                <h2 className="text-[17px] font-semibold text-[#1d1d1f]">
+                <h2 className="text-[17px] font-semibold text-foreground">
                   NDC codes
                 </h2>
-                <div className="mt-3 bg-white rounded-xl p-4">
+                <div className="mt-3 bg-card rounded-xl p-4">
                   <div className="flex flex-wrap gap-2">
                     {selectedDrug.ndc.map((ndc) => (
                       <span
                         key={ndc}
-                        className="px-2.5 py-1 bg-[#f5f5f7] rounded-md text-[13px] font-mono text-[#1d1d1f]"
+                        className="px-2.5 py-1 bg-muted rounded-md text-[13px] font-mono text-foreground"
                       >
                         {ndc}
                       </span>
@@ -217,14 +217,14 @@ export default function DrugSearchPage() {
             {selectedDrug.interactions &&
               selectedDrug.interactions.length > 0 && (
                 <div className="mt-6">
-                  <h2 className="text-[17px] font-semibold text-[#1d1d1f]">
+                  <h2 className="text-[17px] font-semibold text-foreground">
                     Drug interactions
                   </h2>
                   <div className="mt-3 space-y-2">
                     {selectedDrug.interactions.map((interaction, i) => (
                       <div
                         key={i}
-                        className="bg-white rounded-xl p-4 border border-[rgba(0,0,0,0.04)]"
+                        className="bg-card rounded-xl p-4 border border-[rgba(0,0,0,0.04)]"
                       >
                         <div className="flex items-start gap-3">
                           <AlertTriangle
@@ -238,7 +238,7 @@ export default function DrugSearchPage() {
                           />
                           <div>
                             <div className="flex items-center gap-2">
-                              <p className="text-[14px] font-medium text-[#1d1d1f]">
+                              <p className="text-[14px] font-medium text-foreground">
                                 {interaction.drug}
                               </p>
                               <span
@@ -253,7 +253,7 @@ export default function DrugSearchPage() {
                                 {interaction.severity}
                               </span>
                             </div>
-                            <p className="mt-1 text-[13px] text-[rgba(0,0,0,0.48)]">
+                            <p className="mt-1 text-[13px] text-muted-foreground">
                               {interaction.description}
                             </p>
                           </div>
@@ -272,10 +272,10 @@ export default function DrugSearchPage() {
   return (
     <div>
       <div>
-        <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+        <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
           Drug search
         </h1>
-        <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)]">
+        <p className="mt-1 text-[17px] text-muted-foreground">
           Search the RxNorm database for drug information
         </p>
       </div>
@@ -310,8 +310,8 @@ export default function DrugSearchPage() {
         searched &&
         drugs.length === 0 &&
         suggestions.length > 0 && (
-          <div className="mt-6 bg-white rounded-xl p-6">
-            <p className="text-[14px] text-[rgba(0,0,0,0.48)]">
+          <div className="mt-6 bg-card rounded-xl p-6">
+            <p className="text-[14px] text-muted-foreground">
               No results found. Did you mean:
             </p>
             <div className="mt-2 flex flex-wrap gap-2">
@@ -334,12 +334,12 @@ export default function DrugSearchPage() {
         drugs.length === 0 &&
         suggestions.length === 0 &&
         !error && (
-          <div className="mt-12 bg-white rounded-xl p-12 text-center">
+          <div className="mt-12 bg-card rounded-xl p-12 text-center">
             <Pill className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.24)]" />
-            <h3 className="mt-4 text-[17px] font-semibold text-[#1d1d1f]">
+            <h3 className="mt-4 text-[17px] font-semibold text-foreground">
               No drugs found
             </h3>
-            <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)]">
+            <p className="mt-1 text-[14px] text-muted-foreground">
               Try a different spelling or search term.
             </p>
           </div>
@@ -352,21 +352,21 @@ export default function DrugSearchPage() {
             <button
               key={drug.rxcui}
               onClick={() => fetchDrugDetail(drug.rxcui)}
-              className="w-full text-left bg-white rounded-xl p-4 border border-[rgba(0,0,0,0.04)] hover:border-[#0071e3]/30 hover:bg-[#0071e3]/[0.02] transition-colors"
+              className="w-full text-left bg-card rounded-xl p-4 border border-[rgba(0,0,0,0.04)] hover:border-[#0071e3]/30 hover:bg-[#0071e3]/[0.02] transition-colors"
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <p className="text-[15px] font-medium text-[#1d1d1f] truncate">
+                  <p className="text-[15px] font-medium text-foreground truncate">
                     {drug.name}
                   </p>
                   <div className="flex items-center gap-2 mt-0.5">
                     {drug.form && (
-                      <span className="text-[12px] text-[rgba(0,0,0,0.48)]">
+                      <span className="text-[12px] text-muted-foreground">
                         {drug.form}
                       </span>
                     )}
                     {drug.type && (
-                      <span className="px-1.5 py-0.5 bg-[#f5f5f7] rounded text-[11px] text-[rgba(0,0,0,0.48)]">
+                      <span className="px-1.5 py-0.5 bg-muted rounded text-[11px] text-muted-foreground">
                         {drug.type}
                       </span>
                     )}
@@ -384,12 +384,12 @@ export default function DrugSearchPage() {
 
       {/* Initial empty state */}
       {!searched && !loading && (
-        <div className="mt-12 bg-white rounded-xl p-12 text-center">
+        <div className="mt-12 bg-card rounded-xl p-12 text-center">
           <Search className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.24)]" />
-          <h3 className="mt-4 text-[17px] font-semibold text-[#1d1d1f]">
+          <h3 className="mt-4 text-[17px] font-semibold text-foreground">
             Search for a drug
           </h3>
-          <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)] max-w-md mx-auto">
+          <p className="mt-1 text-[14px] text-muted-foreground max-w-md mx-auto">
             Type at least 2 characters to search the RxNorm database. You can
             find NDC codes, interactions, and detailed drug information.
           </p>

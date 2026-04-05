@@ -50,13 +50,13 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f]">
+      <h1 className="text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground">
         Profile
       </h1>
 
       <div className="mt-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-[17px] font-semibold text-[#1d1d1f] flex items-center gap-2">
+          <h2 className="text-[17px] font-semibold text-foreground flex items-center gap-2">
             Notifications
             {unreadCount > 0 && (
               <Badge className="bg-[#0071e3] text-white text-[10px] px-1.5 py-0.5 font-semibold">
@@ -75,32 +75,32 @@ export default function ProfilePage() {
           )}
         </div>
 
-        <div className="bg-white rounded-xl overflow-hidden">
+        <div className="bg-card rounded-xl overflow-hidden">
           {loading ? (
-            <div className="divide-y divide-[rgba(0,0,0,0.03)]">
+            <div className="divide-y divide-border/50">
               {[...Array(4)].map((_, i) => (
                 <div key={i} className="px-4 py-3">
-                  <div className="h-4 w-48 bg-[rgba(0,0,0,0.05)] rounded animate-pulse" />
-                  <div className="h-3 w-64 bg-[rgba(0,0,0,0.04)] rounded animate-pulse mt-1.5" />
+                  <div className="h-4 w-48 bg-muted rounded animate-pulse" />
+                  <div className="h-3 w-64 bg-muted/50 rounded animate-pulse mt-1.5" />
                 </div>
               ))}
             </div>
           ) : notifications.length === 0 ? (
             <div className="p-12 text-center">
               <BellOff
-                className="w-12 h-12 mx-auto text-[rgba(0,0,0,0.15)]"
+                className="w-12 h-12 mx-auto text-muted-foreground/30"
                 aria-hidden="true"
               />
-              <h3 className="mt-4 text-[21px] font-bold text-[#1d1d1f]">
+              <h3 className="mt-4 text-[21px] font-bold text-foreground">
                 No notifications
               </h3>
-              <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+              <p className="mt-2 text-[17px] text-muted-foreground">
                 You&apos;re all caught up.
               </p>
             </div>
           ) : (
             <div
-              className="divide-y divide-[rgba(0,0,0,0.03)]"
+              className="divide-y divide-border/50"
               aria-live="polite"
               aria-label="Notification list"
             >
@@ -123,18 +123,18 @@ export default function ProfilePage() {
                         <p
                           className={`text-[14px] ${
                             !n.read ? "font-semibold" : "font-normal"
-                          } text-[#1d1d1f]`}
+                          } text-foreground`}
                         >
                           {n.title}
                         </p>
                       </div>
-                      <p className="text-[13px] text-[rgba(0,0,0,0.48)] mt-0.5 leading-snug">
+                      <p className="text-[13px] text-muted-foreground mt-0.5 leading-snug">
                         {n.message}
                       </p>
                     </div>
                     <time
                       dateTime={n.createdAt}
-                      className="text-[12px] text-[rgba(0,0,0,0.3)] shrink-0 mt-0.5"
+                      className="text-[12px] text-muted-foreground/60 shrink-0 mt-0.5"
                     >
                       {new Date(n.createdAt).toLocaleDateString("en-US", {
                         month: "short",

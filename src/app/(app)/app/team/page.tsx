@@ -269,9 +269,9 @@ export default function TeamPage() {
             {[1,2,3,4,5].map(i => (
               <div key={i} className="flex items-center gap-3 py-2">
                 <div className="w-32 h-4 bg-muted rounded animate-pulse" />
-                <div className="w-24 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="w-24 h-4 bg-muted/50 rounded animate-pulse" />
                 <div className="flex-1" />
-                <div className="w-12 h-4 bg-[rgba(0,0,0,0.04)] rounded animate-pulse" />
+                <div className="w-12 h-4 bg-muted/50 rounded animate-pulse" />
               </div>
             ))}
           </div>
@@ -460,7 +460,7 @@ export default function TeamPage() {
                             className={`text-[11px] px-1.5 py-0.5 rounded transition-colors ${
                               editForm.primaryLocationId === loc.id
                                 ? "bg-[#0071e3] text-white"
-                                : "bg-muted text-muted-foreground hover:bg-[rgba(0,0,0,0.08)]"
+                                : "bg-muted text-muted-foreground hover:bg-muted"
                             }`}
                           >
                             {editForm.primaryLocationId === loc.id ? "Primary" : "Set primary"}

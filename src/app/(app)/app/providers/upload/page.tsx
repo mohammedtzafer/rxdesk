@@ -99,10 +99,10 @@ export default function ProviderUploadPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
-          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-[#1d1d1f] dark:text-white">
+          <h1 className="text-[28px] sm:text-[40px] font-semibold leading-[1.1] tracking-tight text-foreground dark:text-white">
             Upload Rx data
           </h1>
-          <p className="mt-1 text-[17px] text-[rgba(0,0,0,0.48)] dark:text-white/48">
+          <p className="mt-1 text-[17px] text-muted-foreground dark:text-white/48">
             Import prescription fills to track referral volume by provider
           </p>
         </div>
@@ -123,10 +123,10 @@ export default function ProviderUploadPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
           {EXPECTED_COLUMNS.map((col) => (
             <div key={col.name} className="flex items-start gap-2">
-              <span className="text-[12px] font-mono font-medium text-[#1d1d1f] dark:text-white bg-white dark:bg-white/10 px-1.5 py-0.5 rounded border border-[rgba(0,0,0,0.06)] dark:border-white/10 shrink-0">
+              <span className="text-[12px] font-mono font-medium text-foreground dark:text-white bg-card dark:bg-card/10 px-1.5 py-0.5 rounded border border-[rgba(0,0,0,0.06)] dark:border-white/10 shrink-0">
                 {col.name}
               </span>
-              <span className="text-[12px] text-[rgba(0,0,0,0.48)] dark:text-white/48 leading-tight mt-0.5">
+              <span className="text-[12px] text-muted-foreground dark:text-white/48 leading-tight mt-0.5">
                 {col.desc}
               </span>
             </div>
@@ -137,10 +137,10 @@ export default function ProviderUploadPage() {
       {/* Drop zone */}
       <div
         className={[
-          "bg-white dark:bg-[#1c1c1e] rounded-xl border-2 border-dashed p-12 text-center cursor-pointer transition-colors",
+          "bg-card dark:bg-[#1c1c1e] rounded-xl border-2 border-dashed p-12 text-center cursor-pointer transition-colors",
           dragOver
             ? "border-[#0071e3] bg-[#0071e3]/5"
-            : "border-[rgba(0,0,0,0.1)] dark:border-white/20 hover:border-[rgba(0,0,0,0.2)] dark:hover:border-white/30",
+            : "border-border dark:border-white/20 hover:border-[rgba(0,0,0,0.2)] dark:hover:border-white/30",
         ].join(" ")}
         onDragOver={(e) => {
           e.preventDefault();
@@ -174,43 +174,43 @@ export default function ProviderUploadPage() {
               : "text-[rgba(0,0,0,0.20)] dark:text-white/20",
           ].join(" ")}
         />
-        <p className="mt-3 text-[17px] text-[#1d1d1f] dark:text-white">
+        <p className="mt-3 text-[17px] text-foreground dark:text-white">
           {uploading ? "Uploading..." : "Drop a CSV file here or click to browse"}
         </p>
-        <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)] dark:text-white/48">
+        <p className="mt-1 text-[14px] text-muted-foreground dark:text-white/48">
           .csv files only — max 10 MB
         </p>
       </div>
 
       {/* Upload result */}
       {result && (
-        <div className="mt-4 bg-white dark:bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(0,0,0,0.06)] dark:border-white/10">
+        <div className="mt-4 bg-card dark:bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(0,0,0,0.06)] dark:border-white/10">
           <div className="flex items-center gap-2">
             {result.rowCount > 0 ? (
               <CheckCircle className="w-5 h-5 text-[#22C55E]" />
             ) : (
               <XCircle className="w-5 h-5 text-[#EF4444]" />
             )}
-            <p className="text-[17px] font-semibold text-[#1d1d1f] dark:text-white">
+            <p className="text-[17px] font-semibold text-foreground dark:text-white">
               {result.rowCount > 0
                 ? `${result.rowCount} records imported`
                 : "Import failed — no valid rows found"}
             </p>
           </div>
           {result.rowCount > 0 && (
-            <p className="mt-1 text-[14px] text-[rgba(0,0,0,0.48)] dark:text-white/48">
+            <p className="mt-1 text-[14px] text-muted-foreground dark:text-white/48">
               Rx records are now linked to providers. Head to Analyze Trends to see the data.
             </p>
           )}
           {result.errors.length > 0 && (
             <div className="mt-3">
-              <p className="text-[14px] text-[rgba(0,0,0,0.48)] dark:text-white/48 flex items-center gap-1">
+              <p className="text-[14px] text-muted-foreground dark:text-white/48 flex items-center gap-1">
                 <AlertTriangle className="w-3 h-3" />
                 {result.errors.length} row{result.errors.length !== 1 ? "s" : ""} skipped
               </p>
               <div className="mt-2 max-h-40 overflow-y-auto space-y-0.5">
                 {result.errors.slice(0, 10).map((err, i) => (
-                  <p key={i} className="text-[12px] text-[rgba(0,0,0,0.48)] dark:text-white/48">
+                  <p key={i} className="text-[12px] text-muted-foreground dark:text-white/48">
                     Row {err.row}: {err.message}
                   </p>
                 ))}
@@ -223,27 +223,27 @@ export default function ProviderUploadPage() {
       {/* Upload history */}
       {history.length > 0 && (
         <div className="mt-6">
-          <h2 className="text-[17px] font-semibold text-[#1d1d1f] dark:text-white mb-3">
+          <h2 className="text-[17px] font-semibold text-foreground dark:text-white mb-3">
             Upload history
           </h2>
-          <div className="bg-white dark:bg-[#1c1c1e] rounded-xl border border-[rgba(0,0,0,0.06)] dark:border-white/10 overflow-hidden">
+          <div className="bg-card dark:bg-[#1c1c1e] rounded-xl border border-[rgba(0,0,0,0.06)] dark:border-white/10 overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[600px]">
                 <thead>
-                  <tr className="border-b border-[rgba(0,0,0,0.05)] dark:border-white/10">
-                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] dark:text-white/48 uppercase">
+                  <tr className="border-b border-border dark:border-white/10">
+                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground dark:text-white/48 uppercase">
                       File
                     </th>
-                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] dark:text-white/48 uppercase">
+                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground dark:text-white/48 uppercase">
                       Records
                     </th>
-                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] dark:text-white/48 uppercase hidden md:table-cell">
+                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground dark:text-white/48 uppercase hidden md:table-cell">
                       Date range
                     </th>
-                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] dark:text-white/48 uppercase">
+                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground dark:text-white/48 uppercase">
                       Status
                     </th>
-                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-[rgba(0,0,0,0.48)] dark:text-white/48 uppercase hidden md:table-cell">
+                    <th className="text-left px-4 py-2.5 text-[12px] font-semibold text-muted-foreground dark:text-white/48 uppercase hidden md:table-cell">
                       Uploaded
                     </th>
                   </tr>
@@ -252,18 +252,18 @@ export default function ProviderUploadPage() {
                   {history.map((u) => (
                     <tr
                       key={u.id}
-                      className="border-b border-[rgba(0,0,0,0.03)] dark:border-white/5 last:border-0"
+                      className="border-b border-border/50 dark:border-white/5 last:border-0"
                     >
-                      <td className="px-4 py-2.5 text-[14px] text-[#1d1d1f] dark:text-white">
+                      <td className="px-4 py-2.5 text-[14px] text-foreground dark:text-white">
                         <div className="flex items-center gap-2">
                           <FileText className="w-4 h-4 text-[rgba(0,0,0,0.30)] dark:text-white/30 shrink-0" />
                           <span className="truncate max-w-[180px]">{u.fileName}</span>
                         </div>
                       </td>
-                      <td className="px-4 py-2.5 text-[14px] text-[rgba(0,0,0,0.48)] dark:text-white/48">
+                      <td className="px-4 py-2.5 text-[14px] text-muted-foreground dark:text-white/48">
                         {u.rowCount}
                       </td>
-                      <td className="px-4 py-2.5 text-[14px] text-[rgba(0,0,0,0.48)] dark:text-white/48 hidden md:table-cell">
+                      <td className="px-4 py-2.5 text-[14px] text-muted-foreground dark:text-white/48 hidden md:table-cell">
                         {u.dateRangeStart && u.dateRangeEnd
                           ? `${new Date(u.dateRangeStart).toLocaleDateString()} – ${new Date(u.dateRangeEnd).toLocaleDateString()}`
                           : "—"}
@@ -284,7 +284,7 @@ export default function ProviderUploadPage() {
                           {u.status.toLowerCase()}
                         </span>
                       </td>
-                      <td className="px-4 py-2.5 text-[14px] text-[rgba(0,0,0,0.48)] dark:text-white/48 hidden md:table-cell">
+                      <td className="px-4 py-2.5 text-[14px] text-muted-foreground dark:text-white/48 hidden md:table-cell">
                         {new Date(u.createdAt).toLocaleDateString()}
                       </td>
                     </tr>

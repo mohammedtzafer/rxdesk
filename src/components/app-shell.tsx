@@ -198,7 +198,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
     <div className="flex h-screen bg-background text-foreground">
       {/* ── Desktop: Brand banner (OUTSIDE sidebar, fixed at top) ── */}
       <div
-        className="hidden md:flex items-center gap-3 fixed top-0 left-0 z-50 h-16 w-64 px-4 border-b border-r border-border bg-card transition-all duration-200"
+        className="hidden md:flex items-center gap-3 fixed top-0 left-0 z-50 h-16 w-64 px-4 bg-background transition-all duration-200"
       >
         {branding?.logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -217,12 +217,12 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       {/* ── Desktop sidebar (below brand banner) ── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 border-r border-border bg-card top-16 bottom-0",
+          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 bg-background top-16 bottom-0",
           sidebarWidth
         )}
       >
         {/* Toolbar: theme toggle + collapse */}
-        <div className="flex items-center justify-end gap-1 px-2 py-1.5 border-b border-border">
+        <div className="flex items-center justify-end gap-1 px-2 py-1.5">
           {mounted && (
             <button
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
@@ -278,7 +278,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                 </div>
 
                 {hasChildren && isExpanded && !collapsed && (
-                  <div className="ml-4 pl-3 border-l border-border mt-0.5 space-y-0.5">
+                  <div className="ml-4 pl-3 border-l border-border/40 mt-0.5 space-y-0.5">
                     {item.children!.map((child) => {
                       const ChildIcon = child.icon;
                       const isChildActive = isExactActive(child.href);
@@ -306,7 +306,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
         </nav>
 
         {/* User section */}
-        <div className="px-2 py-3 border-t border-border">
+        <div className="px-2 py-3">
           <Link
             href="/app/profile"
             className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-muted transition-colors"
@@ -331,7 +331,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
       </aside>
 
       {/* ── Mobile top header ── */}
-      <header className="md:hidden fixed top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-4 bg-card border-b border-border">
+      <header className="md:hidden fixed top-0 left-0 right-0 h-14 z-40 flex items-center justify-between px-4 bg-background">
         <div className="flex items-center gap-2">
           {branding?.logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element

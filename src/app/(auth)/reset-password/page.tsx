@@ -18,10 +18,10 @@ function ResetPasswordContent() {
 
   if (!token) {
     return (
-      <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-muted flex items-center justify-center px-4">
         <div className="text-center">
-          <h1 className="text-[28px] font-normal text-[#1d1d1f]">Invalid reset link</h1>
-          <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <h1 className="text-[28px] font-normal text-foreground">Invalid reset link</h1>
+          <p className="mt-2 text-[17px] text-muted-foreground">
             This link is missing a token. Please request a new reset link.
           </p>
           <button
@@ -37,15 +37,15 @@ function ResetPasswordContent() {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center px-4">
+      <div className="min-h-screen bg-muted flex items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
           <div className="w-16 h-16 rounded-full bg-[#22C55E] flex items-center justify-center mx-auto">
             <CheckCircle className="w-8 h-8 text-white" />
           </div>
-          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-[#1d1d1f]">
+          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-foreground">
             Password updated
           </h1>
-          <p className="mt-2 text-[17px] text-[rgba(0,0,0,0.48)]">
+          <p className="mt-2 text-[17px] text-muted-foreground">
             Your password has been reset. Sign in with your new password.
           </p>
           <button
@@ -90,18 +90,18 @@ function ResetPasswordContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center px-4">
+    <div className="min-h-screen bg-muted flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="w-12 h-12 rounded-xl bg-[#0071e3] flex items-center justify-center text-white font-bold text-lg mx-auto">
             Rx
           </div>
-          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-[#1d1d1f]">
+          <h1 className="mt-4 text-[28px] font-normal leading-[1.14] tracking-[0.196px] text-foreground">
             Set new password
           </h1>
         </div>
 
-        <div className="bg-white rounded-xl p-6">
+        <div className="bg-card rounded-xl p-6">
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="p-3 rounded-lg bg-red-50 text-[#EF4444] text-[14px]">{error}</div>
@@ -149,7 +149,7 @@ export default function ResetPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center">
+        <div className="min-h-screen bg-muted flex items-center justify-center">
           <Loader2 className="w-8 h-8 text-[#0071e3] animate-spin" />
         </div>
       }
