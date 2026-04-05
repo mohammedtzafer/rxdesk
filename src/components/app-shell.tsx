@@ -196,12 +196,9 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
 
   return (
     <div className="flex h-screen bg-background text-foreground">
-      {/* ── Desktop: Brand banner (OUTSIDE sidebar, fixed at top-left) ── */}
+      {/* ── Desktop: Brand banner (OUTSIDE sidebar, fixed at top) ── */}
       <div
-        className={cn(
-          "hidden md:flex items-center gap-3 fixed top-0 left-0 z-50 h-16 border-b border-r border-border bg-card transition-all duration-200",
-          collapsed ? "w-16 justify-center px-2" : "w-64 px-4"
-        )}
+        className="hidden md:flex items-center gap-3 fixed top-0 left-0 z-50 h-16 w-64 px-4 border-b border-r border-border bg-card transition-all duration-200"
       >
         {branding?.logoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -211,20 +208,17 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
             Rx
           </div>
         )}
-        {!collapsed && (
-          <div className="min-w-0 flex-1">
-            <p className="text-[15px] font-semibold text-foreground leading-tight truncate">{brandName}</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">Pharmacy Management</p>
-          </div>
-        )}
+        <div className="min-w-0 flex-1">
+          <p className="text-[15px] font-semibold text-foreground leading-tight">{brandName}</p>
+          <p className="text-[11px] text-muted-foreground mt-0.5">Pharmacy Management</p>
+        </div>
       </div>
 
       {/* ── Desktop sidebar (below brand banner) ── */}
       <aside
         className={cn(
-          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 border-r border-border bg-card",
-          sidebarWidth,
-          "top-16 bottom-0" // starts below the brand banner
+          "hidden md:flex flex-col fixed left-0 z-40 transition-all duration-200 border-r border-border bg-card top-16 bottom-0",
+          sidebarWidth
         )}
       >
         {/* Toolbar: theme toggle + collapse */}
