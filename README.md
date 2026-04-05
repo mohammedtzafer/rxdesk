@@ -32,7 +32,16 @@ npm run db:seed
 npm run dev
 ```
 
+## Sales materials
+
+- [One-pager](docs/rxdesk-one-pager.docx) — 2-page Word document for prospective customers
+- [Pitch deck](docs/rxdesk-pitch-deck.pptx) — 6-slide PowerPoint presentation
+- **Regenerate after adding features:** `node scripts/create-sales-docs.mjs`
+
 ## Docs
 
 - [MVP design spec](docs/superpowers/specs/2026-04-04-rxdesk-mvp-design.md)
 - [Market research](docs/rxdesk-market-research.md)
+- [API reference](docs/api-reference.md)
+- [Pharmacy integration research](docs/pharmacy-integration-research.md)
+- [Reports design](docs/reports-design.md)
