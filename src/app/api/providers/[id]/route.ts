@@ -60,6 +60,19 @@ export async function GET(
       lastEnrichedAt: true,
       createdAt: true,
       _count: { select: { prescriptionRecords: true } },
+      addresses: {
+        select: {
+          id: true,
+          label: true,
+          address: true,
+          city: true,
+          state: true,
+          zip: true,
+          isPrimary: true,
+          source: true,
+        },
+        orderBy: [{ isPrimary: "desc" as const }, { createdAt: "asc" as const }],
+      },
     },
   });
 
