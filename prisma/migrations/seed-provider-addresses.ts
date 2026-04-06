@@ -1,6 +1,10 @@
 import { PrismaClient } from "../../src/generated/prisma/client";
+import { PrismaNeon } from "@prisma/adapter-neon";
 
-const db = new PrismaClient();
+const adapter = new PrismaNeon({
+  connectionString: process.env.DATABASE_URL!,
+});
+const db = new PrismaClient({ adapter });
 
 async function main() {
   const providers = await db.provider.findMany({
