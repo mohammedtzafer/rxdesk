@@ -20,6 +20,7 @@ import {
   Users,
   FileText,
   Star,
+  Download,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -99,6 +100,12 @@ export default function DrugRepsPage() {
   const [lunchProvided, setLunchProvided] = useState(false);
   const [visitNotes, setVisitNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  // Export
+  const [exportRange, setExportRange] = useState<number>(30);
+  const [customExportStart, setCustomExportStart] = useState("");
+  const [customExportEnd, setCustomExportEnd] = useState("");
+  const [exporting, setExporting] = useState(false);
 
   // Calendar math
   const monthStart = startOfMonth(viewMonth);
@@ -268,6 +275,47 @@ export default function DrugRepsPage() {
     }
   };
 
+  const handleExport = async (fmt: "csv" | "pdf") => {
+    setExporting(true);
+    try {
+      let startDate: string;
+      let endDate: string;
+
+      if (exportRange === -1 && customExportStart && customExportEnd) {
+        startDate = customExportStart;
+        endDate = customExportEnd;
+      } else {
+        const end = new Date();
+        const start = new Date();
+        start.setDate(start.getDate() - exportRange);
+        startDate = format(start, "yyyy-MM-dd");
+        endDate = format(end, "yyyy-MM-dd");
+      }
+
+      const res = await fetch(`/api/drug-reps/visits/export?format=${fmt}&startDate=${startDate}&endDate=${endDate}`);
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.error || "Export failed");
+        return;
+      }
+
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fmt === "csv" ? `visits-${startDate}-${endDate}.csv` : `visit-report-${startDate}-${endDate}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(`${fmt.toUpperCase()} exported`);
+    } catch {
+      toast.error("Export failed");
+    } finally {
+      setExporting(false);
+    }
+  };
+
   const displayResults = providerSearch.trim()
     ? providerResults
     : favorites.length > 0
@@ -294,6 +342,69 @@ export default function DrugRepsPage() {
         >
           <Plus className="w-4 h-4" /> Log visit
         </button>
+      </div>
+
+      {/* Export toolbar */}
+      <div className="flex flex-wrap items-center gap-2 mb-4 bg-card rounded-xl p-3 border border-border/70">
+        <span className="text-[13px] font-medium text-muted-foreground mr-1">Export:</span>
+        <div className="flex gap-1 bg-muted/50 rounded-lg p-0.5">
+          {[7, 14, 30, 60, 90].map((d) => (
+            <button
+              key={d}
+              onClick={() => setExportRange(d)}
+              className={[
+                "px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors",
+                exportRange === d ? "bg-[#0071e3] text-white" : "text-muted-foreground hover:text-foreground",
+              ].join(" ")}
+            >
+              {d}d
+            </button>
+          ))}
+          <button
+            onClick={() => setExportRange(-1)}
+            className={[
+              "px-2.5 py-1 rounded-md text-[12px] font-medium transition-colors",
+              exportRange === -1 ? "bg-[#0071e3] text-white" : "text-muted-foreground hover:text-foreground",
+            ].join(" ")}
+          >
+            Custom
+          </button>
+        </div>
+
+        {exportRange === -1 && (
+          <div className="flex items-center gap-1.5">
+            <input
+              type="date"
+              value={customExportStart}
+              onChange={(e) => setCustomExportStart(e.target.value)}
+              className="h-8 rounded-lg border border-border px-2 text-[12px] bg-card text-foreground"
+            />
+            <span className="text-[12px] text-muted-foreground">to</span>
+            <input
+              type="date"
+              value={customExportEnd}
+              onChange={(e) => setCustomExportEnd(e.target.value)}
+              className="h-8 rounded-lg border border-border px-2 text-[12px] bg-card text-foreground"
+            />
+          </div>
+        )}
+
+        <div className="flex gap-1.5 ml-auto">
+          <button
+            onClick={() => handleExport("csv")}
+            disabled={exporting || (exportRange === -1 && (!customExportStart || !customExportEnd))}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-lg text-[12px] font-medium text-foreground hover:bg-muted transition-colors disabled:opacity-50"
+          >
+            <Download className="w-3.5 h-3.5" /> CSV
+          </button>
+          <button
+            onClick={() => handleExport("pdf")}
+            disabled={exporting || (exportRange === -1 && (!customExportStart || !customExportEnd))}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0071e3] text-white rounded-lg text-[12px] font-medium hover:bg-[#0077ED] transition-colors disabled:opacity-50"
+          >
+            <Download className="w-3.5 h-3.5" /> PDF
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
