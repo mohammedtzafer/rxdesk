@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
+import { signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Users,
@@ -32,6 +33,7 @@ import {
   Plug,
   Sun,
   Moon,
+  LogOut,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -67,7 +69,7 @@ const navItems: NavItem[] = [
     ],
   },
   {
-    label: "Drug Reps",
+    label: "Track Visit",
     href: "/app/drug-reps",
     icon: Briefcase,
     module: "DRUG_REPS",
@@ -174,7 +176,7 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
   };
 
   const drugRepOnlyNav: NavItem[] = [
-    { label: "Drug Reps", href: "/app/drug-reps", icon: Briefcase, module: "DRUG_REPS", mobileTab: true },
+    { label: "Track Visit", href: "/app/drug-reps", icon: Briefcase, module: "DRUG_REPS", mobileTab: true },
   ];
 
   const visibleNav = isDrugRepOnly
@@ -327,6 +329,24 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
               <Badge variant="outline" className="text-muted-foreground text-[10px]">{plan}</Badge>
             </div>
           )}
+          {collapsed ? (
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              title="Sign out"
+              className="flex items-center justify-center w-full mt-1 p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              aria-label="Sign out"
+            >
+              <LogOut className="w-4 h-4" />
+            </button>
+          ) : (
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="flex items-center gap-2 px-2 py-1.5 w-full rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-muted transition-colors mt-1"
+            >
+              <LogOut className="w-4 h-4 shrink-0" />
+              Sign out
+            </button>
+          )}
         </div>
       </aside>
 
@@ -407,6 +427,15 @@ export function AppShell({ children, user, plan, permissions, branding }: AppShe
                 </div>
               );
             })}
+            <div className="border-t border-border mt-2 pt-2">
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                className="flex items-center gap-3 px-4 py-3 rounded-lg text-base w-full text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              >
+                <LogOut className="w-5 h-5" />
+                Sign out
+              </button>
+            </div>
           </nav>
         </div>
       )}
