@@ -1,5 +1,31 @@
 # RxDesk release notes
 
+## v2.0.0 — 04/05/2026
+
+### Bug fixes
+- Added logout button to desktop sidebar and mobile menu
+- Fixed provider search for drug reps — drug rep role can now search providers when logging visits
+- Renamed "Drug Reps" to "Track Visit" in navigation
+
+### Features
+- **Visit export** — export visit data as CSV or PDF with date range selection (7d, 14d, 30d, 60d, 90d, custom). PDF includes detailed visit log + script summary cross-referenced with prescription data
+- **CSV parser overhaul** — supports PMS format with Excel `="..."` wrapping, new columns (RXNO, PRESNAME, PRESADDRESS, STATUS), date with time parsing, corrected brand/generic logic
+- **Auto-create providers** — uploading CSV automatically creates provider records and addresses from prescriber data
+- **Multiple provider addresses** — providers can have multiple addresses with Apple Maps and Google Maps integration. Addresses auto-populated from CSV uploads and manually editable
+- **Filed-away tracking** — prescription status (Billed/Filed/Unbilled) stored and analyzed. Filed = on hold, not dispensed
+
+### Analytics
+- **Rep ROI dashboard** — correlate drug rep visits with brand script volume in the 30 days following each visit
+- **Brand adoption tracker** — track when providers start prescribing brand drugs, with volume trends
+- **Filed-away analysis** — surface drugs and providers with high filed-away rates (lost opportunity)
+- **Script-to-visit ratio** — measure scripts generated within 7/14/30 days of each visit
+
+### Schema changes
+- Added `ProviderAddress` model for multi-address support
+- Added `rxNumber` and `status` fields to `PrescriptionRecord`
+
+---
+
 ## v1.1.0 — 04/04/2026 — Product pivot: Field Rep, dark mode, provider-centric analytics
 
 ### Drug Rep → Field Rep (conceptual correction)
