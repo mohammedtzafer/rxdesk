@@ -370,3 +370,93 @@ describe("parseCsvContent — flexible header names", () => {
     expect(result.rows).toHaveLength(1);
   });
 });
+
+// ---------------------------------------------------------------------------
+// PMS (Pharmacy Management System) CSV format — Excel =" wrapping
+// ---------------------------------------------------------------------------
+describe("parseCsvContent — PMS format with =\"...\" wrapping", () => {
+  it("strips =\"...\" wrappers from values and parses correctly", () => {
+    const csv = buildCsv(
+      "DATEF,RXNO,PRESNPI,PRESNAME,PRESADDRESS,DRUGNAME,NDC,BRAND,STATUS",
+      '="3/10/2026 12:00:00 AM",="179181",="1285268300",="Huynh. Dathao",="9256 BENDIX RD",="MINOCYCLINE 100mg CAP (65862-0211-05)",="65862-0211-05",="N",="B"'
+    );
+    const result = parseCsvContent(csv);
+
+    expect(result.errors).toHaveLength(0);
+    expect(result.rows).toHaveLength(1);
+
+    const row = result.rows[0];
+    expect(row.providerNpi).toBe("1285268300");
+    expect(row.drugName).toBe("MINOCYCLINE 100mg CAP (65862-0211-05)");
+    expect(row.drugNdc).toBe("65862-0211-05");
+    expect(row.isGeneric).toBe(true); // BRAND=N means generic
+    expect(row.status).toBe("B");
+    expect(row.rxNumber).toBe("179181");
+    expect(row.providerName).toBe("Huynh. Dathao");
+    expect(row.providerAddress).toBe("9256 BENDIX RD");
+    expect(row.fillDate.getFullYear()).toBe(2026);
+    expect(row.fillDate.getMonth()).toBe(2); // March
+    expect(row.fillDate.getDate()).toBe(10);
+  });
+
+  it("handles BRAND=Y as isGeneric=false", () => {
+    const csv = buildCsv(
+      "DATEF,RXNO,PRESNPI,PRESNAME,PRESADDRESS,DRUGNAME,NDC,BRAND,STATUS",
+      '="3/10/2026 12:00:00 AM",="187684",="1730695503",="SANYAOLU. SAMETTA",="7625 MAPLE LAWN BLVD",="QULIPTA 60MG TAB (00074-7094-30)",="00074-7094-30",="Y",="B"'
+    );
+    const result = parseCsvContent(csv);
+
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0].isGeneric).toBe(false);
+  });
+
+  it("handles STATUS values B, F, U", () => {
+    const csv = buildCsv(
+      "DATEF,RXNO,PRESNPI,PRESNAME,PRESADDRESS,DRUGNAME,NDC,BRAND,STATUS",
+      '="3/10/2026 12:00:00 AM",="100",="1285268300",="Test. Doc",="123 Main",="Drug A (11111-2222-33)",="11111-2222-33",="N",="B"',
+      '="3/10/2026 12:00:00 AM",="101",="1285268300",="Test. Doc",="123 Main",="Drug B (11111-2222-34)",="11111-2222-34",="Y",="F"',
+      '="3/10/2026 12:00:00 AM",="102",="1285268300",="Test. Doc",="123 Main",="Drug C (11111-2222-35)",="11111-2222-35",="N",="U"'
+    );
+    const result = parseCsvContent(csv);
+
+    expect(result.rows).toHaveLength(3);
+    expect(result.rows[0].status).toBe("B");
+    expect(result.rows[1].status).toBe("F");
+    expect(result.rows[2].status).toBe("U");
+  });
+
+  it("parses dates with time component (M/D/YYYY H:MM:SS AM)", () => {
+    const csv = buildCsv(
+      "DATEF,RXNO,PRESNPI,PRESNAME,PRESADDRESS,DRUGNAME,NDC,BRAND,STATUS",
+      '="12/5/2025 12:00:00 AM",="200",="1285268300",="Test. Doc",="123 Main",="Drug A (11111-2222-33)",="11111-2222-33",="N",="B"'
+    );
+    const result = parseCsvContent(csv);
+
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0].fillDate.getFullYear()).toBe(2025);
+    expect(result.rows[0].fillDate.getMonth()).toBe(11); // December
+    expect(result.rows[0].fillDate.getDate()).toBe(5);
+  });
+});
+
+describe("parseCsvContent — PMS header mappings", () => {
+  it("accepts PRESNPI as the NPI column", () => {
+    const csv = buildCsv(
+      "PRESNPI,DRUGNAME,DATEF",
+      "1234567890,Lisinopril,01/15/2024"
+    );
+    const result = parseCsvContent(csv);
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0].providerNpi).toBe("1234567890");
+  });
+
+  it("accepts DATEF as the date column", () => {
+    const csv = buildCsv(
+      "NPI,DRUGNAME,DATEF",
+      "1234567890,Lisinopril,03/10/2026"
+    );
+    const result = parseCsvContent(csv);
+    expect(result.rows).toHaveLength(1);
+    expect(result.rows[0].fillDate.getMonth()).toBe(2);
+  });
+});
