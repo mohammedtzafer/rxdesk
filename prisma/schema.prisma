@@ -137,6 +137,7 @@ model Organization {
   prescriptionRecords   PrescriptionRecord[]
   drugReps              DrugRep[]
   drugRepVisits         DrugRepVisit[]
+  providerAddresses     ProviderAddress[]
   payrollExports        PayrollExport[]
 
   departments           Department[]
@@ -316,10 +317,32 @@ model Provider {
   organization          Organization           @relation(fields: [organizationId], references: [id])
   prescriptionRecords   PrescriptionRecord[]
   drugRepVisits         DrugRepVisitProvider[]
+  addresses             ProviderAddress[]
 
   @@unique([organizationId, npi])
   @@index([organizationId])
   @@index([organizationId, specialty])
+}
+
+model ProviderAddress {
+  id             String   @id @default(cuid())
+  providerId     String
+  organizationId String
+  label          String?
+  address        String
+  city           String?
+  state          String?
+  zip            String?
+  isPrimary      Boolean  @default(false)
+  source         String   @default("manual")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  provider     Provider     @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([providerId])
+  @@index([organizationId])
 }
 
 model PrescriptionUpload {
@@ -353,6 +376,8 @@ model PrescriptionRecord {
   quantity       Int?
   daysSupply     Int?
   payerType      PayerType @default(OTHER)
+  rxNumber       String?
+  status         String?   // B=Billed, F=Filed (on hold), U=Unbilled
   createdAt      DateTime  @default(now())
 
   organization Organization        @relation(fields: [organizationId], references: [id])
