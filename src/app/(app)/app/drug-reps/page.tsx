@@ -184,7 +184,7 @@ export default function DrugRepsPage() {
     searchDebounce.current = setTimeout(async () => {
       setSearchingProviders(true);
       try {
-        const res = await fetch(`/api/providers?search=${encodeURIComponent(providerSearch)}&limit=10`);
+        const res = await fetch(`/api/providers/search-for-visit?search=${encodeURIComponent(providerSearch)}&limit=10`);
         if (res.ok) {
           const data = await res.json();
           setProviderResults(data.providers || []);
