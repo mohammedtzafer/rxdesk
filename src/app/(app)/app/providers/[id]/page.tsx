@@ -2,7 +2,7 @@
 
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
-import { ArrowLeft, TrendingUp, TrendingDown, Minus, Pill, MapPin, Phone, Building2, Tag, Upload } from "lucide-react";
+import { ArrowLeft, TrendingUp, TrendingDown, Minus, Pill, MapPin, Phone, Building2, Tag, Upload, Pencil, Trash2, Plus, ExternalLink } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface Provider {
@@ -26,6 +26,16 @@ interface Provider {
   lastEnrichedAt: string | null;
   createdAt: string;
   _count: { prescriptionRecords: number };
+  addresses: Array<{
+    id: string;
+    label: string | null;
+    address: string;
+    city: string | null;
+    state: string | null;
+    zip: string | null;
+    isPrimary: boolean;
+    source: string;
+  }>;
 }
 
 interface Analytics {
@@ -61,6 +71,9 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
   const [customMode, setCustomMode] = useState(false);
   const [customStart, setCustomStart] = useState("");
   const [customEnd, setCustomEnd] = useState("");
+  const [showAddAddress, setShowAddAddress] = useState(false);
+  const [addressForm, setAddressForm] = useState({ label: "", address: "", city: "", state: "", zip: "" });
+  const [savingAddress, setSavingAddress] = useState(false);
 
   useEffect(() => {
     Promise.all([
@@ -96,6 +109,48 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
       </div>
     );
   }
+
+  const buildMapUrl = (addr: { address: string; city: string | null; state: string | null; zip: string | null }) => {
+    const full = [addr.address, addr.city, addr.state, addr.zip].filter(Boolean).join(", ");
+    return {
+      apple: `https://maps.apple.com/?address=${encodeURIComponent(full)}`,
+      google: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(full)}`,
+    };
+  };
+
+  const handleAddAddress = async () => {
+    if (!addressForm.address.trim()) return;
+    setSavingAddress(true);
+    try {
+      const res = await fetch(`/api/providers/${id}/addresses`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(addressForm),
+      });
+      if (res.ok) {
+        const p = await fetch(`/api/providers/${id}`).then((r) => r.json());
+        setProvider(p);
+        setShowAddAddress(false);
+        setAddressForm({ label: "", address: "", city: "", state: "", zip: "" });
+      }
+    } catch {
+      // silent
+    } finally {
+      setSavingAddress(false);
+    }
+  };
+
+  const handleDeleteAddress = async (addressId: string) => {
+    try {
+      const res = await fetch(`/api/providers/${id}/addresses/${addressId}`, { method: "DELETE" });
+      if (res.ok) {
+        const p = await fetch(`/api/providers/${id}`).then((r) => r.json());
+        setProvider(p);
+      }
+    } catch {
+      // silent
+    }
+  };
 
   return (
     <div>
@@ -163,6 +218,127 @@ export default function ProviderDetailPage({ params }: { params: Promise<{ id: s
                 {tag}
               </Badge>
             ))}
+          </div>
+        )}
+      </div>
+
+      {/* Addresses */}
+      <div className="mt-4 bg-card dark:bg-[#1c1c1e] rounded-xl p-5 border border-[rgba(0,0,0,0.06)] dark:border-white/10">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-[14px] font-semibold text-foreground dark:text-white">Addresses</h3>
+          <button
+            onClick={() => setShowAddAddress(!showAddAddress)}
+            className="inline-flex items-center gap-1 text-[13px] text-[#0071e3] hover:underline"
+          >
+            <Plus className="w-3.5 h-3.5" /> Add address
+          </button>
+        </div>
+
+        {provider.addresses && provider.addresses.length > 0 ? (
+          <div className="space-y-3">
+            {provider.addresses.map((addr) => {
+              const maps = buildMapUrl(addr);
+              const fullAddr = [addr.address, addr.city, addr.state, addr.zip].filter(Boolean).join(", ");
+              return (
+                <div key={addr.id} className="flex items-start justify-between gap-3 p-3 rounded-lg bg-muted/30 dark:bg-card/5">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <MapPin className="w-3.5 h-3.5 text-muted-foreground/60 shrink-0" />
+                      <span className="text-[14px] text-foreground dark:text-white">{fullAddr}</span>
+                      {addr.isPrimary && (
+                        <span className="px-1.5 py-0.5 bg-[#0071e3]/10 text-[#0071e3] rounded text-[10px] font-medium">Primary</span>
+                      )}
+                      {addr.label && (
+                        <span className="px-1.5 py-0.5 bg-muted text-muted-foreground rounded text-[10px] font-medium">{addr.label}</span>
+                      )}
+                    </div>
+                    <span className="text-[11px] text-muted-foreground/60 mt-0.5 block capitalize">{addr.source.replace("_", " ")}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 shrink-0">
+                    <a
+                      href={maps.apple}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-md hover:bg-muted transition-colors"
+                      title="Open in Apple Maps"
+                    >
+                      <MapPin className="w-4 h-4 text-muted-foreground" />
+                    </a>
+                    <a
+                      href={maps.google}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-1.5 rounded-md hover:bg-muted transition-colors"
+                      title="Open in Google Maps"
+                    >
+                      <ExternalLink className="w-4 h-4 text-muted-foreground" />
+                    </a>
+                    <button
+                      onClick={() => handleDeleteAddress(addr.id)}
+                      className="p-1.5 rounded-md hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
+                      title="Delete address"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-muted-foreground hover:text-red-500" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p className="text-[14px] text-muted-foreground dark:text-white/48">No addresses on file.</p>
+        )}
+
+        {showAddAddress && (
+          <div className="mt-3 p-3 rounded-lg border border-border dark:border-white/10 space-y-2">
+            <input
+              placeholder="Label (e.g., Main Office)"
+              value={addressForm.label}
+              onChange={(e) => setAddressForm({ ...addressForm, label: e.target.value })}
+              className="w-full h-9 rounded-lg border border-border px-3 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
+            />
+            <input
+              placeholder="Street address"
+              value={addressForm.address}
+              onChange={(e) => setAddressForm({ ...addressForm, address: e.target.value })}
+              className="w-full h-9 rounded-lg border border-border px-3 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
+              required
+            />
+            <div className="grid grid-cols-3 gap-2">
+              <input
+                placeholder="City"
+                value={addressForm.city}
+                onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })}
+                className="h-9 rounded-lg border border-border px-3 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
+              />
+              <input
+                placeholder="State"
+                value={addressForm.state}
+                onChange={(e) => setAddressForm({ ...addressForm, state: e.target.value })}
+                className="h-9 rounded-lg border border-border px-3 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
+              />
+              <input
+                placeholder="ZIP"
+                value={addressForm.zip}
+                onChange={(e) => setAddressForm({ ...addressForm, zip: e.target.value })}
+                className="h-9 rounded-lg border border-border px-3 text-[13px] bg-card dark:bg-[#2c2c2e] text-foreground dark:text-white"
+              />
+            </div>
+            <div className="flex gap-2">
+              <button
+                onClick={handleAddAddress}
+                disabled={savingAddress || !addressForm.address.trim()}
+                className="px-4 py-1.5 bg-[#0071e3] text-white rounded-lg text-[13px] font-medium hover:bg-[#0077ED] disabled:opacity-50"
+              >
+                {savingAddress ? "Saving..." : "Add"}
+              </button>
+              <button
+                onClick={() => setShowAddAddress(false)}
+                className="px-4 py-1.5 border border-border rounded-lg text-[13px] text-foreground hover:bg-muted"
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         )}
       </div>
