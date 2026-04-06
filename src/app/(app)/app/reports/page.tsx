@@ -72,6 +72,10 @@ const reportCategories: ReportCategory[] = [
     icon: Briefcase,
     reports: [
       { id: "rep-activity", label: "Rep Activity", desc: "Visit frequency and coverage" },
+      { id: "rep-roi", label: "Rep ROI", desc: "Visit-to-script correlation per rep" },
+      { id: "brand-adoption", label: "Brand Adoption", desc: "Brand drug prescribing trends by provider" },
+      { id: "filed-away", label: "Filed-Away Analysis", desc: "Scripts filed (not dispensed) by drug and rate" },
+      { id: "script-to-visit", label: "Script-to-Visit Ratio", desc: "New scripts in 7/14/30 days after each visit" },
     ],
   },
   {
@@ -181,6 +185,30 @@ function getSummaryCards(
         { label: "Total fills", value: fmt(combined.totalEvents) },
         { label: "Under 1 hour", value: fmt(combined.under1Hour), sub: "fills" },
       ];
+    case "rep-roi":
+      return [
+        { label: "Total visits", value: fmt(combined.totalVisits) },
+        { label: "Brand scripts (30d post-visit)", value: fmt(combined.totalBrandScripts) },
+        { label: "Avg scripts per visit", value: fmt(combined.avgScriptsPerVisit, 1) },
+      ];
+    case "brand-adoption":
+      return [
+        { label: "Unique brand drugs", value: fmt(combined.uniqueDrugs) },
+        { label: "Unique providers", value: fmt(combined.uniqueProviders) },
+        { label: "Total brand scripts", value: fmt(combined.totalScripts) },
+      ];
+    case "filed-away":
+      return [
+        { label: "Total scripts", value: fmt(combined.totalScripts) },
+        { label: "Filed away", value: fmt(combined.totalFiled) },
+        { label: "Filed rate", value: `${fmt(combined.overallFiledRate, 1)}%` },
+      ];
+    case "script-to-visit":
+      return [
+        { label: "Total visits", value: fmt(combined.totalVisits) },
+        { label: "Avg scripts (7d)", value: fmt(combined.avg7d, 1) },
+        { label: "Avg scripts (30d)", value: fmt(combined.avg30d, 1) },
+      ];
     default:
       return [];
   }
@@ -201,6 +229,10 @@ function getTableRows(reportId: string, data: Record<string, unknown>): unknown[
     case "provider-scorecard":
     case "prescriber-trends":
     case "rep-activity":
+    case "rep-roi":
+    case "brand-adoption":
+    case "filed-away":
+    case "script-to-visit":
     case "hours-summary":
     case "overtime":
     case "schedule-vs-actual":
@@ -226,6 +258,10 @@ function getColumnLabels(reportId: string): Record<string, string> {
     "schedule-vs-actual": { name: "Employee", role: "Role", scheduledHours: "Scheduled", actualHours: "Actual", variance: "Variance", variancePercent: "Variance %" },
     "pto-summary": { name: "Employee", role: "Role", vacationDays: "Vacation", sickDays: "Sick", personalDays: "Personal", otherDays: "Other", totalDays: "Total Days" },
     "fill-to-pickup": { drugName: "Drug", avgWaitMinutes: "Avg Wait (min)", fillCount: "Fill Count" },
+    "rep-roi": { visitDate: "Visit Date", repName: "Rep", company: "Company", providers: "Providers", providerCount: "# Providers", brandScripts30d: "Brand Rx (30d)" },
+    "brand-adoption": { drug: "Drug", provider: "Provider", npi: "NPI", firstPrescribed: "First Prescribed", totalScripts: "Total Rx", billedScripts: "Billed Rx" },
+    "filed-away": { drug: "Drug", ndc: "NDC", brand: "Brand", total: "Total", billed: "Billed", filed: "Filed", unbilled: "Unbilled", filedRate: "Filed %" },
+    "script-to-visit": { visitDate: "Visit Date", repName: "Rep", company: "Company", providers: "Providers", scripts7d: "Rx (7d)", scripts14d: "Rx (14d)", scripts30d: "Rx (30d)" },
   };
   return common[reportId] || {};
 }
@@ -647,9 +683,12 @@ function CellValue({ col, value }: { col: string; value: unknown }) {
     "variance", "variancePercent", "vacationDays", "sickDays", "personalDays",
     "otherDays", "totalDays", "totalRequests", "avgWaitMinutes", "fillCount",
     "avgPerProvider", "medianMinutes",
+    "providerCount", "brandScripts30d", "totalScripts", "billedScripts",
+    "total", "billed", "filed", "unbilled",
+    "scripts7d", "scripts14d", "scripts30d",
   ];
 
-  const pctCols = ["genericRate", "percentOfTotal", "percent", "sharePercent", "gdr", "variancePercent"];
+  const pctCols = ["genericRate", "percentOfTotal", "percent", "sharePercent", "gdr", "variancePercent", "filedRate"];
   const costCols = ["estimatedCost"];
   const changeCols = ["change"];
 
